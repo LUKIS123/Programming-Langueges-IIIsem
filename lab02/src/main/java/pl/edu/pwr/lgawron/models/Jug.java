@@ -27,7 +27,7 @@ public class Jug {
         this.volume = volume;
     }
 
-    public void pourDrink(Jug jug) {
+    public void pourDrink() {
         volume -= 100;
     }
 

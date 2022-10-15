@@ -6,12 +6,8 @@ import pl.edu.pwr.lgawron.models.Person;
 import pl.edu.pwr.lgawron.repositories.JugRepository;
 import pl.edu.pwr.lgawron.repositories.PersonRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class JugEnrollAlgo {
     public int howMany = 0;
@@ -19,7 +15,8 @@ public class JugEnrollAlgo {
 
     private final JugRepository jugRepository;
     private final PersonRepository personRepository;
-    private Map<Person, List<EnrolledJug>> personsEnrolledJugs;
+    //private Map<Person, List<EnrolledJug>> personEnrolledJugs;
+    private final Set<EnrolledJug> personEnrolledJugs = new HashSet<>();
 
     public JugEnrollAlgo(JugRepository jugRepository, PersonRepository personRepository) {
         this.jugRepository = jugRepository;
@@ -48,10 +45,20 @@ public class JugEnrollAlgo {
 //                    break;
 //                }
             for (Person person : personList) {
+                EnrolledJug enrolledJug = new EnrolledJug(person);
                 List<Integer> flavours = person.getPreferredFlavourIds();
                 // Stream<Integer> integerStream = flavours.stream().filter(f -> jugRepository.getByFlavourId(f).get().getFlavourId() == f);
-
-
+                try {
+                    for (int j = 0; j < jugRepository.getJugList().size(); j++) {
+                        Jug match = findMatching(flavours, j);
+                        enrolledJug.assignJugToPerson(match);
+                        assert match != null; //i don't know
+                        match.pourDrink();
+                        personEnrolledJugs.add(enrolledJug);
+                    }
+                } catch (NullPointerException pointerException) {
+                    continue;
+                }
                 if (howMany == 0) {
                     break;
                 }
@@ -59,17 +66,19 @@ public class JugEnrollAlgo {
         }
     }
 
-    private Jug findMatching(List<Integer> flavourIds) {
-        int i = 1;
-        List<Jug> byFlavour = jugRepository.getJugList().stream().filter(jugs -> jugs.getFlavourId() == i).collect(Collectors.toList());
-        Optional<Jug> foundMatch = byFlavour.stream().filter(jug -> jug.getVolume() != 0).findFirst();
-
-        if (foundMatch.isPresent()) {
-            return foundMatch.get();
+    private Jug findMatching(List<Integer> flavourIds, int index) {
+        try {
+            List<Jug> byFlavour = jugRepository.getJugList().stream().filter(jugs -> jugs.getFlavourId() == flavourIds.get(index)).collect(Collectors.toList());
+            Optional<Jug> foundMatch = byFlavour.stream().filter(jug -> jug.getVolume() != 0).findFirst();
+            return foundMatch.orElse(null);
+        } catch (IndexOutOfBoundsException boundsException) {
+            return null;
         }
-
 //    List<Jug> byFlavour = jugList.stream().filter(jugs -> jugs.getFlavourId() == flavourId).collect(Collectors.toList());
 //        return byFlavour.stream().filter(jug -> jug.getVolume() != 0).findFirst();
-        return null;
+    }
+
+    public void printResult() {
+        System.out.println(personEnrolledJugs);
     }
 }
