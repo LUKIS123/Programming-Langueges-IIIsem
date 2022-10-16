@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class NewAlgo {
+public class EnrollJugs {
     private final JugRepository jugRepository;
     private final PersonRepository personRepository;
     private final Set<EnrolledJug> personEnrolledJugs = new HashSet<>();
     private final EnrolledJugRepository enrolledJugRepository;
 
-    public NewAlgo(JugRepository jugRepository, PersonRepository personRepository) {
+    public EnrollJugs(JugRepository jugRepository, PersonRepository personRepository) {
         this.jugRepository = jugRepository;
         this.personRepository = personRepository;
         this.enrolledJugRepository = new EnrolledJugRepository(personRepository.getPersonList());
@@ -31,7 +31,7 @@ public class NewAlgo {
         System.out.println(jugList);
         // delete after
 
-        for (int i = 0; i <= 13; i++) {
+        for (int i = 0; i <= 50; i++) {
 
             for (Person person : personList) {
                 //
@@ -42,19 +42,18 @@ public class NewAlgo {
                 for (int flavour : flavours) {
                     Jug matchingJug = findMatchingWithHighestVolume(flavour);
                     if (matchingJug != null && matchingJug.getVolume() != 0) {
-                        //
-                        //enrolledJug.enroll(matchingJug);
-                        //personEnrolledJugs.add(enrolledJug);
-                        //
+//                        if (enrolledJugRepository.addPersonAssignmentData(person, matchingJug)) {
+//                            break;
+//                        } else {
+//                            continue;
+//                        }
                         enrolledJugRepository.addPersonAssignmentData(person, matchingJug);
                         break;
                     }
                 }
             }
         }
-
-        // ! cos jest nie tak z nalewaniem, liczeniem objetosci
-        // UPDATE!!!! -> chyba jednak działa :))
+        // do poprawy! kazdej osobie przypisuje tylko jeden dzban -> dlaczego?
         // DO ZROBIENIA: policzyc ile iteracji petli, Licznik niezadowolenia, pozniej może jakies shuffle ale wymaga to zapisania rezustatow gdzies i reset
 
         // printing
@@ -75,18 +74,21 @@ public class NewAlgo {
 
     private Jug findMatchingWithHighestVolume(int flavourId) {
         List<Jug> byFlavour = jugRepository.getJugList().stream().filter(jugs -> jugs.getFlavourId() == flavourId).collect(Collectors.toList());
-        // Optional<Jug> foundMatch = byFlavour.stream().filter(jug -> jug.getVolume() != 0).findFirst();
         if (byFlavour.isEmpty()) {
             return null;
         } else {
-            Jug foundMatch = byFlavour.get(0);
-            for (Jug jug : byFlavour) {
-                if (jug.getVolume() > foundMatch.getVolume()) {
-                    foundMatch = jug;
+            Jug checkForFlavourIds = enrolledJugRepository.checkForFlavourIds(flavourId);
+            if (checkForFlavourIds != null) {
+                return checkForFlavourIds;
+            } else {
+                Jug foundMatch = byFlavour.get(0);
+                for (Jug jug : byFlavour) {
+                    if (jug.getVolume() > foundMatch.getVolume()) {
+                        foundMatch = jug;
+                    }
                 }
+                return foundMatch;
             }
-            // return foundMatch.orElse(null);
-            return foundMatch;
         }
     }
 }

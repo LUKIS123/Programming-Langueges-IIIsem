@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron;
 
-import pl.edu.pwr.lgawron.algo.NewAlgo;
+import pl.edu.pwr.lgawron.algo.EnrollJugs;
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
 import pl.edu.pwr.lgawron.repositories.JugRepository;
@@ -40,7 +40,7 @@ public class Main {
 //        algo.pour100ml();
 //        algo.printResult();
 
-        NewAlgo newAlgo = new NewAlgo(jugRepository, personRepository);
-        newAlgo.pourDrinks();
+        EnrollJugs enrollJugs = new EnrollJugs(jugRepository, personRepository);
+        enrollJugs.pourDrinks();
     }
 }

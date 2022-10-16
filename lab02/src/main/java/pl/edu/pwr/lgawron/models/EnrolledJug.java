@@ -33,6 +33,7 @@ public class EnrolledJug {
     public void enroll(Jug jug) {
         int vol = jug.getVolume();
         if (enrolledJugs.containsKey(jug) && vol != 0) {
+            //int current = enrolledJugs.get(jug);
             enrolledJugs.replace(jug, enrolledJugs.get(jug) + 100);
             jug.setVolume(vol - 100);
         } else {
@@ -56,6 +57,18 @@ public class EnrolledJug {
             }
         }
         return false;
+    }
+
+    public Jug checkIfFlavourAlreadyPresent(int flavourId) {
+        if (enrolledJugs.isEmpty()) {
+            return null;
+        }
+        for (Map.Entry<Jug, Integer> entry : enrolledJugs.entrySet()) {
+            if (entry.getKey().getFlavourId() == flavourId) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     @Override
