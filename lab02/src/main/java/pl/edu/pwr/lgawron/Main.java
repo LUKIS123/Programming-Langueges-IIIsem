@@ -1,12 +1,12 @@
 package pl.edu.pwr.lgawron;
 
-import pl.edu.pwr.lgawron.algo.EnrollJugs;
+import pl.edu.pwr.lgawron.algo.EnrollJugsAlgo;
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
 import pl.edu.pwr.lgawron.repositories.JugRepository;
 import pl.edu.pwr.lgawron.repositories.PersonRepository;
-import pl.edu.pwr.lgawron.tools.DataParser;
-import pl.edu.pwr.lgawron.tools.FileUtility;
+import pl.edu.pwr.lgawron.flow.tools.DataParser;
+import pl.edu.pwr.lgawron.flow.tools.FileUtility;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,12 +35,7 @@ public class Main {
         JugRepository jugRepository = new JugRepository(jugList);
         PersonRepository personRepository = new PersonRepository(personList);
 
-//        JugEnrollAlgo algo = new JugEnrollAlgo(jugRepository, personRepository);
-//        algo.ready();
-//        algo.pour100ml();
-//        algo.printResult();
-
-        EnrollJugs enrollJugs = new EnrollJugs(jugRepository, personRepository);
-        enrollJugs.pourDrinks();
+        EnrollJugsAlgo enrollJugsAlgo = new EnrollJugsAlgo(jugRepository, personRepository);
+        enrollJugsAlgo.runAlgo();
     }
 }

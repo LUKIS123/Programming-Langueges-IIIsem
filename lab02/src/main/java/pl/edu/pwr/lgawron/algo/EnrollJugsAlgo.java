@@ -1,59 +1,49 @@
 package pl.edu.pwr.lgawron.algo;
 
-import pl.edu.pwr.lgawron.models.EnrolledJug;
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
 import pl.edu.pwr.lgawron.repositories.EnrolledJugRepository;
 import pl.edu.pwr.lgawron.repositories.JugRepository;
 import pl.edu.pwr.lgawron.repositories.PersonRepository;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class EnrollJugs {
+public class EnrollJugsAlgo {
     private final JugRepository jugRepository;
     private final PersonRepository personRepository;
-    private final Set<EnrolledJug> personEnrolledJugs = new HashSet<>();
     private final EnrolledJugRepository enrolledJugRepository;
 
-    public EnrollJugs(JugRepository jugRepository, PersonRepository personRepository) {
+    public EnrollJugsAlgo(JugRepository jugRepository, PersonRepository personRepository) {
         this.jugRepository = jugRepository;
         this.personRepository = personRepository;
         this.enrolledJugRepository = new EnrolledJugRepository(personRepository.getPersonList());
     }
 
-    public void pourDrinks() {
+    public void runAlgo() {
         List<Jug> jugList = jugRepository.getJugList();
         List<Person> personList = personRepository.getPersonList();
+        int maxIterationCount = jugRepository.getAllJugsVolume() / 100;
         // printing
         System.out.println(jugList);
         // delete after
 
-        for (int i = 0; i <= 50; i++) {
-
+        for (int i = 0; i <= maxIterationCount; i++) {
             for (Person person : personList) {
-                //
-                //EnrolledJug enrolledJug = new EnrolledJug(person);
-                //
-                List<Integer> flavours = person.getPreferredFlavourIds();
+                List<Integer> preferredFlavourIds = person.getPreferredFlavourIds();
 
-                for (int flavour : flavours) {
-                    Jug matchingJug = findMatchingWithHighestVolume(flavour);
+                for (int flavourId : preferredFlavourIds) {
+                    Jug matchingJug = findMatchingWithHighestVolume(flavourId, person.getId());
                     if (matchingJug != null && matchingJug.getVolume() != 0) {
-//                        if (enrolledJugRepository.addPersonAssignmentData(person, matchingJug)) {
-//                            break;
-//                        } else {
-//                            continue;
-//                        }
-                        enrolledJugRepository.addPersonAssignmentData(person, matchingJug);
-                        break;
+                        if (enrolledJugRepository.addPersonAssignmentData(person, matchingJug)) {
+                            break;
+                        }
                     }
                 }
+
             }
         }
-        // do poprawy! kazdej osobie przypisuje tylko jeden dzban -> dlaczego?
+        // do poprawy! jesli caly czas znajduje po najwiekszych jugach, nie ma szans ze do matcha trafi ten sam jug jesli ma mnie o tym samym flavorze o innym id?
+        // update^^: chyba poprawilem
         // DO ZROBIENIA: policzyc ile iteracji petli, Licznik niezadowolenia, pozniej może jakies shuffle ale wymaga to zapisania rezustatow gdzies i reset
 
         // printing
@@ -63,32 +53,28 @@ public class EnrollJugs {
             System.out.println("\n");
         });
         System.out.println("REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO\n");
-
-//        personEnrolledJugs.forEach(enrolledJug -> {
-//            System.out.println(enrolledJug);
-//        });
-
         System.out.println(jugList);
         // delete after
     }
 
-    private Jug findMatchingWithHighestVolume(int flavourId) {
-        List<Jug> byFlavour = jugRepository.getJugList().stream().filter(jugs -> jugs.getFlavourId() == flavourId).collect(Collectors.toList());
+    private Jug findMatchingWithHighestVolume(int flavourId, int personId) {
+        List<Jug> byFlavour = jugRepository.getByFlavourId(flavourId);
         if (byFlavour.isEmpty()) {
             return null;
+        }
+        // Jug with flavour given was already assigned before
+        Jug checkForFlavourIds = enrolledJugRepository.getByFlavourIfEnrolled(flavourId, personId);
+        if (checkForFlavourIds != null && checkForFlavourIds.getVolume() != 0) {
+            return checkForFlavourIds;
         } else {
-            Jug checkForFlavourIds = enrolledJugRepository.checkForFlavourIds(flavourId);
-            if (checkForFlavourIds != null) {
-                return checkForFlavourIds;
-            } else {
-                Jug foundMatch = byFlavour.get(0);
-                for (Jug jug : byFlavour) {
-                    if (jug.getVolume() > foundMatch.getVolume()) {
-                        foundMatch = jug;
-                    }
+            // no Jug with flavour given was assigned
+            Jug foundMatch = byFlavour.get(0);
+            for (Jug jug : byFlavour) {
+                if (jug.getVolume() > foundMatch.getVolume()) {
+                    foundMatch = jug;
                 }
-                return foundMatch;
             }
+            return foundMatch;
         }
     }
 }

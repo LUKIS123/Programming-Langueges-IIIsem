@@ -7,12 +7,11 @@ import pl.edu.pwr.lgawron.models.Person;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class EnrolledJugRepository {
     // stores enrolledJug and satisfaction ratio
     private final Map<EnrolledJug, Integer> personAssignmentData = new LinkedHashMap<>();
-
-    // wymysl cos aby za kolejna iteracja sprawdzało czy repo Lista enrolledJug zawiera juz dany dzban
 
     public EnrolledJugRepository(List<Person> personList) {
         personList.forEach(person -> personAssignmentData.put(new EnrolledJug(person), 0));
@@ -23,20 +22,20 @@ public class EnrolledJugRepository {
     }
 
     public boolean addPersonAssignmentData(Person person, Jug jug) {
-        for (Map.Entry<EnrolledJug, Integer> entry : personAssignmentData.entrySet()) {
-            if (entry.getKey().getPerson().getId() == person.getId() && entry.getKey().checkFlavourIds(jug.getFlavourId(), jug.getId())) {
-                entry.getKey().enroll(jug);
+        for (EnrolledJug enrolled : personAssignmentData.keySet()) {
+            if (enrolled.getPerson().getId() == person.getId() && enrolled.checkIfPossibleToEnroll(jug.getFlavourId(), jug.getId())) {
+                enrolled.enrollJugToPerson(jug);
                 return true;
             }
         }
         return false;
     }
 
-    public Jug checkForFlavourIds(int flavourId) {
+    public Jug getByFlavourIfEnrolled(int flavourId, int personId) {
         for (EnrolledJug enrolledJug : personAssignmentData.keySet()) {
-            Jug flavourAlreadyPresent = enrolledJug.checkIfFlavourAlreadyPresent(flavourId);
-            if (flavourAlreadyPresent != null) {
-                return flavourAlreadyPresent;
+            if (enrolledJug.getPerson().getId() == personId) {
+                Optional<Jug> byFlavour = enrolledJug.getByFlavourId(flavourId);
+                return byFlavour.orElse(null);
             }
         }
         return null;

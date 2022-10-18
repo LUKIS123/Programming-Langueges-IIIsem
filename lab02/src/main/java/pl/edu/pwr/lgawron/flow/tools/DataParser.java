@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.tools;
+package pl.edu.pwr.lgawron.flow.tools;
 
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;

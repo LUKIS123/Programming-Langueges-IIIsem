@@ -4,7 +4,6 @@ import pl.edu.pwr.lgawron.models.Jug;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class JugRepository {
     private final List<Jug> jugList;
@@ -17,12 +16,15 @@ public class JugRepository {
         return jugList;
     }
 
-    public Optional<Jug> getByFlavourId(int flavourId) {
-        List<Jug> byFlavour = jugList.stream().filter(jugs -> jugs.getFlavourId() == flavourId).collect(Collectors.toList());
-        return byFlavour.stream().filter(jug -> jug.getVolume() != 0).findFirst();
+    public int getAllJugsVolume() {
+        return jugList.stream().mapToInt(Jug::getVolume).sum();
     }
 
-    public List<Jug> getByFlavour(int flavourId) {
-        return jugList.stream().filter(jugs -> jugs.getFlavourId() == flavourId).collect(Collectors.toList());
+    public List<Jug> getByFlavourId(int flavourId) {
+        return jugList.stream().filter(jugs -> jugs.getFlavourId() == flavourId).toList();
+    }
+
+    public Optional<Jug> getById(int id) {
+        return jugList.stream().filter(jugs -> jugs.getId() == id).findFirst();
     }
 }

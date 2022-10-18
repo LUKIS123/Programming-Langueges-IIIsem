@@ -4,11 +4,13 @@ public class Jug {
     private final int id;
     private final int flavourId;
     private int volume;
+    private final int volumeInfo;
 
     public Jug(int id, int flavourId, int volume) {
         this.id = id;
         this.flavourId = flavourId;
         this.volume = volume;
+        this.volumeInfo = volume;
     }
 
     public int getId() {
@@ -23,12 +25,12 @@ public class Jug {
         return volume;
     }
 
-    public void setVolume(int volume) {
-        this.volume = volume;
+    public int getVolumeInfo() {
+        return volumeInfo;
     }
 
-    public void pourDrink() {
-        volume -= 100;
+    public void setVolume(int volume) {
+        this.volume = volume;
     }
 
     @Override
