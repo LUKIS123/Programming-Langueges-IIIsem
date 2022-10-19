@@ -1,6 +1,7 @@
 package pl.edu.pwr.lgawron.models;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -56,6 +57,32 @@ public class EnrolledJug {
         }
         // in case no Jug with given flavour was added
         return byFlavour.isEmpty();
+    }
+
+    //czemu nie dziala??
+    public int calculateSatisfactionV1() {
+        List<Integer> preferredFlavourIds = person.getPreferredFlavourIds();
+        int n = preferredFlavourIds.size();
+        int ratio = 0;
+        int i = 1;
+        for (Map.Entry<Jug, Integer> entry : enrolledJugs.entrySet()) {
+            ratio += (n - i) * entry.getValue();
+            i++;
+        }
+        return ratio;
+    }
+
+    public int calculateSatisfaction() {
+        List<Integer> preferredFlavourIds = person.getPreferredFlavourIds();
+        int satisfactionRatio = 0;
+        int position = 1;
+        for (Integer flavourId : preferredFlavourIds) {
+            if (this.getByFlavourId(flavourId).isPresent()) {
+                satisfactionRatio += (preferredFlavourIds.size() - position + 1) * enrolledJugs.get(this.getByFlavourId(flavourId).get());
+                position++;
+            }
+        }
+        return satisfactionRatio;
     }
 
     @Override

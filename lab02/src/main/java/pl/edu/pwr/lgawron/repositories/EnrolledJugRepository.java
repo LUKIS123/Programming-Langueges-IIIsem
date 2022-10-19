@@ -41,6 +41,12 @@ public class EnrolledJugRepository {
         return null;
     }
 
+    public void calculateSatisfactionRatio() {
+        for (Map.Entry<EnrolledJug, Integer> entry : personAssignmentData.entrySet()) {
+            entry.setValue(entry.getKey().calculateSatisfaction());
+        }
+    }
+
     @Override
     public String toString() {
         return "EnrolledJugRepository{" +

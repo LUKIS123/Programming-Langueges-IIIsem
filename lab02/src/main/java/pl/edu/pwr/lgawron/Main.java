@@ -1,15 +1,6 @@
 package pl.edu.pwr.lgawron;
 
-import pl.edu.pwr.lgawron.algo.EnrollJugsAlgo;
-import pl.edu.pwr.lgawron.models.Jug;
-import pl.edu.pwr.lgawron.models.Person;
-import pl.edu.pwr.lgawron.repositories.JugRepository;
-import pl.edu.pwr.lgawron.repositories.PersonRepository;
-import pl.edu.pwr.lgawron.flow.tools.DataParser;
-import pl.edu.pwr.lgawron.flow.tools.FileUtility;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import pl.edu.pwr.lgawron.flow.ApplicationFlow;
 
 /**
  * @author Lukasz Gawron, 264475
@@ -20,22 +11,7 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        String jugDataFilePath = args[0];
-        String personDataFilePath = args[1];
-
-        FileUtility fileUtility = new FileUtility();
-        List<String> jugDataLines = fileUtility.readDataLines(jugDataFilePath);
-        List<String> personDataLines = fileUtility.readDataLines(personDataFilePath);
-
-        DataParser dataParser = new DataParser();
-
-        List<Jug> jugList = jugDataLines.stream().map(dataParser::parseJug).collect(Collectors.toList());
-        List<Person> personList = personDataLines.stream().map(dataParser::parsePerson).collect(Collectors.toList());
-
-        JugRepository jugRepository = new JugRepository(jugList);
-        PersonRepository personRepository = new PersonRepository(personList);
-
-        EnrollJugsAlgo enrollJugsAlgo = new EnrollJugsAlgo(jugRepository, personRepository);
-        enrollJugsAlgo.runAlgo();
+        ApplicationFlow applicationFlow = new ApplicationFlow(args);
+        applicationFlow.runApp();
     }
 }

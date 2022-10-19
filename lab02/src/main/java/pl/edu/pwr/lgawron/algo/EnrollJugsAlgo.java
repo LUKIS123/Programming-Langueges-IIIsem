@@ -13,19 +13,15 @@ public class EnrollJugsAlgo {
     private final PersonRepository personRepository;
     private final EnrolledJugRepository enrolledJugRepository;
 
-    public EnrollJugsAlgo(JugRepository jugRepository, PersonRepository personRepository) {
+    public EnrollJugsAlgo(JugRepository jugRepository, PersonRepository personRepository, EnrolledJugRepository enrolledJugRepository) {
         this.jugRepository = jugRepository;
         this.personRepository = personRepository;
-        this.enrolledJugRepository = new EnrolledJugRepository(personRepository.getPersonList());
+        this.enrolledJugRepository = enrolledJugRepository;
     }
 
     public void runAlgo() {
-        List<Jug> jugList = jugRepository.getJugList();
         List<Person> personList = personRepository.getPersonList();
         int maxIterationCount = jugRepository.getAllJugsVolume() / 100;
-        // printing
-        System.out.println(jugList);
-        // delete after
 
         for (int i = 0; i <= maxIterationCount; i++) {
             for (Person person : personList) {
@@ -42,19 +38,8 @@ public class EnrollJugsAlgo {
 
             }
         }
-        // do poprawy! jesli caly czas znajduje po najwiekszych jugach, nie ma szans ze do matcha trafi ten sam jug jesli ma mnie o tym samym flavorze o innym id?
-        // update^^: chyba poprawilem
+        enrolledJugRepository.calculateSatisfactionRatio();
         // DO ZROBIENIA: policzyc ile iteracji petli, Licznik niezadowolenia, pozniej może jakies shuffle ale wymaga to zapisania rezustatow gdzies i reset
-
-        // printing
-        System.out.println("REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO\n");
-        enrolledJugRepository.getPersonAssignmentData().forEach((enrolledJug, integer) -> {
-            System.out.println(enrolledJug);
-            System.out.println("\n");
-        });
-        System.out.println("REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO REPO\n");
-        System.out.println(jugList);
-        // delete after
     }
 
     private Jug findMatchingWithHighestVolume(int flavourId, int personId) {
