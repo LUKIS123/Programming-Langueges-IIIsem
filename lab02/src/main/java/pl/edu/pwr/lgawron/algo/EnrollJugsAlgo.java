@@ -20,7 +20,8 @@ public class EnrollJugsAlgo {
     }
 
     public void runAlgo(List<Person> currentPersonListPermutation) {
-        List<Person> personList = personRepository.getPersonList();
+        //List<Person> personList = personRepository.getPersonList();
+        List<Person> personList = currentPersonListPermutation;
         int maxIterationCount = jugRepository.getAllJugsVolume() / 100;
 
         for (int i = 0; i <= maxIterationCount; i++) {
@@ -39,7 +40,8 @@ public class EnrollJugsAlgo {
             }
         }
         enrolledJugRepository.calculateSatisfactionRatios();
-        // DO ZROBIENIA: policzyc ile iteracji petli, Licznik niezadowolenia, pozniej może jakies shuffle ale wymaga to zapisania rezustatow gdzies i reset
+        enrolledJugRepository.reset(currentPersonListPermutation);
+        jugRepository.getJugList().forEach(Jug::reset);
     }
 
     private Jug findMatchingWithHighestVolume(int flavourId, int personId) {

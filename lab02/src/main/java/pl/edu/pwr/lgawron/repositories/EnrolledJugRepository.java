@@ -10,6 +10,7 @@ public class EnrolledJugRepository {
     // stores enrolledJug and satisfaction ratio
     private final Map<EnrolledJug, List<Integer>> currentPersonAssignmentData = new LinkedHashMap<>();
     private final Map<EnrolledJug, List<Integer>> bestResult = new LinkedHashMap<>();
+    public double ratio;
 
     public EnrolledJugRepository(List<Person> personList) {
         personList.forEach(person -> currentPersonAssignmentData.put(new EnrolledJug(person), List.of(0, 0)));
@@ -52,23 +53,37 @@ public class EnrolledJugRepository {
         }
     }
 
-    public double calculateSatisfactionToDissatisfactionRatio(Collection<List<Integer>> valuesCollection) {
+    private double calculateSatisfactionToDissatisfactionRatio(Collection<List<Integer>> valuesCollection) {
         int satisfaction = 0;
         int dissatisfaction = 0;
         for (List<Integer> integerList : valuesCollection) {
             satisfaction += integerList.get(0);
             dissatisfaction += integerList.get(1);
         }
-        return (double) satisfaction / dissatisfaction;
+        if (dissatisfaction != 0) {
+            double result = (double) satisfaction / dissatisfaction;
+            ratio = result;
+            return result;
+        } else {
+            ratio = satisfaction;
+            return satisfaction;
+        }
     }
 
-    public void reset() {
+    public void reset(List<Person> personList) {
+        //System.out.println(currentPersonAssignmentData);
+
+
         double currentSatisfactionRatio = this.calculateSatisfactionToDissatisfactionRatio(currentPersonAssignmentData.values());
         double bestResultSatisfactionRatio = this.calculateSatisfactionToDissatisfactionRatio(bestResult.values());
         if (currentSatisfactionRatio > bestResultSatisfactionRatio) {
-            bestResultSatisfactionRatio = currentSatisfactionRatio;
+            bestResult.clear();
+            bestResult.putAll(currentPersonAssignmentData);
         }
         currentPersonAssignmentData.clear();
+        personList.forEach(person -> currentPersonAssignmentData.put(new EnrolledJug(person), List.of(0, 0)));
+
+        //System.out.println(bestResult);
     }
 
     @Override

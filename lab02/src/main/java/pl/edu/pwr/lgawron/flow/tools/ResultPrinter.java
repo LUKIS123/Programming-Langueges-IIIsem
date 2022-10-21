@@ -16,16 +16,18 @@ public class ResultPrinter {
     }
 
     public void print() {
-        System.out.println(jugRepository.getJugList());
 
-        System.out.println("\n---------------------------------------------------------------------------------------------------------------------------------------------\n");
-        enrolledJugRepository.getCurrentPersonAssignmentData().forEach((enrolledJug, integer) -> {
-            System.out.println(enrolledJug);
-            System.out.println("\n");
-        });
+//        System.out.println("\n---------------------------------------------------------------------------------------------------------------------------------------------\n");
+//        enrolledJugRepository.getCurrentPersonAssignmentData().forEach((enrolledJug, integer) -> {
+//            System.out.println(enrolledJug);
+//            System.out.println("\n");
+//        });
         System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------\n");
 
-        System.out.println(jugRepository.getJugList());
-        System.out.println(enrolledJugRepository);
+        System.out.println(enrolledJugRepository.getBestResult());
+        System.out.println(enrolledJugRepository.ratio + "\n");
+
+        //System.out.println(enrolledJugRepository.getCurrentPersonAssignmentData());
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------\n");
     }
 }

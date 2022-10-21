@@ -18,11 +18,7 @@ public class ApplicationFlow {
     private final String[] applicationArguments;
     private final FileUtility fileUtility;
     private final DataParser dataParser;
-    private JugRepository jugRepository;
     private PersonRepository personRepository;
-    private EnrolledJugRepository enrolledJugRepository;
-    private EnrollJugsAlgo enrollAlgo;
-    private ResultPrinter resultPrinter;
 
     public ApplicationFlow(String[] applicationArguments) {
         this.applicationArguments = applicationArguments;
@@ -35,42 +31,35 @@ public class ApplicationFlow {
         List<String> personDataLines = fileUtility.readDataLines(applicationArguments[1]);
 
         // original data lists
-        List<Jug> originalJugList = jugDataLines.stream().map(dataParser::parseJug).toList();
-        List<Person> originalPersonList = personDataLines.stream().map(dataParser::parsePerson).toList();
-        JugRepository originalJugRepo = new JugRepository(originalJugList);
-        PersonRepository originalPersonRepo = new PersonRepository(originalPersonList);
+        List<Jug> jugList = jugDataLines.stream().map(dataParser::parseJug).toList();
+        List<Person> personList = personDataLines.stream().map(dataParser::parsePerson).toList();
 
         // implementation
-        this.jugRepository = new JugRepository(new ArrayList<>(originalJugList));
-        this.personRepository = new PersonRepository(new ArrayList<>(originalPersonList));
-        this.enrolledJugRepository = new EnrolledJugRepository(personRepository.getPersonList());
-        this.enrollAlgo = new EnrollJugsAlgo(jugRepository, personRepository, enrolledJugRepository);
+        JugRepository jugRepository = new JugRepository(jugList);
+        this.personRepository = new PersonRepository(personList);
+        EnrolledJugRepository enrolledJugRepository = new EnrolledJugRepository(personRepository.getPersonList());
+        EnrollJugsAlgo enrollAlgo = new EnrollJugsAlgo(jugRepository, personRepository, enrolledJugRepository);
         // main logic
 
         //enrollAlgo.runAlgo(null);
 
-        // printing results
-        this.resultPrinter = new ResultPrinter(jugRepository, personRepository, enrolledJugRepository);
-        resultPrinter.print();
 
         // gather const data
         List<List<Integer>> getAllPermutations = new ArrayList<>();
-        List<Integer> personIdList = originalPersonList.stream().map(Person::getId).toList();
+        List<Integer> personIdList = personList.stream().map(Person::getId).toList();
         ArrayListPermutationGenerator arrayListPermutationGenerator = new ArrayListPermutationGenerator(personIdList);
         while (arrayListPermutationGenerator.hasMore()) {
             getAllPermutations.add(arrayListPermutationGenerator.getNext()); // values 0,1,2,3
         }
 
         for (List<Integer> variant : getAllPermutations) {
-            List<Person> newPersonList = variant.stream().map(integer -> originalPersonRepo.getPersonList().get(integer)).toList();
-            //System.out.println(newPersonList); //działa!!!
+            List<Person> newPersonList = variant.stream().map(integer -> personRepository.getPersonList().get(integer)).toList();
 
             enrollAlgo.runAlgo(newPersonList);
-            // zmienic pole na lokalne przekazywane do funkcji nie na globalne(personList)
-
-
         }
-        // Do zrobienia: w klasie EnrolledJugRepository zrobić druga mape -> current i best result i podmieniac w razie potrzeby
 
+        // printing results
+        ResultPrinter resultPrinter = new ResultPrinter(jugRepository, personRepository, enrolledJugRepository);
+        resultPrinter.print();
     }
 }
