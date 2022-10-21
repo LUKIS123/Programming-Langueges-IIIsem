@@ -19,7 +19,7 @@ public class EnrollJugsAlgo {
         this.enrolledJugRepository = enrolledJugRepository;
     }
 
-    public void runAlgo() {
+    public void runAlgo(List<Person> currentPersonListPermutation) {
         List<Person> personList = personRepository.getPersonList();
         int maxIterationCount = jugRepository.getAllJugsVolume() / 100;
 
@@ -38,7 +38,7 @@ public class EnrollJugsAlgo {
 
             }
         }
-        enrolledJugRepository.calculateSatisfactionRatio();
+        enrolledJugRepository.calculateSatisfactionRatios();
         // DO ZROBIENIA: policzyc ile iteracji petli, Licznik niezadowolenia, pozniej może jakies shuffle ale wymaga to zapisania rezustatow gdzies i reset
     }
 

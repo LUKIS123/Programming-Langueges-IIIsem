@@ -19,7 +19,7 @@ public class ResultPrinter {
         System.out.println(jugRepository.getJugList());
 
         System.out.println("\n---------------------------------------------------------------------------------------------------------------------------------------------\n");
-        enrolledJugRepository.getPersonAssignmentData().forEach((enrolledJug, integer) -> {
+        enrolledJugRepository.getCurrentPersonAssignmentData().forEach((enrolledJug, integer) -> {
             System.out.println(enrolledJug);
             System.out.println("\n");
         });

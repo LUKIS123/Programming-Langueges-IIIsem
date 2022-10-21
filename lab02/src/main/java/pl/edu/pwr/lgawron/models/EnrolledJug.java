@@ -59,19 +59,6 @@ public class EnrolledJug {
         return byFlavour.isEmpty();
     }
 
-    //czemu nie dziala??
-    public int calculateSatisfactionV1() {
-        List<Integer> preferredFlavourIds = person.getPreferredFlavourIds();
-        int n = preferredFlavourIds.size();
-        int ratio = 0;
-        int i = 1;
-        for (Map.Entry<Jug, Integer> entry : enrolledJugs.entrySet()) {
-            ratio += (n - i) * entry.getValue();
-            i++;
-        }
-        return ratio;
-    }
-
     public int calculateSatisfaction() {
         List<Integer> preferredFlavourIds = person.getPreferredFlavourIds();
         int satisfactionRatio = 0;
@@ -83,6 +70,16 @@ public class EnrolledJug {
             }
         }
         return satisfactionRatio;
+    }
+
+    public int calculateDissatisfaction() {
+        Optional<Integer> preferredFlavourId = person.getPreferredFlavourIds().stream().findFirst();
+
+        if (preferredFlavourId.isPresent()) {
+            Optional<Jug> first = enrolledJugs.keySet().stream().filter(jug -> jug.getFlavourId() == preferredFlavourId.get()).findFirst();
+            return Math.max(400 - enrolledJugs.get(first.orElseThrow()), 0);
+        }
+        return 400;
     }
 
     @Override

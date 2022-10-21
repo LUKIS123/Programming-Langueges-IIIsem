@@ -33,6 +33,14 @@ public class Jug {
         this.volume = volume;
     }
 
+    public Jug getJugCopy() {
+        return new Jug(id, flavourId, volumeInfo);
+    }
+
+    public void reset() {
+        this.volume = volumeInfo;
+    }
+
     @Override
     public String toString() {
         return "Jug{" +
