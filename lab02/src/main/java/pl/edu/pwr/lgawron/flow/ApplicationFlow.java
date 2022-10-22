@@ -4,7 +4,7 @@ import pl.edu.pwr.lgawron.algo.EnrollJugsAlgo;
 import pl.edu.pwr.lgawron.algo.PermutationGenerator;
 import pl.edu.pwr.lgawron.flow.tools.DataParser;
 import pl.edu.pwr.lgawron.flow.tools.InputFileUtility;
-import pl.edu.pwr.lgawron.flow.tools.ResultPrinter;
+import pl.edu.pwr.lgawron.resultutility.ResultPrinter;
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
 import pl.edu.pwr.lgawron.repositories.EnrolledJugsRepository;

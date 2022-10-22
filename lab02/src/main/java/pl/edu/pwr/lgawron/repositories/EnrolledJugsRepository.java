@@ -3,6 +3,8 @@ package pl.edu.pwr.lgawron.repositories;
 import pl.edu.pwr.lgawron.models.PersonEnrolledJugs;
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
+import pl.edu.pwr.lgawron.resultutility.OutputFileWriter;
+import pl.edu.pwr.lgawron.resultutility.ResultInformationParser;
 
 import java.util.*;
 
@@ -12,17 +14,15 @@ public class EnrolledJugsRepository {
     private final Map<PersonEnrolledJugs, List<Integer>> bestResult = new LinkedHashMap<>();
     // best results satisfaction/dissatisfaction ratio
     public double ratio;
+    private final OutputFileWriter outputFileWriter;
 
     public EnrolledJugsRepository() {
-        // tutaj filewriter
+        this.outputFileWriter = new OutputFileWriter();
+        outputFileWriter.flushCSVFile();
     }
 
     public void initRepository(List<Person> personList) {
         personList.forEach(person -> currentPersonAssignmentData.put(new PersonEnrolledJugs(person), List.of(0, 0)));
-    }
-
-    public Map<PersonEnrolledJugs, List<Integer>> getCurrentPersonAssignmentData() {
-        return currentPersonAssignmentData;
     }
 
     public Map<PersonEnrolledJugs, List<Integer>> getBestResult() {
@@ -75,18 +75,18 @@ public class EnrolledJugsRepository {
         }
     }
 
-    public void reset() {
-        //System.out.println(currentPersonAssignmentData);
-
+    public void handleResults() {
         double currentSatisfactionRatio = this.calculateSatisfactionToDissatisfactionRatio(currentPersonAssignmentData.values());
         double bestResultSatisfactionRatio = this.calculateSatisfactionToDissatisfactionRatio(bestResult.values());
+
+        List<String[]> resultInformationModels = ResultInformationParser.parseEnrolledMap(currentPersonAssignmentData);
+        outputFileWriter.writeResults(resultInformationModels, currentSatisfactionRatio);
+
         if (currentSatisfactionRatio > bestResultSatisfactionRatio) {
             bestResult.clear();
             bestResult.putAll(currentPersonAssignmentData);
         }
         currentPersonAssignmentData.clear();
-
-        //System.out.println(bestResult);
     }
 
     public int getOverallSatisfactionParams(boolean isCurrent, boolean isSatisfaction) {
@@ -104,10 +104,4 @@ public class EnrolledJugsRepository {
         return satisfaction;
     }
 
-    @Override
-    public String toString() {
-        return "EnrolledJugsRepository{" +
-                "bestResult=" + bestResult +
-                '}';
-    }
 }

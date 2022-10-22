@@ -36,7 +36,7 @@ public class EnrollJugsAlgo {
             }
         }
         enrolledJugsRepository.calculatePersonSatisfactionFactors();
-        enrolledJugsRepository.reset();
+        enrolledJugsRepository.handleResults();
         jugRepository.getJugList().forEach(Jug::resetVolume);
     }
 

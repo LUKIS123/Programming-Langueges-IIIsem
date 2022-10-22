@@ -19,10 +19,6 @@ public class Person {
         return preferredFlavourIds;
     }
 
-    public Person getPersonCOpy() {
-        return new Person(id, preferredFlavourIds);
-    }
-
     @Override
     public String toString() {
         return "Person{" +

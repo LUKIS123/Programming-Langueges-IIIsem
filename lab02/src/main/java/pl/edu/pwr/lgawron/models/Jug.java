@@ -25,16 +25,8 @@ public class Jug {
         return volume;
     }
 
-    public int getVolumeInfo() {
-        return volumeInfo;
-    }
-
     public void setVolume(int volume) {
         this.volume = volume;
-    }
-
-    public Jug getJugCopy() {
-        return new Jug(id, flavourId, volumeInfo);
     }
 
     public void resetVolume() {
