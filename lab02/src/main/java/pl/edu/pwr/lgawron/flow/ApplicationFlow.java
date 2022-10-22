@@ -1,32 +1,32 @@
 package pl.edu.pwr.lgawron.flow;
 
-import pl.edu.pwr.lgawron.algo.ArrayListPermutationGenerator;
 import pl.edu.pwr.lgawron.algo.EnrollJugsAlgo;
+import pl.edu.pwr.lgawron.algo.PermutationGenerator;
 import pl.edu.pwr.lgawron.flow.tools.DataParser;
-import pl.edu.pwr.lgawron.flow.tools.FileUtility;
+import pl.edu.pwr.lgawron.flow.tools.InputFileUtility;
 import pl.edu.pwr.lgawron.flow.tools.ResultPrinter;
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
-import pl.edu.pwr.lgawron.repositories.EnrolledJugRepository;
+import pl.edu.pwr.lgawron.repositories.EnrolledJugsRepository;
 import pl.edu.pwr.lgawron.repositories.JugRepository;
 import pl.edu.pwr.lgawron.repositories.PersonRepository;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ApplicationFlow {
     private final String[] applicationArguments;
-    private final FileUtility fileUtility;
+    private final InputFileUtility fileUtility;
     private final DataParser dataParser;
-    private PersonRepository personRepository;
 
     public ApplicationFlow(String[] applicationArguments) {
         this.applicationArguments = applicationArguments;
-        this.fileUtility = new FileUtility();
+        this.fileUtility = new InputFileUtility();
         this.dataParser = new DataParser();
     }
 
     public void runApp() {
+        // reading input data from txt
         List<String> jugDataLines = fileUtility.readDataLines(applicationArguments[0]);
         List<String> personDataLines = fileUtility.readDataLines(applicationArguments[1]);
 
@@ -36,30 +36,20 @@ public class ApplicationFlow {
 
         // implementation
         JugRepository jugRepository = new JugRepository(jugList);
-        this.personRepository = new PersonRepository(personList);
-        EnrolledJugRepository enrolledJugRepository = new EnrolledJugRepository(personRepository.getPersonList());
-        EnrollJugsAlgo enrollAlgo = new EnrollJugsAlgo(jugRepository, personRepository, enrolledJugRepository);
+        PersonRepository personRepository = new PersonRepository(personList);
+        EnrolledJugsRepository enrolledJugsRepository = new EnrolledJugsRepository();
+        EnrollJugsAlgo enrollAlgo = new EnrollJugsAlgo(jugRepository, enrolledJugsRepository);
+
         // main logic
-
-        //enrollAlgo.runAlgo(null);
-
-
-        // gather const data
-        List<List<Integer>> getAllPermutations = new ArrayList<>();
-        List<Integer> personIdList = personList.stream().map(Person::getId).toList();
-        ArrayListPermutationGenerator arrayListPermutationGenerator = new ArrayListPermutationGenerator(personIdList);
-        while (arrayListPermutationGenerator.hasMore()) {
-            getAllPermutations.add(arrayListPermutationGenerator.getNext()); // values 0,1,2,3
-        }
-
-        for (List<Integer> variant : getAllPermutations) {
-            List<Person> newPersonList = variant.stream().map(integer -> personRepository.getPersonList().get(integer)).toList();
-
+        PermutationGenerator permutationGenerator = new PermutationGenerator(personList.size());
+        while (permutationGenerator.hasMore()) {
+            int[] next = permutationGenerator.getNext();
+            List<Person> newPersonList = Arrays.stream(next).mapToObj(integer -> personRepository.getPersonList().get(integer)).toList();
             enrollAlgo.runAlgo(newPersonList);
         }
 
         // printing results
-        ResultPrinter resultPrinter = new ResultPrinter(jugRepository, personRepository, enrolledJugRepository);
+        ResultPrinter resultPrinter = new ResultPrinter(enrolledJugsRepository);
         resultPrinter.print();
     }
 }

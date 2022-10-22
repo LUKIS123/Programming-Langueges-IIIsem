@@ -6,7 +6,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class FileUtility {
+public class InputFileUtility {
     public List<String> readDataLines(String filePath) {
         try {
             return Files.readAllLines(Path.of(filePath));

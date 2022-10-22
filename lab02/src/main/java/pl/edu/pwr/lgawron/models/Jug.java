@@ -37,7 +37,7 @@ public class Jug {
         return new Jug(id, flavourId, volumeInfo);
     }
 
-    public void reset() {
+    public void resetVolume() {
         this.volume = volumeInfo;
     }
 
@@ -46,7 +46,7 @@ public class Jug {
         return "Jug{" +
                 "id=" + id +
                 ", flavourId=" + flavourId +
-                ", volume=" + volume +
-                '}';
+                ", initial vol=" + volume +
+                '}' + ":vol assigned";
     }
 }

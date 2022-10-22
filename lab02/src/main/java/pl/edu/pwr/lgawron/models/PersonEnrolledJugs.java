@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class EnrolledJug {
+public class PersonEnrolledJugs {
     private final Person person;
     // stores jug and how much volume was assigned to the person
     private final Map<Jug, Integer> enrolledJugs = new LinkedHashMap<>();
 
-    public EnrolledJug(Person person) {
+    public PersonEnrolledJugs(Person person) {
         this.person = person;
     }
 
@@ -84,8 +84,8 @@ public class EnrolledJug {
 
     @Override
     public String toString() {
-        return "EnrolledJug{" +
-                "person=" + person +
+        return "PersonEnrolledJugs{"
+                + person +
                 ", enrolledJugs=" + enrolledJugs +
                 '}';
     }
