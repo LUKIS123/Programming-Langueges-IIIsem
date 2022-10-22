@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.algo;
+package pl.edu.pwr.lgawron.logic;
 
 //--------------------------------------
 // Systematically generate permutations.

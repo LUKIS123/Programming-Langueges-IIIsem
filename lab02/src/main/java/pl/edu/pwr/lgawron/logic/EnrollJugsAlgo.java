@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.algo;
+package pl.edu.pwr.lgawron.logic;
 
 import pl.edu.pwr.lgawron.models.Jug;
 import pl.edu.pwr.lgawron.models.Person;
@@ -16,7 +16,7 @@ public class EnrollJugsAlgo {
         this.enrolledJugsRepository = enrolledJugsRepository;
     }
 
-    public void runAlgo(List<Person> currentPersonListPermutation) {
+    public void runAlgo(List<Person> currentPersonListPermutation, boolean isGreedyAlgo) {
         enrolledJugsRepository.initRepository(currentPersonListPermutation);
         int maxIterationCount = jugRepository.getAllJugsVolume() / 100;
 
@@ -27,7 +27,7 @@ public class EnrollJugsAlgo {
                 for (int flavourId : preferredFlavourIds) {
                     Jug matchingJug = findMatchingWithHighestVolume(flavourId, person.getId());
                     if (matchingJug != null && matchingJug.getVolume() != 0) {
-                        if (enrolledJugsRepository.addPersonAssignmentData(person, matchingJug)) {
+                        if (enrolledJugsRepository.addPersonAssignmentData(person, matchingJug, isGreedyAlgo)) {
                             break;
                         }
                     }

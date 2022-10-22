@@ -29,10 +29,14 @@ public class EnrolledJugsRepository {
         return bestResult;
     }
 
-    public boolean addPersonAssignmentData(Person person, Jug jug) {
+    public boolean addPersonAssignmentData(Person person, Jug jug, boolean isGreedy) {
         for (PersonEnrolledJugs PersonEnrolledJugs : currentPersonAssignmentData.keySet()) {
             if (PersonEnrolledJugs.getPerson().getId() == person.getId() && PersonEnrolledJugs.checkIfPossibleToEnroll(jug.getFlavourId(), jug.getId())) {
-                PersonEnrolledJugs.enrollJugToPerson(jug);
+                if (isGreedy) {
+                    PersonEnrolledJugs.greedyEnrollJugToPerson(jug);
+                } else {
+                    PersonEnrolledJugs.regularEnrollJugToPerson(jug);
+                }
                 return true;
             }
         }

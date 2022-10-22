@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.flow;
 
-import pl.edu.pwr.lgawron.algo.EnrollJugsAlgo;
-import pl.edu.pwr.lgawron.algo.PermutationGenerator;
+import pl.edu.pwr.lgawron.logic.EnrollJugsAlgo;
+import pl.edu.pwr.lgawron.logic.PermutationGenerator;
 import pl.edu.pwr.lgawron.flow.tools.DataParser;
 import pl.edu.pwr.lgawron.flow.tools.InputFileUtility;
 import pl.edu.pwr.lgawron.resultutility.ResultPrinter;
@@ -41,11 +41,13 @@ public class ApplicationFlow {
         EnrollJugsAlgo enrollAlgo = new EnrollJugsAlgo(jugRepository, enrolledJugsRepository);
 
         // main logic
+        boolean isGreedyAlgo = personList.size() <= jugList.size();
         PermutationGenerator permutationGenerator = new PermutationGenerator(personList.size());
+
         while (permutationGenerator.hasMore()) {
             int[] next = permutationGenerator.getNext();
             List<Person> newPersonList = Arrays.stream(next).mapToObj(integer -> personRepository.getPersonList().get(integer)).toList();
-            enrollAlgo.runAlgo(newPersonList);
+            enrollAlgo.runAlgo(newPersonList, isGreedyAlgo);
         }
 
         // printing results

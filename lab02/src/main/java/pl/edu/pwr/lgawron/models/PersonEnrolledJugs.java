@@ -26,8 +26,9 @@ public class PersonEnrolledJugs {
         return enrolledJugs.keySet().stream().filter(enrolled -> enrolled.getFlavourId() == flavourId).findFirst();
     }
 
-    public void enrollJugToPerson(Jug jug) {
+    public void greedyEnrollJugToPerson(Jug jug) {
         int vol = jug.getVolume();
+
         if (enrolledJugs.containsKey(jug) && vol != 0) {
             enrolledJugs.replace(jug, enrolledJugs.get(jug) + 100);
             jug.setVolume(vol - 100);
@@ -39,6 +40,18 @@ public class PersonEnrolledJugs {
                 enrolledJugs.put(jug, vol);
                 jug.setVolume(0);
             }
+        }
+    }
+
+    public void regularEnrollJugToPerson(Jug jug) {
+        int vol = jug.getVolume();
+
+        if (enrolledJugs.containsKey(jug) && vol != 0) {
+            enrolledJugs.replace(jug, enrolledJugs.get(jug) + 100);
+            jug.setVolume(vol - 100);
+        } else {
+            enrolledJugs.put(jug, 100);
+            jug.setVolume(vol - 100);
         }
     }
 
