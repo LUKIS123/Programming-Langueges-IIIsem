@@ -16,7 +16,7 @@ public class ResultPrinter {
         // System.out.println(enrolledJugsRepository.getBestResult() + "\n");
 
         System.out.println("Overall Satisfaction: " + enrolledJugsRepository.getOverallSatisfactionParams(false, true) +
-                ", Overall Dissatisfaction: " + enrolledJugsRepository.getOverallSatisfactionParams(false, false) + "\n");
+                ", Overall Dissatisfaction: " + enrolledJugsRepository.getOverallSatisfactionParams(false, false));
         System.out.println("Satisfaction to Dissatisfaction ratio: " + enrolledJugsRepository.ratio + "\n");
 
         System.out.println("Table form:");
@@ -24,7 +24,7 @@ public class ResultPrinter {
 
         List<String[]> strings = ResultInformationParser.parseEnrolledMap(enrolledJugsRepository.getBestResult());
         strings.stream().map(this::convertStringArray).forEach(System.out::println);
-        System.out.println("NOTE: All matching results were saved in output.csv for You to check out!");
+        System.out.println("\nNOTE: All matching results were saved in output.csv for You to check out!");
     }
 
     private String convertStringArray(String[] data) {
