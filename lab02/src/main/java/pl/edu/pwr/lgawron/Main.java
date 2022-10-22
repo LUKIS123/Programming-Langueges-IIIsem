@@ -6,7 +6,7 @@ import pl.edu.pwr.lgawron.flow.ApplicationFlow;
  * @author Lukasz Gawron, 264475
  * sposob budowy: gradle build
  * sposob archiwizowania: gradle fatJar
- *  kod w kradle:
+ *  kod w gradle:
  *     task fatJar(type: Jar) {
  *     manifest {
  *         attributes 'Main-Class': 'pl.edu.pwr.lgawron.Main'

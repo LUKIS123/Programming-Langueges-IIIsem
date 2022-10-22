@@ -1,9 +1,6 @@
 package pl.edu.pwr.lgawron.models;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class PersonEnrolledJugs {
     private final Person person;
@@ -87,10 +84,13 @@ public class PersonEnrolledJugs {
 
     public int calculateDissatisfaction() {
         Optional<Integer> preferredFlavourId = person.getPreferredFlavourIds().stream().findFirst();
-
-        if (preferredFlavourId.isPresent()) {
-            Optional<Jug> first = enrolledJugs.keySet().stream().filter(jug -> jug.getFlavourId() == preferredFlavourId.get()).findFirst();
-            return Math.max(400 - enrolledJugs.get(first.orElseThrow()), 0);
+        try {
+            if (preferredFlavourId.isPresent()) {
+                Optional<Jug> first = enrolledJugs.keySet().stream().filter(jug -> jug.getFlavourId() == preferredFlavourId.get()).findFirst();
+                return Math.max(400 - enrolledJugs.get(first.orElseThrow()), 0);
+            }
+        } catch (NoSuchElementException e) {
+            return 400;
         }
         return 400;
     }
