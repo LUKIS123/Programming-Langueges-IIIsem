@@ -1,5 +1,7 @@
 package pl.edu.pwr.lgawron.customer;
 
+import pl.edu.pwr.lgawron.customer.view.CustomerAppView;
+
 /**
  * @author Lukasz Gawron, 264475
  * sposob budowy: gradle build
@@ -10,6 +12,8 @@ package pl.edu.pwr.lgawron.customer;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello Customer!");
+        System.out.println("Hello Customer " + args[0] + "!");
+        var customerAppView = new CustomerAppView(args);
+        customerAppView.runConsoleApp();
     }
 }

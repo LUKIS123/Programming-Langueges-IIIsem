@@ -1,6 +1,6 @@
-package pl.edu.pwr.lgawron.business.logic;
+package pl.edu.pwr.lgawron.businesslogic.utility.parse;
 
-public class InputDataParser {
+public class ConsoleInputDataParser {
     public static int getId(String[] args) {
         try {
             return Integer.parseInt(args[0]);
