@@ -15,6 +15,8 @@ import java.util.List;
 
 // https://stackoverflow.com/questions/5554217/deserialize-a-listt-object-with-gson
 // https://nipafx.dev/java-modules-optional-dependencies/
+
+// do wywalenia pozniej
 public class JsonFileUtility<T> {
     private final Gson gson;
 

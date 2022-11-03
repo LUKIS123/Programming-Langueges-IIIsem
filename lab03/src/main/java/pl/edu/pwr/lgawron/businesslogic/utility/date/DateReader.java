@@ -3,6 +3,8 @@ package pl.edu.pwr.lgawron.businesslogic.utility.date;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 public class DateReader {
@@ -16,9 +18,10 @@ public class DateReader {
 
     public void refreshCurrentDate() {
         try {
-            var reader = new BufferedReader(new FileReader(filename));
-            var current = reader.readLine();
-            reader.close();
+//            var reader = new BufferedReader(new FileReader(filename));
+//            var current = reader.readLine();
+//            reader.close();
+            String current = Files.readString(Path.of(filename));
             if (current != null) {
                 now = LocalDate.parse(current);
             } else {

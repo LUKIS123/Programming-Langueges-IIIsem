@@ -23,7 +23,7 @@ public class CustomerAppFlow {
         this.reclamationService = new CustomerReclamationService();
     }
 
-    public List<Product> listProducts(){
+    public List<Product> listProducts() {
         return productRepository.getDataList();
     }
 
