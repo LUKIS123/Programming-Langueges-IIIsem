@@ -23,7 +23,7 @@ public class DataContext {
     private final CustomerReclamationService manufacturerService;
     public final String productDatabaseUri = "product_database.json";
     public final String customerDatabaseUri = "customer_database.json";
-    public final String manufacturerDatabaseUri = "manufacturer_database";
+    public final String manufacturerDatabaseUri = "manufacturer_database.json";
     public final String complaintDatabaseUri = "customer_complaint_database.json";
     public final String responseDatabaseUri = "manufacturer_response_database.json";
 
@@ -38,7 +38,14 @@ public class DataContext {
     }
 
     public void refreshDatabase() {
-        productRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(productDatabaseUri), Product.class));
+        productRepository
+                .loadData(
+                        JsonSerializeUtility
+                                .serializeFromJson
+                                        (DataFileUtility
+                                                        .readFile
+                                                                (productDatabaseUri),
+                                                Product.class));
         customerRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(customerDatabaseUri), Customer.class));
         manufacturerRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(manufacturerDatabaseUri), Manufacturer.class));
         customerService.load(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(complaintDatabaseUri), Reclamation.class));

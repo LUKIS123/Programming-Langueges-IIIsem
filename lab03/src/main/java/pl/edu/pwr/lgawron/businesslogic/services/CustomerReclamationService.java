@@ -14,6 +14,11 @@ public class CustomerReclamationService {
     }
 
     public void load(List<Reclamation> loadedList) {
+        if (loadedList == null) {
+            // moze rzucac exception idk
+            return;
+        }
+
         if (reclamationList.isEmpty()) {
             reclamationList.addAll(loadedList);
         } else {
@@ -22,6 +27,7 @@ public class CustomerReclamationService {
                 if (byId == null) {
                     reclamationList.add(reclamation);
                 } else {
+                    // pewnie trzeba nadpisac equals
                     reclamationList.set(reclamationList.indexOf(byId), reclamation);
                 }
             }
@@ -37,7 +43,32 @@ public class CustomerReclamationService {
         return first.orElse(null);
     }
 
+    public List<Reclamation> findByCustomer(int customerId) {
+        return reclamationList.stream().filter(reclamation -> reclamation.getCustomerId() == customerId).toList();
+    }
+
     public void addReclamation(Reclamation reclamation) {
         reclamationList.add(reclamation);
+    }
+
+    public void deleteReclamation(int id) {
+        Reclamation byId = this.findById(id);
+        if (byId != null) {
+            reclamationList.remove(byId);
+        }
+    }
+
+    public void updateDescription(int id, String description) {
+        Reclamation byId = this.findById(id);
+        if (byId != null) {
+            byId.description = description;
+        }
+    }
+
+    public void updateProductId(int id, int productId) {
+        Reclamation byId = this.findById(id);
+        if (byId != null) {
+            byId.productId = productId;
+        }
     }
 }
