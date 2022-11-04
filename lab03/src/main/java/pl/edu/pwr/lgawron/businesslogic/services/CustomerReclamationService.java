@@ -1,74 +1,67 @@
 package pl.edu.pwr.lgawron.businesslogic.services;
 
 import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
+import pl.edu.pwr.lgawron.businesslogic.models.ReclamationStatus;
+import pl.edu.pwr.lgawron.businesslogic.repositories.CustomerReclamationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerReclamationService {
-    private final List<Reclamation> reclamationList;
+public class CustomerReclamationService implements ModelService<Reclamation> {
+    private final CustomerReclamationRepository repository;
+    private final List<Reclamation> customerReclamations;
 
     public CustomerReclamationService() {
-        this.reclamationList = new ArrayList<>();
+        this.repository = new CustomerReclamationRepository();
+        this.customerReclamations = new ArrayList<>();
+        this.refreshDataList();
     }
 
-    public void load(List<Reclamation> loadedList) {
-        if (loadedList == null) {
-            // moze rzucac exception idk
-            return;
+    @Override
+    public List<Reclamation> refreshDataList() {
+        List<Reclamation> loadedData = repository.loadData();
+        if (loadedData == null) {
+            return customerReclamations;
         }
-
-        if (reclamationList.isEmpty()) {
-            reclamationList.addAll(loadedList);
+        if (customerReclamations.isEmpty()) {
+            customerReclamations.addAll(loadedData);
         } else {
-            for (Reclamation reclamation : loadedList) {
+            for (Reclamation reclamation : loadedData) {
                 Reclamation byId = this.findById(reclamation.getId());
                 if (byId == null) {
-                    reclamationList.add(reclamation);
+                    customerReclamations.add(reclamation);
                 } else {
-                    // pewnie trzeba nadpisac equals
-                    reclamationList.set(reclamationList.indexOf(byId), reclamation);
+                    customerReclamations.set(customerReclamations.indexOf(byId), reclamation);
                 }
             }
         }
+        return customerReclamations;
     }
 
-    public List<Reclamation> getReclamationList() {
-        return reclamationList;
+    @Override
+    public List<Reclamation> getDataList() {
+         return this.refreshDataList();
     }
 
+    @Override
     public Reclamation findById(int id) {
-        Optional<Reclamation> first = reclamationList.stream().filter(reclamation -> reclamation.getId() == id).findFirst();
+        Optional<Reclamation> first = customerReclamations.stream().filter(reclamation -> reclamation.getCustomerId() == id).findFirst();
         return first.orElse(null);
     }
 
-    public List<Reclamation> findByCustomer(int customerId) {
-        return reclamationList.stream().filter(reclamation -> reclamation.getCustomerId() == customerId).toList();
+    @Override
+    public void addToDatabase(Reclamation reclamation) {
+        this.customerReclamations.add(reclamation);
+        this.repository.saveData(customerReclamations);
     }
 
-    public void addReclamation(Reclamation reclamation) {
-        reclamationList.add(reclamation);
-    }
-
-    public void deleteReclamation(int id) {
+    @Override
+    public void deleteFromDatabase(int id) {
         Reclamation byId = this.findById(id);
-        if (byId != null) {
-            reclamationList.remove(byId);
-        }
-    }
-
-    public void updateDescription(int id, String description) {
-        Reclamation byId = this.findById(id);
-        if (byId != null) {
-            byId.description = description;
-        }
-    }
-
-    public void updateProductId(int id, int productId) {
-        Reclamation byId = this.findById(id);
-        if (byId != null) {
-            byId.productId = productId;
+        if (byId != null && byId.status == ReclamationStatus.REPORTED) {
+            customerReclamations.remove(byId);
+            this.repository.saveData(customerReclamations);
         }
     }
 }

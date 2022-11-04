@@ -1,45 +1,22 @@
 package pl.edu.pwr.lgawron.businesslogic.repositories;
 
 import pl.edu.pwr.lgawron.businesslogic.models.Product;
+import pl.edu.pwr.lgawron.businesslogic.utility.database.DataFileUtility;
+import pl.edu.pwr.lgawron.businesslogic.utility.database.JsonSerializeUtility;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ProductRepository implements ModelRepository<Product> {
-    private final List<Product> productList;
+    public final String productDatabaseUri = "product_database.json";
 
-    public ProductRepository() {
-        this.productList = new ArrayList<>();
-
-        this.productList.add(new Product(1, 1, "Drill"));
-        this.productList.add(new Product(2, 2, "Chainsaw"));
-        this.productList.add(new Product(3, 2, "Lawnmower"));
+    @Override
+    public List<Product> loadData() {
+        return JsonSerializeUtility
+                .serializeFromJson(DataFileUtility.readFile(productDatabaseUri), Product.class);
     }
 
     @Override
-    public void loadData(List<Product> loadedList) {
-        if (productList.isEmpty()) {
-            productList.addAll(loadedList);
-        } else {
-            for (Product product : loadedList) {
-                Product byId = this.findById(product.getId());
-                if (byId == null) {
-                    productList.add(product);
-                }
-            }
-        }
-
-    }
-
-    @Override
-    public List<Product> getDataList() {
-        return productList;
-    }
-
-    @Override
-    public Product findById(int id) {
-        Optional<Product> first = productList.stream().filter(product -> product.getId() == id).findFirst();
-        return first.orElse(null);
+    public void saveData(List<Product> listToSave) {
+        DataFileUtility.writeJsonString(JsonSerializeUtility.serializeToJson(listToSave), productDatabaseUri);
     }
 }

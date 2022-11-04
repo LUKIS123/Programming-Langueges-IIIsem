@@ -21,5 +21,4 @@ public class DataFileUtility {
             System.out.println("ERROR: Could not write data from " + filename);
         }
     }
-
 }

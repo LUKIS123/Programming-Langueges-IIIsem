@@ -5,7 +5,7 @@ import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
 import pl.edu.pwr.lgawron.businesslogic.models.ReclamationStatus;
 import pl.edu.pwr.lgawron.businesslogic.repositories.CustomerRepository;
 import pl.edu.pwr.lgawron.businesslogic.repositories.ProductRepository;
-import pl.edu.pwr.lgawron.businesslogic.services.CustomerReclamationService;
+import pl.edu.pwr.lgawron.businesslogic.service_test.CustomerReclamationService;
 import pl.edu.pwr.lgawron.businesslogic.utility.database.DataContext;
 import pl.edu.pwr.lgawron.businesslogic.utility.date.DateReader;
 import pl.edu.pwr.lgawron.businesslogic.utility.parse.ConsoleInputDataParser;
@@ -42,7 +42,8 @@ public class CustomerAppFlow {
     }
 
     public List<Product> listProducts() {
-        return productRepository.getDataList();
+       // return productRepository.getDataList();
+        return null;
     }
 
     public void makeComplaint(int productId, String description) {

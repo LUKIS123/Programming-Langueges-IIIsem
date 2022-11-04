@@ -1,13 +1,9 @@
 package pl.edu.pwr.lgawron.businesslogic.utility.database;
 
-import pl.edu.pwr.lgawron.businesslogic.models.Customer;
-import pl.edu.pwr.lgawron.businesslogic.models.Manufacturer;
-import pl.edu.pwr.lgawron.businesslogic.models.Product;
-import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
 import pl.edu.pwr.lgawron.businesslogic.repositories.CustomerRepository;
 import pl.edu.pwr.lgawron.businesslogic.repositories.ManufacturerRepository;
 import pl.edu.pwr.lgawron.businesslogic.repositories.ProductRepository;
-import pl.edu.pwr.lgawron.businesslogic.services.CustomerReclamationService;
+import pl.edu.pwr.lgawron.businesslogic.service_test.CustomerReclamationService;
 
 public class DataContext {
     // przechowuje bazy wszystkich modeli
@@ -38,18 +34,18 @@ public class DataContext {
     }
 
     public void refreshDatabase() {
-        productRepository
-                .loadData(
-                        JsonSerializeUtility
-                                .serializeFromJson
-                                        (DataFileUtility
-                                                        .readFile
-                                                                (productDatabaseUri),
-                                                Product.class));
-        customerRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(customerDatabaseUri), Customer.class));
-        manufacturerRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(manufacturerDatabaseUri), Manufacturer.class));
-        customerService.load(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(complaintDatabaseUri), Reclamation.class));
-        manufacturerService.load(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(responseDatabaseUri), Reclamation.class));
+//        productRepository
+//                .loadData(
+//                        JsonSerializeUtility
+//                                .serializeFromJson
+//                                        (DataFileUtility
+//                                                        .readFile
+//                                                                (productDatabaseUri),
+//                                                Product.class));
+//        customerRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(customerDatabaseUri), Customer.class));
+//        manufacturerRepository.loadData(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(manufacturerDatabaseUri), Manufacturer.class));
+//        customerService.load(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(complaintDatabaseUri), Reclamation.class));
+//        manufacturerService.load(JsonSerializeUtility.serializeFromJson(DataFileUtility.readFile(responseDatabaseUri), Reclamation.class));
     }
 
     public void saveCustomerServiceData() {

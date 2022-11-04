@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.businesslogic.services;
+package pl.edu.pwr.lgawron.businesslogic.service_test;
 
 import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
 
