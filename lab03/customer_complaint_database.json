@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "productId": 1,
+    "customerId": 1,
+    "status": "REPORTED",
+    "description": "does not work",
+    "submittedToEmployee": "2022-11-01"
+  },
+  {
+    "id": 2,
+    "productId": 2,
+    "customerId": 1,
+    "status": "REPORTED",
+    "description": "does not work",
+    "submittedToEmployee": "2022-11-01"
+  },
+  {
+    "id": 3,
+    "productId": 1,
+    "customerId": 2,
+    "status": "REPORTED",
+    "description": "bad behaviour",
+    "submittedToEmployee": "2022-11-01"
+  }
+]

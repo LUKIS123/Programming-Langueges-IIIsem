@@ -16,9 +16,6 @@ public class DateReader {
 
     public void refreshCurrentDate() {
         try {
-//            var reader = new BufferedReader(new FileReader(filename));
-//            var current = reader.readLine();
-//            reader.close();
             String current = Files.readString(Path.of(filename));
             if (current != null) {
                 now = LocalDate.parse(current);

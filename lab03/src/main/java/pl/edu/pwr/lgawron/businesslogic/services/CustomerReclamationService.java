@@ -41,27 +41,38 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
 
     @Override
     public List<Reclamation> getDataList() {
-         return this.refreshDataList();
+        return this.refreshDataList();
     }
 
     @Override
     public Reclamation findById(int id) {
-        Optional<Reclamation> first = customerReclamations.stream().filter(reclamation -> reclamation.getCustomerId() == id).findFirst();
+        Optional<Reclamation> first = customerReclamations.stream().filter(reclamation -> reclamation.getId() == id).findFirst();
         return first.orElse(null);
     }
 
     @Override
     public void addToDatabase(Reclamation reclamation) {
-        this.customerReclamations.add(reclamation);
-        this.repository.saveData(customerReclamations);
+        customerReclamations.add(reclamation);
+        repository.saveData(customerReclamations);
     }
 
     @Override
     public void deleteFromDatabase(int id) {
+        this.refreshDataList();
         Reclamation byId = this.findById(id);
         if (byId != null && byId.status == ReclamationStatus.REPORTED) {
             customerReclamations.remove(byId);
-            this.repository.saveData(customerReclamations);
+            repository.saveData(customerReclamations);
+        }
+    }
+
+    public int getSequence() {
+        int sequence = 1;
+        while (true) {
+            Reclamation byId = this.findById(sequence);
+            if (byId == null) {
+                return sequence;
+            } else sequence++;
         }
     }
 }
