@@ -30,8 +30,22 @@
     "id": 4,
     "productId": 1,
     "customerId": 1,
-    "status": "REPORTED",
+    "status": "SENT",
     "description": "something",
-    "submittedToEmployee": "2022-11-01"
+    "submittedToEmployee": "2022-11-01",
+    "submittedToManufacturer": "2022-11-03"
+  },
+  {
+    "id": 5,
+    "productId": 1,
+    "customerId": 1,
+    "status": "FINISHED",
+    "response": "ACCEPTED",
+    "description": "big test",
+    "submittedToEmployee": "2022-11-03",
+    "submittedToManufacturer": "2022-11-03",
+    "manufacturerReply": "2022-11-06",
+    "returnToCustomer": "2022-11-09",
+    "resulted": "2022-11-09"
   }
 ]

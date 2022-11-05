@@ -27,5 +27,26 @@
     "description": "bad behaviour",
     "submittedToEmployee": "2022-11-01",
     "submittedToManufacturer": "2022-11-01"
+  },
+  {
+    "id": 5,
+    "productId": 1,
+    "customerId": 1,
+    "status": "READY_TO_PICKUP",
+    "response": "ACCEPTED",
+    "description": "big test",
+    "submittedToEmployee": "2022-11-03",
+    "submittedToManufacturer": "2022-11-03",
+    "manufacturerReply": "2022-11-06",
+    "returnToCustomer": "2022-11-09"
+  },
+  {
+    "id": 4,
+    "productId": 1,
+    "customerId": 1,
+    "status": "PENDING",
+    "description": "something",
+    "submittedToEmployee": "2022-11-01",
+    "submittedToManufacturer": "2022-11-03"
   }
 ]

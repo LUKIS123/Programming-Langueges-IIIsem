@@ -111,6 +111,7 @@ public class CustomerAppController {
                 reclamation.status = ReclamationStatus.FINISHED;
                 reclamation.resulted = today;
                 pickedUp.add(reclamation.getId());
+                reclamationService.saveDataList();
             }
         }
         return pickedUp;
