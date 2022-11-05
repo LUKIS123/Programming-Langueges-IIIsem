@@ -1,8 +1,11 @@
 package pl.edu.pwr.lgawron.businesslogic.models;
 
 public class Customer {
-    private final int id;
-    public final String username;
+    private int id;
+    public String username;
+
+    public Customer() {
+    }
 
     public Customer(int id, String username) {
         this.id = id;

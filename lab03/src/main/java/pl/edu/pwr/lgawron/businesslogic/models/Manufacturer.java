@@ -1,8 +1,11 @@
 package pl.edu.pwr.lgawron.businesslogic.models;
 
 public class Manufacturer {
-    private final int id;
-    public final String name;
+    private int id;
+    public String name;
+
+    public Manufacturer() {
+    }
 
     public Manufacturer(int id, String name) {
         this.id = id;

@@ -3,17 +3,20 @@ package pl.edu.pwr.lgawron.businesslogic.models;
 import java.time.LocalDate;
 
 public class Reclamation {
-    private final int id;
+    private int id;
     public int productId;
-    private final int customerId;
+    private int customerId;
     public ReclamationStatus status;
     public ReclamationStatus response;
     public String description;
     public LocalDate submittedToEmployee;
     public LocalDate submittedToManufacturer;
-    public LocalDate manufacturerReply; // 2 weeks
+    public LocalDate manufacturerReply;
     public LocalDate returnToCustomer;
     public LocalDate resulted;
+
+    public Reclamation() {
+    }
 
     public Reclamation(int id, int productId, int customerId) {
         this.id = id;
