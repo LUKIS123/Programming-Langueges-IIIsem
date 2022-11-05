@@ -3,16 +3,8 @@
     "id": 1,
     "productId": 1,
     "customerId": 1,
-    "status": "SENT",
-    "description": "does not work",
-    "submittedToEmployee": "2022-11-01",
-    "submittedToManufacturer": "2022-11-01"
-  },
-  {
-    "id": 1,
-    "productId": 1,
-    "customerId": 1,
-    "status": "SENT",
+    "status": "PENDING",
+    "response": "REJECTED",
     "description": "does not work",
     "submittedToEmployee": "2022-11-01",
     "submittedToManufacturer": "2022-11-01"
@@ -30,7 +22,8 @@
     "id": 3,
     "productId": 1,
     "customerId": 2,
-    "status": "SENT",
+    "status": "PENDING",
+    "response": "ACCEPTED",
     "description": "bad behaviour",
     "submittedToEmployee": "2022-11-01",
     "submittedToManufacturer": "2022-11-01"

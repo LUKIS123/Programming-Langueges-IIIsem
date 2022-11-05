@@ -53,8 +53,10 @@ public class CustomerAppController {
                     break;
                 case REFRESH_DATE:
                     actionResult = CustomerConsoleAppView.refreshDate(this);
+                    break;
                 case PICK_UP:
                     actionResult = CustomerConsoleAppView.pickUp(this);
+                    break;
             }
         }
 
@@ -107,6 +109,7 @@ public class CustomerAppController {
         for (Reclamation reclamation : byCustomerId) {
             if (reclamation.status == ReclamationStatus.READY_TO_PICKUP) {
                 reclamation.status = ReclamationStatus.FINISHED;
+                reclamation.resulted = today;
                 pickedUp.add(reclamation.getId());
             }
         }

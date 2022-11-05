@@ -6,8 +6,12 @@ import pl.edu.pwr.lgawron.employee.flow.EmployeeAppController;
  * @author Lukasz Gawron, 264475
  * sposob budowy: gradle build
  * sposob archiwizowania: gradle jar
- * sposob uruchamiania: java -p lab03.jar -m lab03.main/pl.edu.pwr.lgawron.employee.Main [ID]
- * [ID] oznacza id pracownika
+ *
+ * sposob uruchamiania:
+ * W folderze umiescic p lab03_pop.jar oraz lacznie 6 plikow oraz gson-2.10.jar,
+ * pliki: date.txt, customer_compaint_database.json, customer_database.json, manufacturer_database.json, manufacturer_response_database.json, products_database.json
+ *
+ * komenda: java -p . -m lab03.main/pl.edu.pwr.lgawron.employee.Main
  */
 
 public class Main {
@@ -16,11 +20,3 @@ public class Main {
         controller.index();
     }
 }
-
-//        String str = "1986-04-08";
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate date = LocalDate.parse(str, formatter);
-//        System.out.println(date);
-//
-//        String s = String.valueOf(date);
-//        System.out.println(s);

@@ -59,6 +59,7 @@ public class EmployeeAppController {
                     break;
                 case FORWARD_ALL:
                     actionResult = EmployeeConsoleAppView.forwardAll(this);
+                    break;
             }
         }
     }
@@ -86,8 +87,8 @@ public class EmployeeAppController {
     public boolean sendBackToCustomer(int reclamationId) {
         this.refreshDate();
         Reclamation byId = manufacturerReclamationService.findById(reclamationId);
-        if (byId != null && byId.status == ReclamationStatus.SENT_BACK &&
-                DAYS.between(byId.manufacturerReply, today) >= deliveryTime) {
+        if (byId != null && byId.status == ReclamationStatus.SENT_BACK
+                && DAYS.between(byId.manufacturerReply, today) >= deliveryTime) {
             byId.status = ReclamationStatus.READY_TO_PICKUP;
             byId.returnToCustomer = today;
             manufacturerReclamationService.saveDataList();
