@@ -1,8 +1,6 @@
 package pl.edu.pwr.lgawron.employee;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import pl.edu.pwr.lgawron.employee.flow.EmployeeAppController;
 
 /**
  * @author Lukasz Gawron, 264475
@@ -14,7 +12,10 @@ import java.time.format.DateTimeFormatter;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello Employee!");
+        EmployeeAppController controller = new EmployeeAppController();
+        controller.index();
+    }
+}
 
 //        String str = "1986-04-08";
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -23,8 +24,3 @@ public class Main {
 //
 //        String s = String.valueOf(date);
 //        System.out.println(s);
-
-
-    }
-
-}

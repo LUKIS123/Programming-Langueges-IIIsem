@@ -1,4 +1,4 @@
 package pl.edu.pwr.lgawron.manufacturer.view;
 
-public class ManufacturerAppView {
+public class ManufacturerConsoleAppView {
 }

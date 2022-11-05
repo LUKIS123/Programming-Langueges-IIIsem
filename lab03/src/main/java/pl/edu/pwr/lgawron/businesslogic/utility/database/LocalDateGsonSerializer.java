@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.businesslogic.utility.database.gsonserialize;
+package pl.edu.pwr.lgawron.businesslogic.utility.database;
 
 import com.google.gson.*;
 

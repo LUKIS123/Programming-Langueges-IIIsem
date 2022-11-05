@@ -29,6 +29,7 @@ public class DateReader {
     }
 
     public LocalDate getCurrentDate() {
+        this.refreshCurrentDate();
         return now;
     }
 }

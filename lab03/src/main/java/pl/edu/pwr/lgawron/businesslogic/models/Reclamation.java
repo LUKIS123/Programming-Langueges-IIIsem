@@ -7,6 +7,7 @@ public class Reclamation {
     public int productId;
     private final int customerId;
     public ReclamationStatus status;
+    public ReclamationStatus response;
     public String description;
     public LocalDate submittedToEmployee;
     public LocalDate submittedToManufacturer;
@@ -38,6 +39,10 @@ public class Reclamation {
         builder.append("Reclamation{").append("id=").append(id);
         builder.append(", productId=").append(productId);
         builder.append(", customerId=").append(customerId);
+
+        if (response != null)
+            builder.append(", response=").append(response);
+
         builder.append(", status=").append(status);
         builder.append(", description=").append(description);
         builder.append(", submittedToEmployee=").append(submittedToEmployee);

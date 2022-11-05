@@ -52,6 +52,7 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
 
     @Override
     public void addToDatabase(Reclamation reclamation) {
+        this.refreshDataList();
         customerReclamations.add(reclamation);
         repository.saveData(customerReclamations);
     }
@@ -66,6 +67,19 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
         }
     }
 
+    public void saveDataList() {
+        repository.saveData(customerReclamations);
+    }
+
+    public void replaceReclamation(Reclamation reclamation) {
+        this.refreshDataList();
+        Reclamation byId = this.findById(reclamation.getId());
+        if (byId != null) {
+            customerReclamations.set(customerReclamations.indexOf(byId), reclamation);
+            repository.saveData(customerReclamations);
+        }
+    }
+
     public int getSequence() {
         int sequence = 1;
         while (true) {
@@ -75,4 +89,5 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
             } else sequence++;
         }
     }
+
 }

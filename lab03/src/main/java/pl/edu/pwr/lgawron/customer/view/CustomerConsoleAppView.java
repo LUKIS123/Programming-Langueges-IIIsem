@@ -12,7 +12,7 @@ public class CustomerConsoleAppView {
         System.out.println("Give your ID number:");
         int id = new Scanner(System.in).nextInt();
         if (controller.loginToDatabase(id)) {
-            System.out.println("Hello " + controller.getUserName() + " Today is: " + controller.today);
+            System.out.println("Hello " + controller.getUserName() + " ,Today is: " + controller.today);
             return ActionResult.MENU;
         }
 
@@ -26,6 +26,7 @@ public class CustomerConsoleAppView {
         System.out.println("3 - Make a complaint");
         System.out.println("4 - Delete complaint");
         System.out.println("5 - Refresh current date");
+        System.out.println("6 - Pick up product");
         System.out.println("0 - Close app");
 
         int next = new Scanner(System.in).nextInt();
@@ -40,6 +41,8 @@ public class CustomerConsoleAppView {
                 return ActionResult.DELETE_COMPLAINT;
             case 5:
                 return ActionResult.REFRESH_DATE;
+            case 6:
+                return ActionResult.PICK_UP;
             case 0:
                 return ActionResult.END;
         }
@@ -89,6 +92,16 @@ public class CustomerConsoleAppView {
     public static ActionResult refreshDate(CustomerAppController controller) {
         controller.refreshDate();
         System.out.println("Current date is: " + controller.today);
+        return ActionResult.MENU;
+    }
+
+    public static ActionResult pickUp(CustomerAppController controller) {
+        List<Integer> integers = controller.pickUp();
+        if (integers.isEmpty()) {
+            System.out.println("You have no products to pick up!");
+            return ActionResult.MENU;
+        }
+        integers.forEach(integer -> System.out.println("Picked up product referring to reclamation ID: " + integer));
         return ActionResult.MENU;
     }
 

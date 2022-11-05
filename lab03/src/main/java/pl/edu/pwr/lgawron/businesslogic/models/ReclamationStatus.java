@@ -2,7 +2,8 @@ package pl.edu.pwr.lgawron.businesslogic.models;
 
 public enum ReclamationStatus {
     REPORTED,
-    VERIFIED,
+    SENT,
+    PENDING,
     ACCEPTED, REJECTED,
     SENT_BACK,
     READY_TO_PICKUP,

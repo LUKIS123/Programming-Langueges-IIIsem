@@ -52,16 +52,42 @@ public class ManufacturerReclamationService implements ModelService<Reclamation>
 
     @Override
     public void addToDatabase(Reclamation reclamation) {
-        this.manufacturerReclamations.add(reclamation);
-        this.repository.saveData(manufacturerReclamations);
+        this.refreshDataList();
+        manufacturerReclamations.add(reclamation);
+        repository.saveData(manufacturerReclamations);
     }
 
     @Override
     public void deleteFromDatabase(int id) {
+        this.refreshDataList();
         Reclamation byId = this.findById(id);
         if (byId != null && byId.status == ReclamationStatus.REPORTED) {
             manufacturerReclamations.remove(byId);
-            this.repository.saveData(manufacturerReclamations);
+            repository.saveData(manufacturerReclamations);
         }
     }
+
+    public void saveDataList() {
+        repository.saveData(manufacturerReclamations);
+    }
+
+    public void replaceReclamation(Reclamation reclamation) {
+        this.refreshDataList();
+        Reclamation byId = this.findById(reclamation.getId());
+        if (byId != null) {
+            manufacturerReclamations.set(manufacturerReclamations.indexOf(byId), reclamation);
+            repository.saveData(manufacturerReclamations);
+        }
+    }
+
+    public int getSequence() {
+        int sequence = 1;
+        while (true) {
+            Reclamation byId = this.findById(sequence);
+            if (byId == null) {
+                return sequence;
+            } else sequence++;
+        }
+    }
+
 }

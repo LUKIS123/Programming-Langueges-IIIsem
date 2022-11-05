@@ -7,5 +7,6 @@ public enum ActionResult {
     LIST_COMPLAINTS,
     ADD_COMPLAINT,
     DELETE_COMPLAINT,
-    REFRESH_DATE
+    REFRESH_DATE,
+    PICK_UP
 }

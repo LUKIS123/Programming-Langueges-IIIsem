@@ -11,6 +11,7 @@ import pl.edu.pwr.lgawron.customer.view.ActionResult;
 import pl.edu.pwr.lgawron.customer.view.CustomerConsoleAppView;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerAppController {
@@ -52,6 +53,8 @@ public class CustomerAppController {
                     break;
                 case REFRESH_DATE:
                     actionResult = CustomerConsoleAppView.refreshDate(this);
+                case PICK_UP:
+                    actionResult = CustomerConsoleAppView.pickUp(this);
             }
         }
 
@@ -77,15 +80,14 @@ public class CustomerAppController {
     }
 
     public void addCustomerReclamation(int productId, String complaintDescription) {
+        this.refreshDate();
         Reclamation newReclamation = new Reclamation(databaseSequence, productId, userId);
         newReclamation.description = complaintDescription;
         newReclamation.status = ReclamationStatus.REPORTED;
         newReclamation.submittedToEmployee = today;
-        this.reclamationService.addToDatabase(newReclamation);
+        reclamationService.addToDatabase(newReclamation);
 
-        dateReader.refreshCurrentDate();
         today = dateReader.getCurrentDate();
-        reclamationService.refreshDataList();
         databaseSequence = reclamationService.getSequence();
     }
 
@@ -95,8 +97,20 @@ public class CustomerAppController {
     }
 
     public void refreshDate() {
-        dateReader.refreshCurrentDate();
         today = dateReader.getCurrentDate();
+    }
+
+    public List<Integer> pickUp() {
+        this.refreshDate();
+        List<Integer> pickedUp = new ArrayList<>();
+        List<Reclamation> byCustomerId = this.findByCustomerId();
+        for (Reclamation reclamation : byCustomerId) {
+            if (reclamation.status == ReclamationStatus.READY_TO_PICKUP) {
+                reclamation.status = ReclamationStatus.FINISHED;
+                pickedUp.add(reclamation.getId());
+            }
+        }
+        return pickedUp;
     }
 
 }
