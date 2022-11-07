@@ -22,8 +22,7 @@ public class DataFileUtility {
         try {
             Files.write(Path.of(filename), jsonString.getBytes());
         } catch (IOException e) {
-            // System.out.println("ERROR: Could not write data to " + filename);
-            throw new DatabaseSaveException();
+            throw new DatabaseSaveException("Could not write data to " + filename);
         }
     }
 }

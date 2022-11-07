@@ -84,7 +84,7 @@ public class CustomerAppController {
 
     public boolean addCustomerReclamation(int productId, String complaintDescription) {
         this.refreshDate();
-        databaseSequence=reclamationService.getSequence();
+        databaseSequence = reclamationService.getSequence();
         Reclamation newReclamation = new Reclamation(databaseSequence, productId, userId);
         newReclamation.description = complaintDescription;
         newReclamation.status = ReclamationStatus.REPORTED;
@@ -92,7 +92,7 @@ public class CustomerAppController {
         try {
             reclamationService.addToDatabase(newReclamation);
         } catch (DatabaseSaveException e) {
-            System.out.println(e.description);
+            System.out.println(e.getMessage());
             return false;
         }
         today = dateReader.getCurrentDate();
@@ -104,7 +104,7 @@ public class CustomerAppController {
         try {
             reclamationService.deleteFromDatabase(reclamationId);
         } catch (DatabaseSaveException e) {
-            System.out.println(e.description);
+            System.out.println(e.getMessage());
             return false;
         }
         return reclamationService.findById(reclamationId) == null;
@@ -126,7 +126,7 @@ public class CustomerAppController {
                 try {
                     reclamationService.saveDataList();
                 } catch (DatabaseSaveException e) {
-                    System.out.println(e.description);
+                    System.out.println(e.getMessage());
                     return List.of();
                 }
             }

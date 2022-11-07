@@ -80,7 +80,7 @@ public class EmployeeAppController {
                 manufacturerReclamationService.addToDatabase(byId);
                 manufacturerReclamationService.saveDataList();
             } catch (DatabaseSaveException e) {
-                System.out.println(e.description);
+                System.out.println(e.getMessage());
                 return false;
             }
             return true;
@@ -99,7 +99,7 @@ public class EmployeeAppController {
                 manufacturerReclamationService.saveDataList();
                 customerReclamationService.replaceReclamation(byId);
             } catch (DatabaseSaveException e) {
-                System.out.println(e.description);
+                System.out.println(e.getMessage());
                 return false;
             }
             return true;

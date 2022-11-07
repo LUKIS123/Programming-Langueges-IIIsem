@@ -122,7 +122,7 @@ public class ManufacturerAppController {
         try {
             reclamationService.saveDataList();
         } catch (DatabaseSaveException e) {
-            System.out.println(e.description);
+            System.out.println(e.getMessage());
             return 0;
         }
         return count;
@@ -143,7 +143,7 @@ public class ManufacturerAppController {
             try {
                 reclamationService.saveDataList();
             } catch (DatabaseSaveException e) {
-                System.out.println(e.description);
+                System.out.println(e.getMessage());
                 return false;
             }
             return true;
