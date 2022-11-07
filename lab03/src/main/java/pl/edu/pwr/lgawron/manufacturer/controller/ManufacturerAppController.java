@@ -8,6 +8,7 @@ import pl.edu.pwr.lgawron.businesslogic.services.ManufacturerReclamationService;
 import pl.edu.pwr.lgawron.businesslogic.services.ManufacturerService;
 import pl.edu.pwr.lgawron.businesslogic.services.ProductService;
 import pl.edu.pwr.lgawron.businesslogic.utility.date.DateReader;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 import pl.edu.pwr.lgawron.manufacturer.view.ActionResult;
 import pl.edu.pwr.lgawron.manufacturer.view.ManufacturerConsoleAppView;
 
@@ -95,6 +96,10 @@ public class ManufacturerAppController {
                 if (reclamation.getProductId() == product.getId()) {
                     found.add(reclamation);
                 }
+                if (reclamation.status == ReclamationStatus.SENT
+                        && DAYS.between(reclamation.submittedToManufacturer, today) >= deliveryTime) {
+                    reclamation.status = ReclamationStatus.PENDING;
+                }
             }
         }
         return found;
@@ -110,7 +115,15 @@ public class ManufacturerAppController {
                 reclamation.status = ReclamationStatus.PENDING;
                 count++;
             }
+            if (reclamation.status == ReclamationStatus.PENDING) {
+                count++;
+            }
+        }
+        try {
             reclamationService.saveDataList();
+        } catch (DatabaseSaveException e) {
+            System.out.println(e.description);
+            return 0;
         }
         return count;
     }
@@ -118,6 +131,7 @@ public class ManufacturerAppController {
     public boolean answerComplaint(int reclamationId, int answer) {
         this.refreshDate();
         Reclamation byId = reclamationService.findById(reclamationId);
+
         if (byId != null && byId.status == ReclamationStatus.PENDING) {
             if (answer != -1) {
                 byId.response = ReclamationStatus.ACCEPTED;
@@ -126,7 +140,12 @@ public class ManufacturerAppController {
             }
             byId.status = ReclamationStatus.SENT_BACK;
             byId.manufacturerReply = today;
-            reclamationService.saveDataList();
+            try {
+                reclamationService.saveDataList();
+            } catch (DatabaseSaveException e) {
+                System.out.println(e.description);
+                return false;
+            }
             return true;
         }
         return false;

@@ -3,6 +3,7 @@ package pl.edu.pwr.lgawron.businesslogic.services;
 import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
 import pl.edu.pwr.lgawron.businesslogic.models.ReclamationStatus;
 import pl.edu.pwr.lgawron.businesslogic.repositories.CustomerReclamationRepository;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +52,14 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
     }
 
     @Override
-    public void addToDatabase(Reclamation reclamation) {
+    public void addToDatabase(Reclamation reclamation) throws DatabaseSaveException {
         this.refreshDataList();
         customerReclamations.add(reclamation);
         repository.saveData(customerReclamations);
     }
 
     @Override
-    public void deleteFromDatabase(int id) {
+    public void deleteFromDatabase(int id) throws DatabaseSaveException {
         this.refreshDataList();
         Reclamation byId = this.findById(id);
         if (byId != null && byId.status == ReclamationStatus.REPORTED) {
@@ -67,11 +68,11 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
         }
     }
 
-    public void saveDataList() {
+    public void saveDataList() throws DatabaseSaveException {
         repository.saveData(customerReclamations);
     }
 
-    public void replaceReclamation(Reclamation reclamation) {
+    public void replaceReclamation(Reclamation reclamation) throws DatabaseSaveException {
         this.refreshDataList();
         Reclamation byId = this.findById(reclamation.getId());
         if (byId != null) {
@@ -81,6 +82,7 @@ public class CustomerReclamationService implements ModelService<Reclamation> {
     }
 
     public int getSequence() {
+        this.refreshDataList();
         int sequence = 1;
         while (true) {
             Reclamation byId = this.findById(sequence);

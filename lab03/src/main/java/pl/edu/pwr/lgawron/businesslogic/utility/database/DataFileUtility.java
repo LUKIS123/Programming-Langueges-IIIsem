@@ -1,5 +1,7 @@
 package pl.edu.pwr.lgawron.businesslogic.utility.database;
 
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,11 +18,12 @@ public class DataFileUtility {
         return "";
     }
 
-    public static void writeJsonString(String jsonString, String filename) {
+    public static void writeJsonString(String jsonString, String filename) throws DatabaseSaveException {
         try {
             Files.write(Path.of(filename), jsonString.getBytes());
         } catch (IOException e) {
-            System.out.println("ERROR: Could not write data to " + filename);
+            // System.out.println("ERROR: Could not write data to " + filename);
+            throw new DatabaseSaveException();
         }
     }
 }

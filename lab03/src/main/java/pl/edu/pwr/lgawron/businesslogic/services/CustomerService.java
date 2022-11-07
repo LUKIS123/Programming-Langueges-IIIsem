@@ -2,6 +2,7 @@ package pl.edu.pwr.lgawron.businesslogic.services;
 
 import pl.edu.pwr.lgawron.businesslogic.models.Customer;
 import pl.edu.pwr.lgawron.businesslogic.repositories.CustomerRepository;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +51,13 @@ public class CustomerService implements ModelService<Customer> {
     }
 
     @Override
-    public void addToDatabase(Customer customer) {
+    public void addToDatabase(Customer customer) throws DatabaseSaveException {
         this.customers.add(customer);
         this.repository.saveData(customers);
     }
 
     @Override
-    public void deleteFromDatabase(int id) {
+    public void deleteFromDatabase(int id) throws DatabaseSaveException {
         Customer byId = this.findById(id);
         if (byId != null) {
             customers.remove(byId);

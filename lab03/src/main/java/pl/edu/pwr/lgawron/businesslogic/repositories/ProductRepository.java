@@ -3,6 +3,7 @@ package pl.edu.pwr.lgawron.businesslogic.repositories;
 import pl.edu.pwr.lgawron.businesslogic.models.Product;
 import pl.edu.pwr.lgawron.businesslogic.utility.database.DataFileUtility;
 import pl.edu.pwr.lgawron.businesslogic.utility.database.JsonSerializeUtility;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 
 import java.util.List;
 
@@ -16,7 +17,8 @@ public class ProductRepository implements ModelRepository<Product> {
     }
 
     @Override
-    public void saveData(List<Product> listToSave) {
-        DataFileUtility.writeJsonString(JsonSerializeUtility.serializeToJson(listToSave), productDatabaseUri);
+    public void saveData(List<Product> listToSave) throws DatabaseSaveException {
+        DataFileUtility
+                .writeJsonString(JsonSerializeUtility.serializeToJson(listToSave), productDatabaseUri);
     }
 }

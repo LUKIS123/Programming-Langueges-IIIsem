@@ -7,6 +7,7 @@ import pl.edu.pwr.lgawron.businesslogic.services.CustomerReclamationService;
 import pl.edu.pwr.lgawron.businesslogic.services.CustomerService;
 import pl.edu.pwr.lgawron.businesslogic.services.ProductService;
 import pl.edu.pwr.lgawron.businesslogic.utility.date.DateReader;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 import pl.edu.pwr.lgawron.customer.view.ActionResult;
 import pl.edu.pwr.lgawron.customer.view.CustomerConsoleAppView;
 
@@ -81,20 +82,31 @@ public class CustomerAppController {
                 .filter(reclamation -> reclamation.getCustomerId() == userId).toList();
     }
 
-    public void addCustomerReclamation(int productId, String complaintDescription) {
+    public boolean addCustomerReclamation(int productId, String complaintDescription) {
         this.refreshDate();
+        databaseSequence=reclamationService.getSequence();
         Reclamation newReclamation = new Reclamation(databaseSequence, productId, userId);
         newReclamation.description = complaintDescription;
         newReclamation.status = ReclamationStatus.REPORTED;
         newReclamation.submittedToEmployee = today;
-        reclamationService.addToDatabase(newReclamation);
-
+        try {
+            reclamationService.addToDatabase(newReclamation);
+        } catch (DatabaseSaveException e) {
+            System.out.println(e.description);
+            return false;
+        }
         today = dateReader.getCurrentDate();
         databaseSequence = reclamationService.getSequence();
+        return true;
     }
 
     public boolean deleteReclamation(int reclamationId) {
-        reclamationService.deleteFromDatabase(reclamationId);
+        try {
+            reclamationService.deleteFromDatabase(reclamationId);
+        } catch (DatabaseSaveException e) {
+            System.out.println(e.description);
+            return false;
+        }
         return reclamationService.findById(reclamationId) == null;
     }
 
@@ -111,7 +123,12 @@ public class CustomerAppController {
                 reclamation.status = ReclamationStatus.FINISHED;
                 reclamation.resulted = today;
                 pickedUp.add(reclamation.getId());
-                reclamationService.saveDataList();
+                try {
+                    reclamationService.saveDataList();
+                } catch (DatabaseSaveException e) {
+                    System.out.println(e.description);
+                    return List.of();
+                }
             }
         }
         return pickedUp;

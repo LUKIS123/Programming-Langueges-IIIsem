@@ -2,6 +2,7 @@ package pl.edu.pwr.lgawron.businesslogic.services;
 
 import pl.edu.pwr.lgawron.businesslogic.models.Product;
 import pl.edu.pwr.lgawron.businesslogic.repositories.ProductRepository;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +51,13 @@ public class ProductService implements ModelService<Product> {
     }
 
     @Override
-    public void addToDatabase(Product product) {
+    public void addToDatabase(Product product) throws DatabaseSaveException {
         this.products.add(product);
         this.repository.saveData(products);
     }
 
     @Override
-    public void deleteFromDatabase(int id) {
+    public void deleteFromDatabase(int id) throws DatabaseSaveException {
         Product byId = this.findById(id);
         if (byId != null) {
             this.products.remove(byId);

@@ -3,6 +3,7 @@ package pl.edu.pwr.lgawron.businesslogic.repositories;
 import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
 import pl.edu.pwr.lgawron.businesslogic.utility.database.DataFileUtility;
 import pl.edu.pwr.lgawron.businesslogic.utility.database.JsonSerializeUtility;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class CustomerReclamationRepository implements ModelRepository<Reclamatio
     }
 
     @Override
-    public void saveData(List<Reclamation> listToSave) {
+    public void saveData(List<Reclamation> listToSave) throws DatabaseSaveException {
         DataFileUtility
                 .writeJsonString(JsonSerializeUtility.serializeToJson(listToSave), complaintDatabaseUri);
     }

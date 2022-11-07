@@ -26,7 +26,7 @@ public class CustomerConsoleAppView {
         System.out.println("3 - Make a complaint");
         System.out.println("4 - Delete complaint");
         System.out.println("5 - Refresh current date");
-        System.out.println("6 - Pick up product");
+        System.out.println("6 - Pick up products");
         System.out.println("0 - Close app");
 
         int next = new Scanner(System.in).nextInt();
@@ -73,7 +73,9 @@ public class CustomerConsoleAppView {
         System.out.println("Give description");
         String complaintDescription = new Scanner(System.in).nextLine();
 
-        controller.addCustomerReclamation(productId, complaintDescription);
+        boolean b = controller.addCustomerReclamation(productId, complaintDescription);
+        if (b)
+            System.out.println("Success");
         return ActionResult.MENU;
     }
 

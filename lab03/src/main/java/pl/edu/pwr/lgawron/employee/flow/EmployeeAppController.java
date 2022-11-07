@@ -4,6 +4,7 @@ import pl.edu.pwr.lgawron.businesslogic.models.Reclamation;
 import pl.edu.pwr.lgawron.businesslogic.models.ReclamationStatus;
 import pl.edu.pwr.lgawron.businesslogic.services.*;
 import pl.edu.pwr.lgawron.businesslogic.utility.date.DateReader;
+import pl.edu.pwr.lgawron.businesslogic.utility.exceptions.DatabaseSaveException;
 import pl.edu.pwr.lgawron.employee.view.ActionResult;
 import pl.edu.pwr.lgawron.employee.view.EmployeeConsoleAppView;
 
@@ -74,11 +75,14 @@ public class EmployeeAppController {
         if (byId != null && byId.status == ReclamationStatus.REPORTED) {
             byId.status = ReclamationStatus.SENT;
             byId.submittedToManufacturer = today;
-            customerReclamationService.saveDataList();
-
-            manufacturerReclamationService.addToDatabase(byId);
-            manufacturerReclamationService.saveDataList();
-
+            try {
+                customerReclamationService.saveDataList();
+                manufacturerReclamationService.addToDatabase(byId);
+                manufacturerReclamationService.saveDataList();
+            } catch (DatabaseSaveException e) {
+                System.out.println(e.description);
+                return false;
+            }
             return true;
         }
         return false;
@@ -91,9 +95,13 @@ public class EmployeeAppController {
                 && DAYS.between(byId.manufacturerReply, today) >= deliveryTime) {
             byId.status = ReclamationStatus.READY_TO_PICKUP;
             byId.returnToCustomer = today;
-            manufacturerReclamationService.saveDataList();
-
-            customerReclamationService.replaceReclamation(byId);
+            try {
+                manufacturerReclamationService.saveDataList();
+                customerReclamationService.replaceReclamation(byId);
+            } catch (DatabaseSaveException e) {
+                System.out.println(e.description);
+                return false;
+            }
             return true;
         }
         return false;
