@@ -30,7 +30,7 @@ public class Application extends javafx.application.Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("app-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 420, 420);
+        Scene scene = new Scene(fxmlLoader.load(), 1500, 1000);
         stage.setTitle("Hello!");
 
 
@@ -65,7 +65,7 @@ public class Application extends javafx.application.Application {
 //        pane.getChildren().add(label);
 //
 //        Scene scene1 = new Scene(pane, 420, 420);
-        //stage.setScene(scene1);
+//        stage.setScene(scene1);
 
         stage.setScene(scene);
         stage.show();

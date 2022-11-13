@@ -1,10 +1,9 @@
 package pl.edu.pwr.lgawron.lab04;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class AppController {
@@ -13,19 +12,10 @@ public class AppController {
     public Button simulate;
     public TextField d;
     public TextField h;
-    @FXML
-    private Label welcomeText;
-    @FXML
-    private TextField textField;
+    public Canvas machine;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
-
-    @FXML
-    protected void onSimulateButtonClick(ActionEvent actionEvent) {
-        EventHandler<ActionEvent> onAction = simulate.getOnAction();
+    public void beginSimulation(ActionEvent actionEvent) {
 
 
     }
