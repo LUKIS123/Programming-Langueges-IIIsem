@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.shape.Line?>
 <VBox alignment="TOP_CENTER" prefHeight="650.0" prefWidth="512.0" spacing="20.0"
       xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pwr.lgawron.lab04.AppController">
@@ -32,9 +30,10 @@
             </HBox>
             <HBox alignment="TOP_CENTER" spacing="20.0">
                 <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" text="Single rotation"
-                        onAction="#simuateSingleRotation"/>
-                <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Multiple rotation"/>
-                <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Stop"/>
+                        onAction="#simulateSingleRotation"/>
+                <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Multiple rotation"
+                        onAction="#simulateMultipleRotation"/>
+                <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Stop" onAction="#stopAnimation"/>
             </HBox>
             <Label fx:id="communicate" alignment="BOTTOM_CENTER" visible="false" style="-fx-font-weight: bold"/>
         </children>

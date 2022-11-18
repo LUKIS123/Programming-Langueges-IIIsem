@@ -3,7 +3,7 @@ package pl.edu.pwr.lgawron.lab04.animation;
 import javafx.scene.canvas.Canvas;
 import pl.edu.pwr.lgawron.lab04.tools.InputValuesHolder;
 
-public class AnimationFlow {
+public class AnimationFlow implements Animation {
     private final Canvas canvas;
     private final AnimationObject manipulator;
     private MachineAnimationTimer timer;
@@ -13,6 +13,7 @@ public class AnimationFlow {
         this.manipulator = new Manipulator(valuesHolder);
     }
 
+    @Override
     public void animateCanvas() {
         timer = new MachineAnimationTimer() {
             int i = 360;
@@ -31,10 +32,12 @@ public class AnimationFlow {
         timer.start();
     }
 
+    @Override
     public void breakTimer() {
         timer.stop();
     }
 
+    @Override
     public boolean isFinished() {
         return timer.isRunning();
     }

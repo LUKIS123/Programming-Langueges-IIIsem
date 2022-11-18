@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import pl.edu.pwr.lgawron.lab04.animation.Animation;
 import pl.edu.pwr.lgawron.lab04.animation.AnimationFlow;
 import pl.edu.pwr.lgawron.lab04.tools.InputValuesHolder;
 
@@ -23,13 +24,13 @@ public class AppController {
     @FXML
     private Canvas canvas;
     private final InputValuesHolder valuesHolder = new InputValuesHolder();
-    private AnimationFlow flow;
+    private Animation flow;
 
     public AppController() {
     }
 
     @FXML
-    public void simuateSingleRotation(ActionEvent actionEvent) {
+    public void simulateSingleRotation(ActionEvent actionEvent) {
         try {
             communicate.setVisible(false);
             valuesHolder.setValues(l1.getText(), l2.getText(), d.getText(), h.getText());
@@ -56,4 +57,10 @@ public class AppController {
         }
     }
 
+    public void simulateMultipleRotation(ActionEvent actionEvent) {
+
+    }
+
+    public void stopAnimation(ActionEvent actionEvent) {
+    }
 }
