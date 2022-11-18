@@ -5,21 +5,41 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="512.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.shape.Line?>
+<VBox alignment="TOP_CENTER" prefHeight="650.0" prefWidth="512.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/17.0.2-ea"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pwr.lgawron.lab04.AppController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <TextField fx:id="l1" promptText="l1"/>
-    <TextField fx:id="l2" promptText="l2"/>
-    <TextField fx:id="d" promptText="d"/>
-    <TextField fx:id="h" promptText="h"/>
-    <Button fx:id="simulate" mnemonicParsing="false" text="Simulate" onAction="#beginSimulation"/>
+    <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #cccccf;">
+        <children>
+            <Label text="Please enter simulation data:" textAlignment="JUSTIFY" style="-fx-font-weight: bold"/>
+            <HBox alignment="TOP_CENTER" spacing="20.0">
+                <Text textAlignment="JUSTIFY" text="Enter l1:"/>
+                <TextField fx:id="l1" alignment="BASELINE_LEFT" maxWidth="100" promptText="l1"/>
+                <Text textAlignment="JUSTIFY" text="Enter l2:"/>
+                <TextField fx:id="l2" alignment="BASELINE_RIGHT" maxWidth="100" promptText="l2"/>
+            </HBox>
+            <HBox alignment="TOP_CENTER" spacing="20.0">
+                <Text textAlignment="JUSTIFY" text="Enter d:"/>
+                <TextField fx:id="d" alignment="TOP_LEFT" maxWidth="100" promptText="d"/>
+                <Text textAlignment="JUSTIFY" text="Enter h:"/>
+                <TextField fx:id="h" alignment="TOP_RIGHT" maxWidth="100" promptText="h"/>
+            </HBox>
+            <HBox alignment="TOP_CENTER" spacing="20.0">
+                <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" text="Single rotation"
+                        onAction="#simuateSingleRotation"/>
+                <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Multiple rotation"/>
+                <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Stop"/>
+            </HBox>
+            <Label fx:id="communicate" alignment="BOTTOM_CENTER" visible="false" style="-fx-font-weight: bold"/>
+        </children>
+    </VBox>
 
-
-    <Canvas  fx:id = "machine" height="600.0" width="400.0" >
-
-    </Canvas>
+    <Canvas fx:id="canvas" height="400.0" width="400.0"/>
 
 </VBox>

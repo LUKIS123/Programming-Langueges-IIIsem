@@ -1,13 +1,9 @@
 package pl.edu.pwr.lgawron.lab04;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,17 +18,33 @@ import java.io.IOException;
  * - javafx-controls.jar
  * - javafx-fxml.jar
  * - javafx-graphics.jar
- * komenda: java -p . -m pl.edu.pwr.lgawron.lab04/pl.edu.pwr.lgawron.lab04.Application
+ * komenda: java -p . -m pl.edu.pwr.lgawron.lab04/pl.edu.pwr.lgawron.lab04.Main
  */
 
 
-public class Application extends javafx.application.Application {
+public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("app-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1500, 1000);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("app-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 650, 650);
 
+        stage.setScene(scene);
+        stage.setTitle("Machine-Simulation");
+
+        stage.setOnHidden(event -> {
+            AppController controller = (AppController) fxmlLoader.getController();
+            controller.onExitApplication();
+            Platform.exit();
+        });
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch();
+    }
+}
 
 //        TextField l1 = new TextField("l1");
 //        TextField l2 = new TextField("l1");
@@ -66,12 +78,3 @@ public class Application extends javafx.application.Application {
 //
 //        Scene scene1 = new Scene(pane, 420, 420);
 //        stage.setScene(scene1);
-
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
-    }
-}
