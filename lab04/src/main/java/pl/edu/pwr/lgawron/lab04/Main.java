@@ -26,7 +26,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("app-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 900, 1100);
+        Scene scene = new Scene(fxmlLoader.load(), 1100, 1100);
 
         stage.setScene(scene);
         stage.setTitle("Machine-Simulation");
@@ -45,15 +45,3 @@ public class Main extends Application {
         launch();
     }
 }
-
-//
-//        EventHandler<ActionEvent> event = e -> {
-//
-//            ParseValues parseValues = new ParseValues();
-//            parseValues.setL1(l1.getText());
-//            parseValues.setL2(l2.getText());
-//            parseValues.setD(d.getText());
-//            parseValues.setH(h.getText());
-//
-//            label.setText(String.valueOf(parseValues.getL1()));
-//        };

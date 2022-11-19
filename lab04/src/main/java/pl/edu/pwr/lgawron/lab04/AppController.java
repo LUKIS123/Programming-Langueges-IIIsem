@@ -34,7 +34,7 @@ public class AppController {
     }
 
     @FXML
-    public void simulateSingleRotation(ActionEvent actionEvent) {
+    public void simulateSingleRotation() {
         this.parseInputData();
         if (flow == null || (flow instanceof MultipleRotationAnimationFlow && !flow.isFinished())) {
             flow = new SingleRotationAnimationFlow(animationCanvas, valuesHolder, vxChart, vyChart);
@@ -42,17 +42,16 @@ public class AppController {
         } else if (!flow.isFinished()) {
             flow.animateCanvas();
         }
-        // mozna sprawdzac czy jest consumed, wtedy wyswitlic okno z wykresem czy cos
-        //actionEvent.consume();
     }
 
     @FXML
-    public void simulateMultipleRotation(ActionEvent actionEvent) {
+    public void simulateMultipleRotation() {
         this.parseInputData();
         if (flow == null || flow instanceof SingleRotationAnimationFlow) {
-            flow = new MultipleRotationAnimationFlow(animationCanvas, valuesHolder);
+            flow = new MultipleRotationAnimationFlow(animationCanvas, valuesHolder, vxChart, vyChart);
             flow.animateCanvas();
-        } else if (!flow.isFinished()) {
+        } else {
+            flow.resetValues();
             flow.animateCanvas();
         }
     }
@@ -62,13 +61,16 @@ public class AppController {
         try {
             communicate.setVisible(false);
             valuesHolder.setValues(l1.getText(), l2.getText(), d.getText(), h.getText());
+            if (flow instanceof MultipleRotationAnimationFlow) {
+                flow.breakTimer();
+            }
         } catch (NumberFormatException e) {
             communicate.setText("Cannot run! " + e.getMessage());
             communicate.setVisible(true);
         }
     }
 
-    public void stopAnimation(ActionEvent actionEvent) {
+    public void stopAnimation() {
         if (flow != null) {
             flow.breakTimer();
         }

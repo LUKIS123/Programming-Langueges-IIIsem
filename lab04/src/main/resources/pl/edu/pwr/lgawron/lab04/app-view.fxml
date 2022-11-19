@@ -40,10 +40,15 @@
     </VBox>
 
     <Canvas fx:id="animationCanvas" height="400.0" width="600.0"/>
+    <VBox alignment="TOP_CENTER"/>
 
-    <HBox alignment="BOTTOM_CENTER" spacing="20.0" style="-fx-background-color: #cccccf;">
+    <HBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #cccccf;">
+        <Label text="Vx chart [Pixels/sek]" textAlignment="JUSTIFY"/>
         <Canvas fx:id="vxChart" height="400.0" width="362.0"/>
         <Canvas fx:id="vyChart" height="400.0" width="362.0"/>
+        <Label text="Vy chart [Pixels/sek]" textAlignment="JUSTIFY"/>
     </HBox>
+
+    <VBox/>
 
 </VBox>

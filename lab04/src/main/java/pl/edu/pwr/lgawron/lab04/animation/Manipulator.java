@@ -3,7 +3,7 @@ package pl.edu.pwr.lgawron.lab04.animation;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
-import pl.edu.pwr.lgawron.lab04.animation.charts.FurthestPointCoordinatesData;
+import pl.edu.pwr.lgawron.lab04.animation.chart.FurthestPointCoordinatesData;
 import pl.edu.pwr.lgawron.lab04.tools.InputValuesHolder;
 
 public class Manipulator implements AnimationObject {
@@ -93,4 +93,7 @@ public class Manipulator implements AnimationObject {
                 graphicsContext.getCanvas().getWidth(), graphicsContext.getCanvas().getHeight() / 2);
     }
 
+    public void setFullRotation(boolean fullRotation) {
+        isFullRotation = fullRotation;
+    }
 }

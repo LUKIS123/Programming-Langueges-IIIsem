@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab04.animation.charts;
+package pl.edu.pwr.lgawron.lab04.animation.chart;
 
 import pl.edu.pwr.lgawron.lab04.tools.InputValuesHolder;
 

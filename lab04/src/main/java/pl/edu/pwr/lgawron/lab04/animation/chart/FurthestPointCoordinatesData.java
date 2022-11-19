@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab04.animation.charts;
+package pl.edu.pwr.lgawron.lab04.animation.chart;
 
 import pl.edu.pwr.lgawron.lab04.tools.InputValuesHolder;
 
@@ -34,6 +34,29 @@ public class FurthestPointCoordinatesData {
             return Math.sqrt(Math.pow(pointCoordinates.get(359).y() - pointCoordinates.get(0).y(), 2));
         }
         return Math.sqrt(Math.pow(pointCoordinates.get(i).y() - pointCoordinates.get(i + 1).y(), 2));
+    }
+
+    public void clearDataAfterRotation() {
+        if (pointCoordinates.size() >= 360) {
+            pointCoordinates.clear();
+        }
+    }
+
+    public void dataCleaner() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (pointCoordinates.size() >= 720) {
+                    pointCoordinates.clear();
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        t.start();
     }
 
 }

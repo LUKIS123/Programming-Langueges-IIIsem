@@ -1,17 +1,12 @@
-package pl.edu.pwr.lgawron.lab04.animation.charts;
+package pl.edu.pwr.lgawron.lab04.animation.chart;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class ChartManipulator {
-    private final FurthestPointCoordinatesData furthestPointCoordinatesData;
-    private final Canvas chart;
     private final double dotSize;
 
-    public ChartManipulator(FurthestPointCoordinatesData furthestPointCoordinatesData, Canvas chart) {
-        this.furthestPointCoordinatesData = furthestPointCoordinatesData;
-        this.chart = chart;
+    public ChartManipulator() {
         this.dotSize = 1;
     }
 

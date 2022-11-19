@@ -6,4 +6,6 @@ public interface AnimationFlow {
     void breakTimer();
 
     boolean isFinished();
+
+    void resetValues();
 }
