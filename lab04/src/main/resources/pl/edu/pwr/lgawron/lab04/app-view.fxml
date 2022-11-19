@@ -39,6 +39,11 @@
         </children>
     </VBox>
 
-    <Canvas fx:id="canvas" height="400.0" width="400.0"/>
+    <Canvas fx:id="animationCanvas" height="400.0" width="600.0"/>
+
+    <HBox alignment="BOTTOM_CENTER" spacing="20.0" style="-fx-background-color: #cccccf;">
+        <Canvas fx:id="vxChart" height="400.0" width="362.0"/>
+        <Canvas fx:id="vyChart" height="400.0" width="362.0"/>
+    </HBox>
 
 </VBox>

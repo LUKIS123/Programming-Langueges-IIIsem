@@ -26,7 +26,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("app-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 650, 650);
+        Scene scene = new Scene(fxmlLoader.load(), 900, 1100);
 
         stage.setScene(scene);
         stage.setTitle("Machine-Simulation");
@@ -46,15 +46,6 @@ public class Main extends Application {
     }
 }
 
-//        TextField l1 = new TextField("l1");
-//        TextField l2 = new TextField("l1");
-//        TextField d = new TextField("l1");
-//        TextField h = new TextField("l1");
-//
-//        Button button = new Button("Ok");
-//        TilePane pane = new TilePane();
-//
-//        Label label = new Label("button not selected");
 //
 //        EventHandler<ActionEvent> event = e -> {
 //
@@ -66,15 +57,3 @@ public class Main extends Application {
 //
 //            label.setText(String.valueOf(parseValues.getL1()));
 //        };
-//
-//        button.setOnAction(event);
-//
-//        pane.getChildren().add(l1);
-//        pane.getChildren().add(l2);
-//        pane.getChildren().add(d);
-//        pane.getChildren().add(h);
-//        pane.getChildren().add(button);
-//        pane.getChildren().add(label);
-//
-//        Scene scene1 = new Scene(pane, 420, 420);
-//        stage.setScene(scene1);

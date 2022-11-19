@@ -6,4 +6,6 @@ public interface AnimationObject {
     public void draw(GraphicsContext graphicsContext);
 
     public void rotate();
+
+    public void reset(GraphicsContext graphicsContext);
 }

@@ -3,15 +3,19 @@ package pl.edu.pwr.lgawron.lab04.animation;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import pl.edu.pwr.lgawron.lab04.animation.charts.FurthestPointCoordinatesData;
 import pl.edu.pwr.lgawron.lab04.tools.InputValuesHolder;
 
 public class Manipulator implements AnimationObject {
     double alpha, beta, gamma;
     private final InputValuesHolder values;
     double hx, dx;
+    private final FurthestPointCoordinatesData furthestPointCoordinatesData;
+    private boolean isFullRotation = false;
 
-    public Manipulator(InputValuesHolder valuesHolder) {
+    public Manipulator(InputValuesHolder valuesHolder, FurthestPointCoordinatesData furthestPointCoordinatesData) {
         this.values = valuesHolder;
+        this.furthestPointCoordinatesData = furthestPointCoordinatesData;
     }
 
     @Override
@@ -60,6 +64,22 @@ public class Manipulator implements AnimationObject {
         gamma = Math.toDegrees(Math.atan2((values.getH() - hx), (values.getD() - dx)));
 
         beta = alpha - gamma;
+        this.saveCoordinates();
+    }
+
+    @Override
+    public void reset(GraphicsContext graphicsContext) {
+        graphicsContext.restore();
+        alpha = 0;
+    }
+
+    private void saveCoordinates() {
+        if (furthestPointCoordinatesData.getPointCoordinates().size() == 360) {
+            isFullRotation = true;
+        }
+        if (!isFullRotation) {
+            furthestPointCoordinatesData.addPoint(alpha, gamma);
+        }
     }
 
     private void drawCoordinateSystem(GraphicsContext graphicsContext) {
