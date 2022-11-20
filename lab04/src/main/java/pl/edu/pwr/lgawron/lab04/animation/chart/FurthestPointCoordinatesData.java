@@ -8,6 +8,7 @@ import java.util.List;
 public class FurthestPointCoordinatesData {
     private final CoordinateCalculator coordinateCalculator;
     private final List<Point> pointCoordinates;
+    private Thread t;
 
     public FurthestPointCoordinatesData(InputValuesHolder valuesHolder) {
         this.pointCoordinates = new ArrayList<>();
@@ -43,11 +44,16 @@ public class FurthestPointCoordinatesData {
     }
 
     public void dataCleaner() {
-        Thread t = new Thread(new Runnable() {
+        if (t != null) {
+            if (t.isAlive())
+                return;
+        }
+        t = new Thread(new Runnable() {
             @Override
             public void run() {
                 if (pointCoordinates.size() >= 720) {
                     pointCoordinates.clear();
+                    t.interrupt();
                 }
                 try {
                     Thread.sleep(1000);
