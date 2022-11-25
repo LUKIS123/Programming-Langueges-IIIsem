@@ -1,6 +1,5 @@
 package pl.edu.pwr.lgawron.lab04;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;

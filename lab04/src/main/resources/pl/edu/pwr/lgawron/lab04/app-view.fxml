@@ -15,19 +15,26 @@
 
     <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #cccccf;">
         <children>
-            <Label text="Please enter simulation data:" textAlignment="JUSTIFY" style="-fx-font-weight: bold"/>
             <HBox alignment="TOP_CENTER" spacing="20.0">
-                <Text textAlignment="JUSTIFY" text="Enter l1:"/>
-                <TextField fx:id="l1" alignment="BASELINE_LEFT" maxWidth="100" promptText="l1"/>
-                <Text textAlignment="JUSTIFY" text="Enter l2:"/>
-                <TextField fx:id="l2" alignment="BASELINE_RIGHT" maxWidth="100" promptText="l2"/>
+                <HBox>
+                    <Label text="Please enter simulation data:" alignment="TOP_LEFT" textAlignment="JUSTIFY"
+                           style="-fx-font-weight: bold"/>
+
+                </HBox>
+                <HBox>
+                    <Text textAlignment="JUSTIFY" text="Enter l1:"/>
+                    <TextField fx:id="l1" alignment="BASELINE_LEFT" maxWidth="100" promptText="l1"/>
+                    <Text textAlignment="JUSTIFY" text="Enter l2:"/>
+                    <TextField fx:id="l2" alignment="BASELINE_RIGHT" maxWidth="100" promptText="l2"/>
+                </HBox>
+                <HBox alignment="TOP_CENTER" spacing="20.0">
+                    <Text textAlignment="JUSTIFY" text="Enter d:"/>
+                    <TextField fx:id="d" alignment="TOP_LEFT" maxWidth="100" promptText="d"/>
+                    <Text textAlignment="JUSTIFY" text="Enter h:"/>
+                    <TextField fx:id="h" alignment="TOP_RIGHT" maxWidth="100" promptText="h"/>
+                </HBox>
             </HBox>
-            <HBox alignment="TOP_CENTER" spacing="20.0">
-                <Text textAlignment="JUSTIFY" text="Enter d:"/>
-                <TextField fx:id="d" alignment="TOP_LEFT" maxWidth="100" promptText="d"/>
-                <Text textAlignment="JUSTIFY" text="Enter h:"/>
-                <TextField fx:id="h" alignment="TOP_RIGHT" maxWidth="100" promptText="h"/>
-            </HBox>
+
             <HBox alignment="TOP_CENTER" spacing="20.0">
                 <Button alignment="BOTTOM_LEFT" mnemonicParsing="false" text="Single rotation"
                         onAction="#simulateSingleRotation"/>
@@ -39,13 +46,13 @@
         </children>
     </VBox>
 
-    <Canvas fx:id="animationCanvas" height="400.0" width="600.0"/>
+    <Canvas fx:id="animationCanvas" height="300.0" width="600.0"/>
     <VBox alignment="TOP_CENTER"/>
 
     <HBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #cccccf;">
         <Label text="Vx chart [Pixels/sek]" textAlignment="JUSTIFY"/>
-        <Canvas fx:id="vxChart" height="400.0" width="362.0"/>
-        <Canvas fx:id="vyChart" height="400.0" width="362.0"/>
+        <Canvas fx:id="vxChart" height="300.0" width="400.0"/>
+        <Canvas fx:id="vyChart" height="300.0" width="400.0"/>
         <Label text="Vy chart [Pixels/sek]" textAlignment="JUSTIFY"/>
     </HBox>
 
