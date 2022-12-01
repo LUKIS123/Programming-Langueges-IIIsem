@@ -1,6 +1,7 @@
 package pl.edu.pwr.lgawron.lab05;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,7 +26,16 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("app-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 800);
+
         stage.setTitle("Laboratory-Simulation");
+        stage.setScene(scene);
+
+        stage.setOnHidden(event -> {
+            AppController controller = (AppController) fxmlLoader.getController();
+            controller.onExitApplication();
+            Platform.exit();
+        });
+
         stage.setScene(scene);
         stage.show();
     }

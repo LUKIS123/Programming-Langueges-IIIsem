@@ -7,4 +7,6 @@ module pl.edu.pwr.lgawron.lab05 {
 
     opens pl.edu.pwr.lgawron.lab05 to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab05;
+    exports pl.edu.pwr.lgawron.lab05.flow;
+    opens pl.edu.pwr.lgawron.lab05.flow to javafx.fxml;
 }
