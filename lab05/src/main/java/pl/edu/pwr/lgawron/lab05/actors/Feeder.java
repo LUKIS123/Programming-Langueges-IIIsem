@@ -67,6 +67,9 @@ public class Feeder implements RunnableActor {
 
         this.refreshLabel();
         this.setFreeToUse(false);
+
+        // sleep?
+        // this.tryToSleep();
     }
 
     public synchronized boolean consume() {

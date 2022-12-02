@@ -13,7 +13,7 @@ import java.util.List;
 public class ApplicationFlow {
     private final int organismNumber;
     private final int assistantNumber;
-    private final int minSleepTime = 1500;
+    private final int minSleepTime;
     private final VBox distributorBox;
     private final VBox labTechniciansBox;
     private final VBox nourishmentBox;
@@ -29,11 +29,12 @@ public class ApplicationFlow {
 
     //RunnableActor[][] grid;
 
-    public ApplicationFlow(int organismNumber, int assistantNumber,
+    public ApplicationFlow(int organismNumber, int assistantNumber, int minSleepTime,
                            VBox distributorBox, VBox labTechniciansBox, VBox nourishmentBox, VBox staminaBox) {
 
         this.organismNumber = organismNumber;
         this.assistantNumber = assistantNumber;
+        this.minSleepTime = minSleepTime;
         this.distributorBox = distributorBox;
         this.labTechniciansBox = labTechniciansBox;
         this.nourishmentBox = nourishmentBox;

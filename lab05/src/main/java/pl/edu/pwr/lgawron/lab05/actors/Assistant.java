@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import pl.edu.pwr.lgawron.lab05.flow.ApplicationFlow;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,7 +14,7 @@ public class Assistant implements RunnableActor {
     private boolean exit;
     private final int id;
     private final int minSleepTime;
-    private int direction;
+    private AtomicInteger direction;
     private List<Assistant> assistantList;
     private List<Feeder> feederList;
     private List<Label> labelList;
@@ -29,7 +30,7 @@ public class Assistant implements RunnableActor {
         this.minSleepTime = minSleepTime;
         this.flow = flow;
         this.distributor = distributor;
-        this.direction = 1;
+        this.direction = new AtomicInteger(1);
 
         // listy
         this.labelList = flow.getAssistantLabels();
@@ -57,7 +58,7 @@ public class Assistant implements RunnableActor {
             }
 
             if (food.get() == 0) {
-                this.refill();
+                this.takeFoodSupply();
             }
 
             nourish();
@@ -68,8 +69,13 @@ public class Assistant implements RunnableActor {
     }
 
     public synchronized void nourish() {
+        Feeder feeder = feederList.get(position.get());
+        if (feeder.getNourishment().get() > 5) {
+            return;
+        }
+
         if (food.get() != 0) {
-            Feeder feeder = feederList.get(position.get());
+
             int nourishment = feeder.getNourishment().get();
             int quantity = 10 - nourishment;
 
@@ -83,12 +89,50 @@ public class Assistant implements RunnableActor {
 
         }
     }
-// doczytac czy organizmom ma sie odnawiac zycie po zjedzeniu
+
+    // doczytac czy organizmom ma sie odnawiac zycie po zjedzeniu
     public synchronized void move() {
+        // do tej pory jest git
+        // uzyc direction do zmiany pozycji w liscie
+
+        int nextPosition = position.get() + direction.get();
+        if (nextPosition == -1 || nextPosition >= assistantList.size()) {
+            this.changeDirection();
+            return;
+        }
+
+        if (assistantList.get(nextPosition) == null) {
+            Collections.swap(assistantList, position.get(), nextPosition);
+
+            int oldPosition = position.get();
+
+            position.set(nextPosition);
+
+            // labelki
+            currentLabel = labelList.get(nextPosition);
+            this.clearLabel(oldPosition);
+            this.refreshLabel();
+        } else {
+            this.changeDirection();
+        }
 
     }
 
-    public synchronized void refill() {
+    private void clearLabel(int oldPosition) {
+        Platform.runLater(
+                () -> labelList.get(oldPosition).setText("|_______|")
+        );
+    }
+
+    private void changeDirection() {
+        if (direction.get() == 1) {
+            direction.set(-1);
+        } else {
+            direction.set(1);
+        }
+    }
+
+    public synchronized void takeFoodSupply() {
         if (distributor.isFreeToUse()) {
             distributor.setFreeToUse(false);
             food.set(50);
