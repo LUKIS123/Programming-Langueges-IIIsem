@@ -7,37 +7,38 @@ import pl.edu.pwr.lgawron.lab05.flow.ApplicationFlow;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AssistantNew implements RunnableActor {
+public class AssistantOld implements RunnableActor {
     private final AtomicInteger food = new AtomicInteger(50);
     private final Object lock;
     private boolean exit;
     private final int id;
     private final int minSleepTime;
     private final AtomicInteger direction;
-    private final List<Assistant> assistantList;
+    private final List<AssistantOld> assistantOldList;
     private final List<Feeder> feederList;
     private final List<Organism> organismList;
     private final List<Label> labelList;
     private Thread t;
     private Label currentLabel;
     private final AtomicInteger position;
-    private final DistributorNew distributor;
+    private final DistributorOld distributorOld;
     private final ApplicationFlow flow;
 
-    public AssistantNew(int id, int startingPosition, int minSleepTime, ApplicationFlow flow, DistributorNew distributor) {
+    public AssistantOld(int id, int startingPosition, int minSleepTime, ApplicationFlow flow, DistributorOld distributorOld) {
         this.id = id;
         this.position = new AtomicInteger(startingPosition);
         this.minSleepTime = minSleepTime;
         this.flow = flow;
-        this.distributor = distributor;
+        this.distributorOld = distributorOld;
         this.direction = new AtomicInteger(1);
         this.lock = new Object();
 
         // lists
         this.labelList = flow.getAssistantLabels();
-        this.assistantList = flow.getAssistants();
+        this.assistantOldList = flow.getAssistants();
         this.feederList = flow.getFeeders();
         this.organismList = flow.getOrganisms();
 
@@ -46,7 +47,7 @@ public class AssistantNew implements RunnableActor {
         this.refreshLabel();
 
 
-        t = new Thread(this, "Distributor-" + id);
+        t = new Thread(this, "Assistant-" + id);
         exit = false;
         t.start();
     }
@@ -99,13 +100,13 @@ public class AssistantNew implements RunnableActor {
 
     public synchronized void move() {
         int nextPosition = position.get() + direction.get();
-        if (nextPosition == -1 || nextPosition >= assistantList.size()) {
+        if (nextPosition == -1 || nextPosition >= assistantOldList.size()) {
             this.changeDirection();
             return;
         }
 
-        if (assistantList.get(nextPosition) == null) {
-            Collections.swap(assistantList, position.get(), nextPosition);
+        if (assistantOldList.get(nextPosition) == null) {
+            Collections.swap(assistantOldList, position.get(), nextPosition);
 
             int oldPosition = position.get();
 
@@ -136,16 +137,9 @@ public class AssistantNew implements RunnableActor {
     }
 
     public synchronized void takeFoodSupply() {
-//        if (distributor.isFreeToUse()) {
-//            distributor.setFreeToUse(false);
-//            food.set(50);
-//        }
-        try {
-            distributor.dispense();
-            food.set(distributor.getValue());
-            distributor.finish();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if (distributorOld.isFreeToUse()) {
+            distributorOld.setFreeToUse(false);
+            food.set(50);
         }
         this.tryToSleep();
     }
@@ -154,6 +148,16 @@ public class AssistantNew implements RunnableActor {
         Platform.runLater(
                 () -> currentLabel.setText("|   " + food.get() + "   |")
         );
+    }
+
+    // do znajdywania
+
+    // -> indexof nie dziala
+    // cala funckja troche bez sensu
+    private int getCurrentPosition() {
+        // return assistantList.indexOf(this);
+        Optional<AssistantOld> first = assistantOldList.stream().filter(assistantOld -> assistantOld.getId() == this.id).findFirst();
+        return first.map(AssistantOld::getCurrentPosition).orElseGet(position::get);
     }
 
     private void tryToSleep() {

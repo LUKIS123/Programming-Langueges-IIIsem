@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Distributor implements RunnableActor {
+public class DistributorOld implements RunnableActor {
     private final AtomicBoolean freeToUse = new AtomicBoolean(true);
     private boolean exit;
     private final int id;
@@ -13,7 +13,7 @@ public class Distributor implements RunnableActor {
     private final Label label;
     private Thread t;
 
-    public Distributor(int id, int minSleepTime, Label label) {
+    public DistributorOld(int id, int minSleepTime, Label label) {
         this.id = id;
         this.minSleepTime = minSleepTime;
         this.label = label;

@@ -73,11 +73,9 @@ public class Feeder implements RunnableActor {
     }
 
     public synchronized boolean consume() {
-        // new
         if (!isFreeToUse()) {
             return false;
         }
-        // new
         if (nourishment.get() != 0) {
             //this.setFreeToUse(false);
             nourishment.set(nourishment.get() - 1);

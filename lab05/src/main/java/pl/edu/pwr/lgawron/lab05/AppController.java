@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pl.edu.pwr.lgawron.lab05.flow.ApplicationFlow;
-import pl.edu.pwr.lgawron.lab05.frameutility.TextFieldParser;
+import pl.edu.pwr.lgawron.lab05.frameutility.parse.TextFieldParser;
 import pl.edu.pwr.lgawron.lab05.frameutility.exceptions.InputDataException;
 
 import java.util.List;
@@ -47,7 +47,8 @@ public class AppController {
         flow = new ApplicationFlow(parsedInput.get(0), parsedInput.get(1), parsedInput.get(2),
                 distributorBox, labTechniciansBox, nourishmentBox, staminaBox);
 
-        flow.init();
+        //flow.init();
+        flow.init2();
     }
 
     @FXML

@@ -3,11 +3,11 @@ package pl.edu.pwr.lgawron.lab05.actors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
+import pl.edu.pwr.lgawron.lab05.actorresources.Distributor;
 import pl.edu.pwr.lgawron.lab05.flow.ApplicationFlow;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Assistant implements RunnableActor {
@@ -38,7 +38,7 @@ public class Assistant implements RunnableActor {
 
         // lists
         this.labelList = flow.getAssistantLabels();
-        this.assistantList = flow.getAssistants();
+        this.assistantList = flow.getAssistantNewList();
         this.feederList = flow.getFeeders();
         this.organismList = flow.getOrganisms();
 
@@ -47,7 +47,7 @@ public class Assistant implements RunnableActor {
         this.refreshLabel();
 
 
-        t = new Thread(this, "Distributor-" + id);
+        t = new Thread(this, "Assistant-" + id);
         exit = false;
         t.start();
     }
@@ -137,9 +137,12 @@ public class Assistant implements RunnableActor {
     }
 
     public synchronized void takeFoodSupply() {
-        if (distributor.isFreeToUse()) {
-            distributor.setFreeToUse(false);
-            food.set(50);
+        try {
+            distributor.stockUpResource(this.id);
+            food.set(distributor.getResource());
+            distributor.finishProcess(this.id);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         this.tryToSleep();
     }
@@ -148,16 +151,6 @@ public class Assistant implements RunnableActor {
         Platform.runLater(
                 () -> currentLabel.setText("|   " + food.get() + "   |")
         );
-    }
-
-    // do znajdywania
-
-    // -> indexof nie dziala
-    // cala funckja troche bez sensu
-    private int getCurrentPosition() {
-        // return assistantList.indexOf(this);
-        Optional<Assistant> first = assistantList.stream().filter(assistant -> assistant.getId() == this.id).findFirst();
-        return first.map(Assistant::getCurrentPosition).orElseGet(position::get);
     }
 
     private void tryToSleep() {

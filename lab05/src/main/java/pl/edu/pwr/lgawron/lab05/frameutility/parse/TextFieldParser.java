@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab05.frameutility;
+package pl.edu.pwr.lgawron.lab05.frameutility.parse;
 
 import pl.edu.pwr.lgawron.lab05.frameutility.exceptions.InputDataException;
 
@@ -15,7 +15,7 @@ public class TextFieldParser {
             throw new InputDataException("There can't be more assistants than organisms");
         }
 
-        if (integerList.get(0) > 20) {
+        if (integerList.get(0) > 25) {
             throw new InputDataException("Too many organisms");
         }
 
