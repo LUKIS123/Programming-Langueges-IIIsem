@@ -112,7 +112,7 @@ public class Assistant implements RunnableActor {
 
             // updating labels
             currentLabel = labelList.get(nextPosition);
-            this.clearLabel(oldPosition);
+            this.clearOldLabel(oldPosition);
             this.refreshLabel();
         } else {
             this.changeDirection();
@@ -157,7 +157,7 @@ public class Assistant implements RunnableActor {
         LabelTextRenderer.renderAssistants(currentLabel, food.get(), id);
     }
 
-    private void clearLabel(int oldPosition) {
+    private void clearOldLabel(int oldPosition) {
         LabelTextRenderer.renderEmptyAssistant(labelList.get(oldPosition));
     }
 }
