@@ -3,7 +3,9 @@ package pl.edu.pwr.lgawron.lab05.flow;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import pl.edu.pwr.lgawron.lab05.actorresources.Distributor;
+import pl.edu.pwr.lgawron.lab05.actorresources.Feeder;
 import pl.edu.pwr.lgawron.lab05.actors.*;
+import pl.edu.pwr.lgawron.lab05.frameutility.render.LabelTextRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,31 +18,30 @@ public class ApplicationFlow {
     private final VBox labTechniciansBox;
     private final VBox nourishmentBox;
     private final VBox staminaBox;
-    private DistributorOld distributorOld;
-    private List<AssistantOld> assistantOlds;
-    //
-    private List<Assistant> assistantList;
-    private Distributor distributor;
-    //
-    private List<Feeder> feeders;
-    private List<Organism> organisms;
-    private Label distributorLabel;
-    private List<Label> assistantLabels;
-    private List<Label> feederLabels;
-    private List<Label> organismLabels;
+    private final Distributor distributor;
+    private final List<Feeder> feederList;
+    private final List<Assistant> assistantList;
+    private final List<Organism> organismList;
+    private final Label distributorLabel;
+    private final List<Label> assistantLabels;
+    private final List<Label> feederLabels;
+    private final List<Label> organismLabels;
 
     public ApplicationFlow(int organismNumber, int assistantNumber, int minSleepTime,
                            VBox distributorBox, VBox labTechniciansBox, VBox nourishmentBox, VBox staminaBox) {
 
+        // input
         this.organismNumber = organismNumber;
         this.assistantNumber = assistantNumber;
         this.minSleepTime = minSleepTime;
+
+        // boxes
         this.distributorBox = distributorBox;
         this.labTechniciansBox = labTechniciansBox;
         this.nourishmentBox = nourishmentBox;
         this.staminaBox = staminaBox;
 
-        // labels
+        // labels & list of labels
         this.distributorLabel = new Label();
         distributorBox.getChildren().add(distributorLabel);
 
@@ -56,43 +57,25 @@ public class ApplicationFlow {
         this.fillLabelList(organismLabels);
         this.addLabelsToBox(staminaBox, organismLabels);
 
-        // actors
-        // this.distributor = new Distributor(0, minSleepTime, distributorLabel);
-
+        // resources
         this.distributor = new Distributor(minSleepTime, distributorLabel);
+        this.feederList = new ArrayList<>();
 
-
-        this.assistantOlds = new ArrayList<>();
-        this.feeders = new ArrayList<>();
-        this.organisms = new ArrayList<>();
-        //
+        // actors
         this.assistantList = new ArrayList<>();
+        this.organismList = new ArrayList<>();
     }
 
-    public void init() {
+    public void initialize() {
         for (int i = 0; i < organismNumber; i++) {
             if (i < assistantNumber) {
-                assistantOlds.add(i, new AssistantOld(i, i, minSleepTime, this, distributorOld));
-            } else {
-                assistantOlds.add(i, null);
-            }
-
-            feeders.add(i, new Feeder(minSleepTime, i, feederLabels.get(i)));
-            organisms.add(i, new Organism(feeders.get(i), minSleepTime, i, organismLabels.get(i)));
-        }
-        this.completeEmptyAssistantSpaces();
-    }
-
-    public void init2() {
-        for (int i = 0; i < organismNumber; i++) {
-            if (i < assistantNumber) {
-                assistantList.add(i, new Assistant(i, i, minSleepTime, this, distributor));
+                assistantList.add(i, new Assistant(i, i, minSleepTime, distributor, assistantLabels, assistantList, feederList, organismList));
             } else {
                 assistantList.add(i, null);
             }
 
-            feeders.add(i, new Feeder(minSleepTime, i, feederLabels.get(i)));
-            organisms.add(i, new Organism(feeders.get(i), minSleepTime, i, organismLabels.get(i)));
+            feederList.add(i, new Feeder(minSleepTime, feederLabels.get(i), i));
+            organismList.add(i, new Organism(feederList.get(i), minSleepTime, i, organismLabels.get(i)));
         }
         this.completeEmptyAssistantSpaces();
     }
@@ -107,48 +90,31 @@ public class ApplicationFlow {
         labels.forEach(label -> vBox.getChildren().add(label));
     }
 
+    public void endSimulation() {
+        for (Assistant assistant : assistantList) {
+            if (assistant != null) {
+                assistant.setExit(true);
+            }
+        }
+        assistantList.clear();
+
+        organismList.forEach(organism -> {
+            organism.setExit(false);
+        });
+    }
+
+    public void clearLabels() {
+        distributorBox.getChildren().clear();
+        labTechniciansBox.getChildren().clear();
+        nourishmentBox.getChildren().clear();
+        staminaBox.getChildren().clear();
+    }
+
     private void completeEmptyAssistantSpaces() {
         for (Label label : assistantLabels) {
             if (label.getText().isEmpty()) {
-                label.setText("|_______|");
+                LabelTextRenderer.renderEmptyAssistantsSpaces(label);
             }
         }
-    }
-
-    // getters
-    public DistributorOld getDistributor() {
-        return distributorOld;
-    }
-
-    public List<AssistantOld> getAssistants() {
-        return assistantOlds;
-    }
-
-    public List<Feeder> getFeeders() {
-        return feeders;
-    }
-
-    public List<Organism> getOrganisms() {
-        return organisms;
-    }
-
-    public Label getDistributorLabel() {
-        return distributorLabel;
-    }
-
-    public List<Label> getAssistantLabels() {
-        return assistantLabels;
-    }
-
-    public List<Label> getFeederLabels() {
-        return feederLabels;
-    }
-
-    public List<Label> getOrganismLabels() {
-        return organismLabels;
-    }
-
-    public List<Assistant> getAssistantNewList() {
-        return assistantList;
     }
 }

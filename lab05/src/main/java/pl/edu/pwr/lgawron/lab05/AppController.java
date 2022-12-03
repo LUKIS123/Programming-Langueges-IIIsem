@@ -1,14 +1,13 @@
 package pl.edu.pwr.lgawron.lab05;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pl.edu.pwr.lgawron.lab05.flow.ApplicationFlow;
-import pl.edu.pwr.lgawron.lab05.frameutility.parse.TextFieldParser;
 import pl.edu.pwr.lgawron.lab05.frameutility.exceptions.InputDataException;
+import pl.edu.pwr.lgawron.lab05.frameutility.parse.TextFieldParser;
 
 import java.util.List;
 
@@ -47,15 +46,15 @@ public class AppController {
         flow = new ApplicationFlow(parsedInput.get(0), parsedInput.get(1), parsedInput.get(2),
                 distributorBox, labTechniciansBox, nourishmentBox, staminaBox);
 
-        //flow.init();
-        flow.init2();
+        flow.initialize();
     }
 
     @FXML
-    public void onStopSimulationClick(ActionEvent actionEvent) {
-        // dodac sleep albo waita -> dodatkowa zmienna stop -> jesli prawda to sleep/wait
-        flow.getAssistants().forEach(assistant -> assistant.tryToWait(actionEvent));
-
+    public void onStopSimulationClick() {
+        if (flow != null) {
+            flow.endSimulation();
+            flow.clearLabels();
+        }
     }
 
     private List<Integer> parseInputData() {
@@ -77,6 +76,8 @@ public class AppController {
     }
 
     public void onExitApplication() {
-
+        if (flow != null) {
+            flow.endSimulation();
+        }
     }
 }

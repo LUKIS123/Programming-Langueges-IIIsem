@@ -1,21 +1,23 @@
 package pl.edu.pwr.lgawron.lab05.actors;
 
-import javafx.application.Platform;
 import javafx.scene.control.Label;
+import pl.edu.pwr.lgawron.lab05.actorresources.Feeder;
+import pl.edu.pwr.lgawron.lab05.frameutility.render.LabelTextRenderer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Organism implements RunnableActor {
-    private final AtomicBoolean isAlive = new AtomicBoolean(true);
-    private final AtomicInteger stamina = new AtomicInteger(5);
+    private final AtomicBoolean isAlive;
+    private final AtomicInteger stamina;
     private final Feeder feeder;
     private final int minSleepTime;
     private final int id;
     private final Label label;
-    private final Thread t;
 
     public Organism(Feeder feeder, int minSleepTime, int id, Label label) {
+        this.isAlive = new AtomicBoolean(true);
+        this.stamina = new AtomicInteger(5);
         this.feeder = feeder;
         this.minSleepTime = minSleepTime;
         this.id = id;
@@ -23,8 +25,8 @@ public class Organism implements RunnableActor {
 
         this.refreshLabel();
 
-        t = new Thread(this, "Organism-" + id);
-        t.start();
+        Thread thread = new Thread(this, "Organism-" + id);
+        thread.start();
     }
 
     @Override
@@ -32,7 +34,6 @@ public class Organism implements RunnableActor {
         while (isAlive.get()) {
             try {
                 Thread.sleep(minSleepTime + (int) (Math.random() * 100));
-                // t.wait(minSleepTime + (int) (Math.random() * 100));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -43,21 +44,15 @@ public class Organism implements RunnableActor {
                 if (stamina.get() < 5) {
                     stamina.set(stamina.get() + 1);
                 }
+                feeder.setFreeToUse(true);
             }
 
-            // else stamina +1 -> tylko jesli mniejsza od 5
             this.refreshLabel();
         }
     }
 
-    private void refreshLabel() {
-        Platform.runLater(
-                () -> label.setText("|   " + stamina.get() + "   |")
-        );
-    }
-
     public synchronized boolean eat() {
-        return feeder.consume();
+        return feeder.consumeResource();
     }
 
     public void decay() {
@@ -77,11 +72,12 @@ public class Organism implements RunnableActor {
         return id;
     }
 
-    public AtomicBoolean getIsAlive() {
-        return isAlive;
+    @Override
+    public void setExit(boolean exit) {
+        this.isAlive.set(exit);
     }
 
-    public void setIsAlive(boolean value) {
-        this.isAlive.set(value);
+    private void refreshLabel() {
+        LabelTextRenderer.renderStamina(label, stamina.get());
     }
 }

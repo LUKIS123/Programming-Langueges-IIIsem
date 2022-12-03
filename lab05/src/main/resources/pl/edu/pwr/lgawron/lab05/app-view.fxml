@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Label?>
+
 <VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="pl.edu.pwr.lgawron.lab05.AppController" style="-fx-background-color: #cccccf;">
     <padding>
@@ -26,8 +27,8 @@
     </VBox>
 
     <VBox alignment="CENTER" spacing="20">
-        <HBox fx:id="descriptionBox" alignment="CENTER" spacing="80" visible="false">
-            <Text text="distributorOld"/>
+        <HBox fx:id="descriptionBox" alignment="CENTER" spacing="100" visible="false">
+            <Text text="distributor"/>
             <Text text="lab_technicians"/>
             <Text text="nourishment"/>
             <Text text="stamina"/>

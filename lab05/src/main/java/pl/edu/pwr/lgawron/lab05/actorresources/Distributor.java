@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab05.actorresources;
 
-import javafx.application.Platform;
 import javafx.scene.control.Label;
+import pl.edu.pwr.lgawron.lab05.frameutility.render.LabelTextRenderer;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,25 +14,21 @@ public class Distributor implements ResourceHolder {
         this.minSleepTime = minSleepTime;
         this.label = label;
         this.value = new AtomicInteger(0);
-        this.refreshLabel();
+        this.refreshLabel(0, false);
     }
 
     @Override
     public void stockUpResource(int id) throws InterruptedException {
         synchronized (this) {
-            this.refreshLabel(false, id);
+            this.refreshLabel(id, true);
 
             while (value.get() == 50) {
                 wait();
             }
 
-            Thread.sleep(minSleepTime + (int) (Math.random() * 100));
+            Thread.sleep(minSleepTime + (int) (Math.random() * 120));
             value.set(50);
         }
-    }
-
-    @Override
-    public void stockUpResource(int id, int amount) throws InterruptedException {
     }
 
     @Override
@@ -43,7 +39,7 @@ public class Distributor implements ResourceHolder {
             }
 
             value.set(0);
-            this.refreshLabel(true, id);
+            this.refreshLabel(id, false);
             notifyAll();
         }
     }
@@ -53,21 +49,11 @@ public class Distributor implements ResourceHolder {
         return value.get();
     }
 
-    private void refreshLabel(boolean variant, int id) {
-        Platform.runLater(
-                () -> {
-                    if (variant) {
-                        label.setText("|____free____|");
-                    } else {
-                        label.setText("|used_by_as-" + String.valueOf(Character.toChars(id + 65)) + "|");
-                    }
-                });
+    @Override
+    public void stockUpResource(int id, int amount) throws InterruptedException {
     }
 
-    private void refreshLabel() {
-        Platform.runLater(
-                () -> {
-                    label.setText("|____free____|");
-                });
+    private void refreshLabel(int id, boolean isUsed) {
+        LabelTextRenderer.renderDistributor(label, id, isUsed);
     }
 }
