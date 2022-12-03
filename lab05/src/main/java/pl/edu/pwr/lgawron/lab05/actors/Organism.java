@@ -13,7 +13,7 @@ public class Organism implements RunnableActor {
     private final int minSleepTime;
     private final int id;
     private final Label label;
-    private Thread t;
+    private final Thread t;
 
     public Organism(Feeder feeder, int minSleepTime, int id, Label label) {
         this.feeder = feeder;
@@ -36,9 +36,16 @@ public class Organism implements RunnableActor {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
             if (!this.eat()) {
                 this.decay();
-            } // else stamina +1 -> tylko jesli mniejsza od 5
+            } else {
+                if (stamina.get() < 5) {
+                    stamina.set(stamina.get() + 1);
+                }
+            }
+
+            // else stamina +1 -> tylko jesli mniejsza od 5
             this.refreshLabel();
         }
     }
@@ -66,8 +73,8 @@ public class Organism implements RunnableActor {
         return stamina;
     }
 
-    public void setStamina(int value) {
-        this.stamina.set(value);
+    public int getId() {
+        return id;
     }
 
     public AtomicBoolean getIsAlive() {
@@ -76,13 +83,5 @@ public class Organism implements RunnableActor {
 
     public void setIsAlive(boolean value) {
         this.isAlive.set(value);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public Thread getT() {
-        return t;
     }
 }

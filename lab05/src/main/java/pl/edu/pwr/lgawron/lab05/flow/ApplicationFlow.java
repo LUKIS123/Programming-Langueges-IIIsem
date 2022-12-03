@@ -27,8 +27,6 @@ public class ApplicationFlow {
     private List<Label> feederLabels;
     private List<Label> organismLabels;
 
-    //RunnableActor[][] grid;
-
     public ApplicationFlow(int organismNumber, int assistantNumber, int minSleepTime,
                            VBox distributorBox, VBox labTechniciansBox, VBox nourishmentBox, VBox staminaBox) {
 
@@ -128,14 +126,3 @@ public class ApplicationFlow {
         return organismLabels;
     }
 }
-
-
-//for (int j = 0; j < organismNumber; j++) {
-//        for (int k = 0; k < assistantNumber; k++) {
-//
-//        }
-//        }
-
-//            grid[i][0] = new Assistant(i, minSleepTime, this);
-//            grid[i][1] = new Feeder(minSleepTime, i);
-//            grid[i][2] = new Organism((Feeder) grid[i][1], minSleepTime, i);

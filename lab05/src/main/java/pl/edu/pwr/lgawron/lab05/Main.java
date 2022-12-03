@@ -31,7 +31,7 @@ public class Main extends Application {
         stage.setScene(scene);
 
         stage.setOnHidden(event -> {
-            AppController controller = (AppController) fxmlLoader.getController();
+            AppController controller = fxmlLoader.getController();
             controller.onExitApplication();
             Platform.exit();
         });

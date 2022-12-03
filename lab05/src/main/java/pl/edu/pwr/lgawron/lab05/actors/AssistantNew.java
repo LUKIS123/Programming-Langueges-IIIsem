@@ -7,10 +7,9 @@ import pl.edu.pwr.lgawron.lab05.flow.ApplicationFlow;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Assistant implements RunnableActor {
+public class AssistantNew implements RunnableActor {
     private final AtomicInteger food = new AtomicInteger(50);
     private final Object lock;
     private boolean exit;
@@ -24,10 +23,10 @@ public class Assistant implements RunnableActor {
     private Thread t;
     private Label currentLabel;
     private final AtomicInteger position;
-    private final Distributor distributor;
+    private final DistributorNew distributor;
     private final ApplicationFlow flow;
 
-    public Assistant(int id, int startingPosition, int minSleepTime, ApplicationFlow flow, Distributor distributor) {
+    public AssistantNew(int id, int startingPosition, int minSleepTime, ApplicationFlow flow, DistributorNew distributor) {
         this.id = id;
         this.position = new AtomicInteger(startingPosition);
         this.minSleepTime = minSleepTime;
@@ -137,9 +136,16 @@ public class Assistant implements RunnableActor {
     }
 
     public synchronized void takeFoodSupply() {
-        if (distributor.isFreeToUse()) {
-            distributor.setFreeToUse(false);
-            food.set(50);
+//        if (distributor.isFreeToUse()) {
+//            distributor.setFreeToUse(false);
+//            food.set(50);
+//        }
+        try {
+            distributor.dispense();
+            food.set(distributor.getValue());
+            distributor.finish();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         this.tryToSleep();
     }
@@ -148,16 +154,6 @@ public class Assistant implements RunnableActor {
         Platform.runLater(
                 () -> currentLabel.setText("|   " + food.get() + "   |")
         );
-    }
-
-    // do znajdywania
-
-    // -> indexof nie dziala
-    // cala funckja troche bez sensu
-    private int getCurrentPosition() {
-        // return assistantList.indexOf(this);
-        Optional<Assistant> first = assistantList.stream().filter(assistant -> assistant.getId() == this.id).findFirst();
-        return first.map(Assistant::getCurrentPosition).orElseGet(position::get);
     }
 
     private void tryToSleep() {

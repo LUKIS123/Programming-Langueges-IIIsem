@@ -33,7 +33,7 @@ public class Feeder implements RunnableActor {
             this.tryToSleep();
             if (!isFreeToUse()) {
                 try {
-                    Thread.sleep(minSleepTime + (int) (Math.random() * 100));
+                    Thread.sleep((int) (Math.random() * 100));
                     // t.wait(minSleepTime + (int) (Math.random() * 100));
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
@@ -73,8 +73,13 @@ public class Feeder implements RunnableActor {
     }
 
     public synchronized boolean consume() {
+        // new
+        if (!isFreeToUse()) {
+            return false;
+        }
+        // new
         if (nourishment.get() != 0) {
-            this.setFreeToUse(false);
+            //this.setFreeToUse(false);
             nourishment.set(nourishment.get() - 1);
 
             this.refreshLabel();
