@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
+
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pl.edu.pwr.lgawron.lab05.AppController" style="-fx-background-color: #cccccf;">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <VBox alignment="TOP_CENTER" spacing="5" style="-fx-background-color: #00bbff;">
+        <Text text="Set lab technician number, organism number and minimal sleep time:"/>
+        <HBox alignment="TOP_CENTER" spacing="40">
+            <TextField fx:id="labTechnicianNumber" promptText="Lab technicians"/>
+            <TextField fx:id="organismNumber" promptText="Organisms"/>
+            <TextField fx:id="minSleepTime" promptText="Minimal sleep time"/>
+        </HBox>
+        <HBox alignment="TOP_CENTER" spacing="40">
+            <Button text="Start" onAction="#onStartSimulationClick"/>
+            <Button text="Stop" onAction="#onStopSimulationClick"/>
+        </HBox>
+        <Label fx:id="communicate" visible="false"/>
+    </VBox>
+
+    <VBox alignment="CENTER" spacing="50">
+        <HBox fx:id="descriptionBox" alignment="CENTER" spacing="105" visible="false">
+            <Text text="distributor"/>
+            <Text text="lab_technicians"/>
+            <Text text="nourishment"/>
+            <Text text="stamina"/>
+        </HBox>
+        <HBox alignment="CENTER" spacing="115" style="-fx-background-color: #ffffff;">
+            <VBox fx:id="distributorBox" alignment="CENTER"/>
+            <VBox fx:id="labTechniciansBox" alignment="CENTER"/>
+            <VBox fx:id="nourishmentBox" alignment="CENTER"/>
+            <VBox fx:id="staminaBox" alignment="CENTER"/>
+        </HBox>
+    </VBox>
+
+</VBox>
