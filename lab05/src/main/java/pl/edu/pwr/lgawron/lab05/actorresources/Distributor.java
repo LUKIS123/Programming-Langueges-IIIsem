@@ -26,7 +26,7 @@ public class Distributor implements ResourceHolder {
                 wait();
             }
 
-            Thread.sleep(minSleepTime + (int) (Math.random() * 120));
+            Thread.sleep(minSleepTime + (int) (Math.random() * 100));
             value.set(50);
         }
     }
@@ -50,7 +50,7 @@ public class Distributor implements ResourceHolder {
     }
 
     @Override
-    public void stockUpResource(int id, int amount) throws InterruptedException {
+    public void stockUpResource(int id, int amount) {
     }
 
     private void refreshLabel(int id, boolean isUsed) {

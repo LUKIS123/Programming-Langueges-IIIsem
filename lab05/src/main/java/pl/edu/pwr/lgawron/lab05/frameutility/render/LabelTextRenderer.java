@@ -21,9 +21,9 @@ public class LabelTextRenderer {
         Platform.runLater(
                 () -> {
                     if (food >= 10) {
-                        label.setText("| as-" + s + "_" + food + " |");
+                        label.setText("| as-" + s + "__" + food + " |");
                     } else {
-                        label.setText("| as-" + s + "_0" + food + " |");
+                        label.setText("| as-" + s + "__0" + food + " |");
                     }
                 }
         );

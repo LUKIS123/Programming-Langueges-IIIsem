@@ -22,7 +22,6 @@ public class ApplicationFlow {
     private final List<Feeder> feederList;
     private final List<Assistant> assistantList;
     private final List<Organism> organismList;
-    private final Label distributorLabel;
     private final List<Label> assistantLabels;
     private final List<Label> feederLabels;
     private final List<Label> organismLabels;
@@ -42,7 +41,7 @@ public class ApplicationFlow {
         this.staminaBox = staminaBox;
 
         // labels & list of labels
-        this.distributorLabel = new Label();
+        Label distributorLabel = new Label();
         distributorBox.getChildren().add(distributorLabel);
 
         this.assistantLabels = new ArrayList<>();
@@ -96,11 +95,8 @@ public class ApplicationFlow {
                 assistant.setExit(true);
             }
         }
-        assistantList.clear();
 
-        organismList.forEach(organism -> {
-            organism.setExit(false);
-        });
+        organismList.forEach(organism -> organism.setExit(false));
     }
 
     public void clearLabels() {
