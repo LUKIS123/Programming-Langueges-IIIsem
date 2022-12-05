@@ -12,14 +12,13 @@ public class Feeder implements ResourceHolder {
     private final int minSleepTime;
     private final Label label;
     private final int id;
-    private final Object lock;
+    private static final Object lock = new Object();
 
     public Feeder(int minSleepTime, Label label, int id) {
         this.minSleepTime = minSleepTime;
         this.label = label;
         this.id = id;
         this.freeToUse = new AtomicBoolean(true);
-        this.lock = new Object();
 
         this.nourishment = new AtomicInteger(5);
         this.refreshLabel(false);
@@ -43,6 +42,7 @@ public class Feeder implements ResourceHolder {
 
     @Override
     public void stockUpResource(int id, int amount) throws InterruptedException {
+
         synchronized (lock) {
             this.refreshLabel(true);
             while (!freeToUse.get()) {

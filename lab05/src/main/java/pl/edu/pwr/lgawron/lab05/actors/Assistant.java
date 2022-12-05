@@ -22,6 +22,7 @@ public class Assistant implements RunnableActor {
     private Label currentLabel;
     private final AtomicInteger position;
     private final Distributor distributor;
+    private static final Object lock = new Object();
 
     public Assistant(int id, int startingPosition, int minSleepTime,
                      Distributor distributor, List<Label> labelList, List<Assistant> assistantList,
@@ -97,26 +98,30 @@ public class Assistant implements RunnableActor {
         }
     }
 
-    public synchronized void move() {
-        int nextPosition = position.get() + direction.get();
-        if (nextPosition == -1 || nextPosition >= assistantList.size()) {
-            this.changeDirection();
-            return;
+    public void move() {
+
+        synchronized (lock) {
+            int nextPosition = position.get() + direction.get();
+            if (nextPosition == -1 || nextPosition >= assistantList.size()) {
+                this.changeDirection();
+                return;
+            }
+
+            if (assistantList.get(nextPosition) == null) {
+                Collections.swap(assistantList, position.get(), nextPosition);
+
+                int oldPosition = position.get();
+                position.set(nextPosition);
+
+                // updating labels
+                currentLabel = labelList.get(nextPosition);
+                this.clearOldLabel(oldPosition);
+                this.refreshLabel();
+            } else {
+                this.changeDirection();
+            }
         }
 
-        if (assistantList.get(nextPosition) == null) {
-            Collections.swap(assistantList, position.get(), nextPosition);
-
-            int oldPosition = position.get();
-            position.set(nextPosition);
-
-            // updating labels
-            currentLabel = labelList.get(nextPosition);
-            this.clearOldLabel(oldPosition);
-            this.refreshLabel();
-        } else {
-            this.changeDirection();
-        }
     }
 
 
@@ -128,16 +133,19 @@ public class Assistant implements RunnableActor {
         }
     }
 
-    public synchronized void takeFoodSupply() {
-        try {
-            distributor.stockUpResource(this.id);
-            food.set(distributor.getResource());
-            distributor.finishProcess(this.id);
-            this.refreshLabel();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    public void takeFoodSupply() {
+
+        synchronized (lock) {
+            try {
+                distributor.stockUpResource(this.id);
+                food.set(distributor.getResource());
+                distributor.finishProcess(this.id);
+                this.refreshLabel();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            this.tryToSleep();
         }
-        this.tryToSleep();
     }
 
     private void tryToSleep() {
