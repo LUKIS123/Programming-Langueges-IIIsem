@@ -24,8 +24,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'pl.edu.pwr.lgawron.lab06.lab06'
-    mainClass = 'pl.edu.pwr.lgawron.lab06.lab06.HelloApplication'
+    mainModule = 'pl.edu.pwr.lgawron.lab06.player'
+    mainClass = 'pl.edu.pwr.lgawron.lab06.player.Main'
 }
 
 javafx {

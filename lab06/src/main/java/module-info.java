@@ -1,8 +1,12 @@
-module pl.edu.pwr.lgawron.lab06.lab06 {
+module pl.edu.pwr.lgawron.lab06 {
     requires javafx.controls;
     requires javafx.fxml;
 
+    opens pl.edu.pwr.lgawron.lab06.administrator to javafx.fxml;
+    opens pl.edu.pwr.lgawron.lab06.player to javafx.fxml;
 
-    opens pl.edu.pwr.lgawron.lab06.lab06 to javafx.fxml;
-    exports pl.edu.pwr.lgawron.lab06.lab06;
+    exports pl.edu.pwr.lgawron.lab06.administrator to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab06.player;
+    exports pl.edu.pwr.lgawron.lab06.player.parse;
+    opens pl.edu.pwr.lgawron.lab06.player.parse to javafx.fxml;
 }
