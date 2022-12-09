@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.player;
+package pl.edu.pwr.lgawron.lab06.administrator;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,9 +19,10 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
 
 public class AppController {
     @FXML
-    private HBox mainBox;
+    private Button hostButton;
     @FXML
-    private Button registerButton;
+    private HBox mainBox;
+
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
     private final ValuesHolder values = new ValuesHolder();
 
@@ -29,11 +30,11 @@ public class AppController {
     }
 
     @FXML
-    public void onRegisterButtonClick(ActionEvent openPopUpEvent) {
+    public void onHostButtonClick(ActionEvent openPopUpEvent) {
         Node node = (Node) openPopUpEvent.getSource();
         Stage thisStage = (Stage) node.getScene().getWindow();
 
-        registerButton.setOnAction(
+        hostButton.setOnAction(
                 event -> {
                     VBox dialogVbox = registerPopUp.renderPopUp();
 

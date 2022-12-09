@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.player;
+package pl.edu.pwr.lgawron.lab06.mainlogic.frame;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;

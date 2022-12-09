@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.player.parse;
+package pl.edu.pwr.lgawron.lab06.mainlogic.parse;
 
 public class ValuesHolder {
 
