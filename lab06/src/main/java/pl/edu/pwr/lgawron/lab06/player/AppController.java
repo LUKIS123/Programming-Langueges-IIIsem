@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 import pl.edu.pwr.lgawron.lab06.mainlogic.frame.RegisterPopUp;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.InputDataException;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
+import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerSenderSocket;
+
+import java.util.LinkedList;
 
 public class AppController {
     @FXML
@@ -77,6 +80,20 @@ public class AppController {
                     dialog.show();
                 }
         );
+    }
+
+    public void onStartButtonClick(ActionEvent actionEvent) {
+//        PlayerSenderSocket playerSenderSocket = new PlayerSenderSocket();
+//        playerSenderSocket.sendRequest(values.getPort(), "japierdole");
+
+
+//        LinkedList<Integer> linkedList = new LinkedList<>();
+//        linkedList.add(1);
+//        linkedList.add(2);
+//        System.out.println(linkedList.pop());
+//        System.out.println(linkedList.size());
+
+
     }
 
     public void onExitApplication() {

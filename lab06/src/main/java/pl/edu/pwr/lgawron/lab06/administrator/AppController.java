@@ -13,18 +13,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import pl.edu.pwr.lgawron.lab06.mainlogic.flow.GameFlow;
 import pl.edu.pwr.lgawron.lab06.mainlogic.frame.RegisterPopUp;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.InputDataException;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
 
 public class AppController {
     @FXML
+    private Button startButton;
+    @FXML
     private Button hostButton;
     @FXML
     private HBox mainBox;
-
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
     private final ValuesHolder values = new ValuesHolder();
+    private GameFlow game;
 
     public AppController() {
     }
@@ -79,6 +82,17 @@ public class AppController {
                 }
         );
     }
+
+    public void onStartButtonClick(ActionEvent actionEvent) {
+//        AdminReceiverSocket adminSocket = new AdminReceiverSocket(values.getPort());
+//        adminSocket.start();
+
+        // trzeba to zabiezpieczyc czy values cos w sobie w ogole ma
+        game = new GameFlow(values);
+        game.init();
+
+    }
+
 
     public void onExitApplication() {
 
