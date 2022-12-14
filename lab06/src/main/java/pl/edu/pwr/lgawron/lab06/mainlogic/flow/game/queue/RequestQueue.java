@@ -15,18 +15,21 @@ public class RequestQueue {
         if (queuedRequests.isEmpty()) {
             queuedRequests.add(request);
             notifyAll();
+        } else {
+            queuedRequests.add(request);
         }
-        queuedRequests.add(request);
-
         // notify
         //notifyAll();
     }
 
-    public synchronized PlayerRequest popLatest() throws InterruptedException {
-        while (queuedRequests.isEmpty()) {
-            wait();
+    public synchronized PlayerRequest popLatest() {
+        try {
+            while (queuedRequests.isEmpty()) {
+                wait();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
         return queuedRequests.pop();
     }
 

@@ -38,11 +38,13 @@ public class AdminReceiverSocket {
                     BufferedReader br = new BufferedReader(isr);
                     String theLine = br.readLine();
 
+                    // do wywalenia
+                    System.out.println(theLine);
                     // jakies parsowanie komend trzeba zrobic -> komenda: playerId, type, coordinates itd
                     String s = newLineSignRemover(theLine);
                     String[] split = s.split(";");
 
-                    PlayerRequest playerRequest = new PlayerRequest(split[0], split[1]);
+                    PlayerRequest playerRequest = new PlayerRequest(split[0], split[1]).withPort(split[2]);
                     requestQueue.addElement(playerRequest);
 
 

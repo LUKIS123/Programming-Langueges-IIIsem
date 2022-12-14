@@ -21,8 +21,8 @@ public class PlayerRequest {
         return Integer.parseInt(s);
     }
 
-    public PlayerRequest withPort(int port) {
-        serverPort = port;
+    public PlayerRequest withPort(String port) {
+        serverPort = this.getIntValue(port);
         return this;
     }
 

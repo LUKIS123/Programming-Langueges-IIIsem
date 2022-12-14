@@ -16,17 +16,19 @@ import javafx.stage.Stage;
 import pl.edu.pwr.lgawron.lab06.mainlogic.frame.RegisterPopUp;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.InputDataException;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
-import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerSenderSocket;
-
-import java.util.LinkedList;
 
 public class AppController {
+    @FXML
+    public Label connectionInfo;
+    @FXML
+    public Button startButton;
     @FXML
     private HBox mainBox;
     @FXML
     private Button registerButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
-    private final ValuesHolder values = new ValuesHolder();
+    private final PlayerAppFlow appFlow = new PlayerAppFlow();
+    private ValuesHolder values;
 
     public AppController() {
     }
@@ -36,14 +38,18 @@ public class AppController {
         Node node = (Node) openPopUpEvent.getSource();
         Stage thisStage = (Stage) node.getScene().getWindow();
 
+        values = new ValuesHolder();
+
         registerButton.setOnAction(
                 event -> {
                     VBox dialogVbox = registerPopUp.renderPopUp();
 
                     TextField server = new TextField();
                     server.setPromptText("Server");
+                    server.setText("localhost");
                     TextField port = new TextField();
                     port.setPromptText("Port");
+                    port.setText("8080");
                     Button button = new Button("Login");
                     button.setAlignment(Pos.BOTTOM_CENTER);
                     Label communicate = new Label();
@@ -66,6 +72,7 @@ public class AppController {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
                             inputEvent.consume();
+                            appFlow.startRegistration(values);
                         } catch (InputDataException e) {
                             communicate.setText(e.getMessage() + "!");
                             communicate.setVisible(true);

@@ -13,5 +13,5 @@ public enum RequestType {
     MOVE,
     TAKE,
     LOGOUT,
-    UNKNOWN
+    UNKNOWN;
 }

@@ -43,8 +43,10 @@ public class AppController {
 
                     TextField server = new TextField();
                     server.setPromptText("Server");
+                    server.setText("localhost");
                     TextField port = new TextField();
                     port.setPromptText("Port");
+                    port.setText("8080");
                     Button button = new Button("Login");
                     button.setAlignment(Pos.BOTTOM_CENTER);
                     Label communicate = new Label();

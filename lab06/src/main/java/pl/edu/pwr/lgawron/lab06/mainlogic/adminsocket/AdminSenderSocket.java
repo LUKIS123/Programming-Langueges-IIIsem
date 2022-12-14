@@ -1,22 +1,25 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 
 public class AdminSenderSocket {
-
-    public void sendResponse(int port, String host, String command) {
+    //komenda: playerId, type, coordinates itd
+    public void sendResponse(int port, String host, String message) {
         try {
-            Socket soc = new Socket("localhost", port);
+
+            Socket soc = new Socket(host, port);
+            OutputStream out = soc.getOutputStream();
+            PrintWriter pw = new PrintWriter(out, false);
+            pw.println(message);
+            pw.flush();
+            pw.close();
+            soc.close();
 
 
-            DataOutputStream outputStream = new DataOutputStream(soc.getOutputStream());
-            outputStream.writeUTF("Hello test 123! \n newline");
-            outputStream.flush();
-
-            //}
         } catch (SocketException e) {
             // jakos obsluzyc podczas zamyknia socketa
             e.printStackTrace();
