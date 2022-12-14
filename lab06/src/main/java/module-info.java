@@ -11,4 +11,12 @@ module pl.edu.pwr.lgawron.lab06 {
     opens pl.edu.pwr.lgawron.lab06.mainlogic.parse to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab06.mainlogic.frame;
     opens pl.edu.pwr.lgawron.lab06.mainlogic.frame to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab06.player.flow;
+    opens pl.edu.pwr.lgawron.lab06.player.flow to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab06.player.utils;
+    opens pl.edu.pwr.lgawron.lab06.player.utils to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab06.administrator.utils;
+    opens pl.edu.pwr.lgawron.lab06.administrator.utils to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab06.mainlogic.playersocket;
+    opens pl.edu.pwr.lgawron.lab06.mainlogic.playersocket to javafx.fxml;
 }

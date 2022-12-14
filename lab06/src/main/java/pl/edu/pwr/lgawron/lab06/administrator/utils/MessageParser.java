@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.administrator;
+package pl.edu.pwr.lgawron.lab06.administrator.utils;
 
 public class MessageParser {
     //komenda: playerId, type, coordinates itd

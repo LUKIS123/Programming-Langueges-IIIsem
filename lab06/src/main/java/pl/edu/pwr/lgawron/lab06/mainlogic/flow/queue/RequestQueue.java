@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.queue;
+package pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 

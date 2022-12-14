@@ -69,6 +69,11 @@ public class AppController {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
                             inputEvent.consume();
+
+                            // initialization & starting server
+                            game = new GameFlow(values);
+                            game.initServer();
+                            //
                         } catch (InputDataException e) {
                             communicate.setText(e.getMessage() + "!");
                             communicate.setVisible(true);
@@ -86,12 +91,7 @@ public class AppController {
     }
 
     public void onStartButtonClick(ActionEvent actionEvent) {
-//        AdminReceiverSocket adminSocket = new AdminReceiverSocket(values.getPort());
-//        adminSocket.start();
 
-        // trzeba to zabiezpieczyc czy values cos w sobie w ogole ma
-        game = new GameFlow(values);
-        game.init();
 
     }
 

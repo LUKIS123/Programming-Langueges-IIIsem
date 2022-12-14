@@ -16,10 +16,11 @@ import javafx.stage.Stage;
 import pl.edu.pwr.lgawron.lab06.mainlogic.frame.RegisterPopUp;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.InputDataException;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
+import pl.edu.pwr.lgawron.lab06.player.flow.PlayerAppFlow;
 
 public class AppController {
     @FXML
-    public Label connectionInfo;
+    private Label connectionInfo = new Label("Disconnected");
     @FXML
     public Button startButton;
     @FXML
@@ -27,7 +28,7 @@ public class AppController {
     @FXML
     private Button registerButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
-    private final PlayerAppFlow appFlow = new PlayerAppFlow();
+    private final PlayerAppFlow appFlow = new PlayerAppFlow(connectionInfo);
     private ValuesHolder values;
 
     public AppController() {
@@ -72,7 +73,11 @@ public class AppController {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
                             inputEvent.consume();
+
+                            // initialization -> joining game
                             appFlow.startRegistration(values);
+                            //
+
                         } catch (InputDataException e) {
                             communicate.setText(e.getMessage() + "!");
                             communicate.setVisible(true);
@@ -90,10 +95,6 @@ public class AppController {
     }
 
     public void onStartButtonClick(ActionEvent actionEvent) {
-//        PlayerSenderSocket playerSenderSocket = new PlayerSenderSocket();
-//        playerSenderSocket.sendRequest(values.getPort(), "japierdole");
-
-
 //        LinkedList<Integer> linkedList = new LinkedList<>();
 //        linkedList.add(1);
 //        linkedList.add(2);
@@ -105,5 +106,8 @@ public class AppController {
 
     public void onExitApplication() {
 
+    }
+
+    public void moveUp(ActionEvent actionEvent) {
     }
 }

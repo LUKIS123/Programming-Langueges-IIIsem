@@ -1,11 +1,11 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.queue;
+package pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminSenderSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.PlayerService;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
-import pl.edu.pwr.lgawron.lab06.administrator.MessageParser;
+import pl.edu.pwr.lgawron.lab06.administrator.utils.MessageParser;
 
 public class BackgroundWorker {
     private boolean exit;

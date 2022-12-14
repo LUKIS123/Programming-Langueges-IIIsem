@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.queue.RequestQueue;
+import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

@@ -10,10 +10,21 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
-    <HBox alignment="TOP_CENTER">
-        <Label fx:id="connectionInfo" alignment="TOP_LEFT" visible="false"/>
-        <Button fx:id="registerButton" text="Register To Game" alignment="TOP_CENTER" onAction="#onRegisterButtonClick"/>
-        <Button fx:id="startButton" text="Start Game" alignment="TOP_CENTER" onAction="#onStartButtonClick"/>
+    <HBox alignment="TOP_CENTER" spacing="20">
+        <Label fx:id="connectionInfo" alignment="TOP_LEFT"/>
+        <Button fx:id="registerButton" text="Register To Game" alignment="TOP_CENTER"
+                onAction="#onRegisterButtonClick"/>
+        <Button fx:id="startButton" text="Join Game" alignment="TOP_CENTER" onAction="#onStartButtonClick"/>
+
+        <!--   temporary stuff for movement    -->
+        <HBox>
+            <Button fx:id="up" text="up" onAction="#moveUp"/>
+            <Button fx:id="left" text="left"/>
+            <Button fx:id="right" text="right"/>
+            <Button fx:id="down" text="down"/>
+
+        </HBox>
+
 
     </HBox>
 
