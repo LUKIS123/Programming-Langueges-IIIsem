@@ -9,7 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,11 +21,15 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
 
 public class AppController {
     @FXML
+    public GridPane mapPane;
+    @FXML
+    public GridPane playerPane;
+    @FXML
+    public Pane mainPane;
+    @FXML
     private Button startButton;
     @FXML
     private Button hostButton;
-    @FXML
-    private HBox mainBox;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
     private final ValuesHolder values = new ValuesHolder();
     private GameFlow game;
@@ -71,7 +76,7 @@ public class AppController {
                             inputEvent.consume();
 
                             // initialization & starting server
-                            game = new GameFlow(values);
+                            game = new GameFlow(values, mapPane, playerPane);
                             game.initServer();
                             //
                         } catch (InputDataException e) {
@@ -82,7 +87,6 @@ public class AppController {
                             dialog.close();
                         }
                     };
-
                     button.setOnAction(buttonHandler);
                     dialog.setScene(dialogScene);
                     dialog.show();
@@ -91,8 +95,7 @@ public class AppController {
     }
 
     public void onStartButtonClick(ActionEvent actionEvent) {
-
-
+        game.firstRender();
     }
 
 

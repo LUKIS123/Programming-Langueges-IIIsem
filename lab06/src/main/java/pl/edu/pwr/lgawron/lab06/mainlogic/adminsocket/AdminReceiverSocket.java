@@ -1,6 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 
 import java.io.BufferedReader;
@@ -40,13 +41,10 @@ public class AdminReceiverSocket {
 
                     // do wywalenia
                     System.out.println(theLine);
-                    // jakies parsowanie komend trzeba zrobic -> komenda: playerId, type, coordinates itd
+
+                    // command: playerId, type, coordinates itd
                     String s = newLineSignRemover(theLine);
-                    String[] split = s.split(";");
-
-                    PlayerRequest playerRequest = new PlayerRequest(split[0], split[1]).withPort(split[2]);
-                    requestQueue.addElement(playerRequest);
-
+                    requestQueue.addElement(this.parseRequest(s));
 
                     // closing the non-server socket
                     pSocket.close();
@@ -61,6 +59,20 @@ public class AdminReceiverSocket {
             }
         });
         thread.start();
+    }
+
+    private PlayerRequest parseRequest(String s) {
+        String[] split = s.split(";");
+        if (split[1].equals("register")) {
+            return AdminSocketParser.pareRegisterRequest(split);
+        }
+        if (split[1].equals("see")) {
+            return AdminSocketParser.parseSeeRequest(split);
+        }
+        if (split[1].equals("move")) {
+            return AdminSocketParser.parseMoveRequest(split);
+        }
+        return new PlayerRequest("0", "unknown");
     }
 
     private String newLineSignRemover(String str) {

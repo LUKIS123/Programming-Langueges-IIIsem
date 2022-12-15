@@ -14,7 +14,6 @@ public class BackgroundWorker {
     private final AdminSenderSocket senderSocket;
     private final PlayerService playerService;
 
-
     public BackgroundWorker(RequestQueue requestQueue, AdminSenderSocket senderSocket, PlayerService playerService) {
         this.queue = requestQueue;
         this.senderSocket = senderSocket;
@@ -26,18 +25,39 @@ public class BackgroundWorker {
         thread = new Thread(() -> {
 
             while (!exit) {
-
                 PlayerRequest playerRequest = queue.popLatest();
 
-
-
+                // register
                 if (playerRequest.getType().equals(RequestType.REGISTER)) {
-                    PlayerInstance playerInstance = playerService.addPlayer(playerRequest.getServerPort());
+                    PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getServerPort());
+
                     senderSocket.sendResponse(
                             playerRequest.getServerPort(),
                             "localhost",
-                            MessageParser.createRegisterMessage(playerInstance.getId(), playerInstance.getServerPort())
+                            MessageParser.createRegisterMessage(
+                                    playerInstance.getId(),
+                                    playerInstance.getServerPort(),
+                                    playerInstance.getPosition())
                     );
+                }
+
+                // see
+                if (playerRequest.getType().equals(RequestType.SEE)) {
+                    PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
+                    senderSocket.sendResponse(
+                            playerInstance.getServerPort(),
+                            "localhost",
+                            MessageParser.createSeeMessage(playerInstance.getId(),
+                                    playerService.getAdjacentParsed(playerInstance))
+                    );
+                }
+
+                // move
+                if (playerRequest.getType().equals(RequestType.MOVE)) {
+                    // PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
+                    playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
+
+
                 }
 
 

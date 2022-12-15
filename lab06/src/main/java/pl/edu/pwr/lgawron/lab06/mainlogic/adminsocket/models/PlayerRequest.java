@@ -4,6 +4,8 @@ public class PlayerRequest {
     private final int playerId;
     private final RequestType type;
     private int serverPort;
+    private int moveX = 0;
+    private int moveY = 0;
 
     public PlayerRequest(String playerId, String type) {
         this.playerId = this.getIntValue(playerId);
@@ -13,6 +15,18 @@ public class PlayerRequest {
     private RequestType checkType(String type) {
         if (type.equals("register")) {
             return RequestType.REGISTER;
+        }
+        if (type.equals("see")) {
+            return RequestType.SEE;
+        }
+        if (type.equals("move")) {
+            return RequestType.MOVE;
+        }
+        if (type.equals("take")) {
+            return RequestType.TAKE;
+        }
+        if (type.equals("logout")) {
+            return RequestType.LOGOUT;
         }
         return RequestType.UNKNOWN;
     }
@@ -26,6 +40,13 @@ public class PlayerRequest {
         return this;
     }
 
+    public PlayerRequest withCoordinates(String coordinates) {
+        String[] split = coordinates.split(",");
+        moveX = Integer.parseInt(split[0]);
+        moveY = Integer.parseInt(split[1]);
+        return this;
+    }
+
     public int getPlayerId() {
         return playerId;
     }
@@ -36,5 +57,13 @@ public class PlayerRequest {
 
     public int getServerPort() {
         return serverPort;
+    }
+
+    public int getMoveX() {
+        return moveX;
+    }
+
+    public int getMoveY() {
+        return moveY;
     }
 }

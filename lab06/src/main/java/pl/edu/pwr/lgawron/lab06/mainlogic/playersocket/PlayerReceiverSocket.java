@@ -64,10 +64,13 @@ public class PlayerReceiverSocket {
 
     private void handleResponse(String[] split) {
         String type = split[1];
+
         if (type.equals("register")) {
             // 1;register;61595
-
             worker.init(Integer.parseInt(split[2]), Integer.parseInt(split[0]));
+        }
+        if (type.equals("see")) {
+
         }
 
     }

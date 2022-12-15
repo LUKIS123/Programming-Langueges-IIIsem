@@ -19,4 +19,6 @@ module pl.edu.pwr.lgawron.lab06 {
     opens pl.edu.pwr.lgawron.lab06.administrator.utils to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab06.mainlogic.playersocket;
     opens pl.edu.pwr.lgawron.lab06.mainlogic.playersocket to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry;
+    opens pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry to javafx.fxml;
 }

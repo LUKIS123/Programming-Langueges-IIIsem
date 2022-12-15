@@ -30,6 +30,3 @@ public class AdminSenderSocket {
     }
 
 }
-
-
-//https://stackoverflow.com/questions/2675362/how-to-find-an-available-port -> wanze

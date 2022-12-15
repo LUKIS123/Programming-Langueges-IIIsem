@@ -18,8 +18,6 @@ public class RequestQueue {
         } else {
             queuedRequests.add(request);
         }
-        // notify
-        //notifyAll();
     }
 
     public synchronized PlayerRequest popLatest() {

@@ -1,27 +1,46 @@
 package pl.edu.pwr.lgawron.lab06.player.flow;
 
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
 import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerSenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.utils.GameData;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
+import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestParser;
 
 public class PlayerWorker {
     private GameData gameData;
     private PlayerData playerData;
-    private final Label info;
+    private VBox controlBox;
     private PlayerSenderSocket senderSocket;
+    private ValuesHolder valuesHolder;
 
-    public PlayerWorker(Label label) {
-        this.info = label;
+    public PlayerWorker(VBox controlBox, ValuesHolder valuesHolder) {
+        this.valuesHolder = valuesHolder;
+        this.controlBox = controlBox;
     }
 
     public void init(int receiverPort, int id) {
         this.playerData = new PlayerData(receiverPort, id);
         this.gameData = new GameData();
 
-        System.out.println("Success" + id + ";" + receiverPort);
-        info.setText("Connected, id=" + id + ", listening on=" + receiverPort);
-        info.setVisible(true);
+        this.displayBasicInfo(receiverPort, id);
+    }
+
+    @FXML
+    public void displayBasicInfo(int receiverPort, int id) {
+        System.out.println("Success;" + id + ";" + receiverPort);
+        Platform.runLater(() ->
+                controlBox.getChildren().add(new Label("Connected, id=" + id + ", listening on=" + receiverPort)));
+    }
+
+    public void sendSeeRequest() {
+        if (playerData == null) {
+            return;
+        }
+        senderSocket.sendRequest(valuesHolder.getPort(), valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
     }
 
     public void setSenderSocket(PlayerSenderSocket senderSocket) {
