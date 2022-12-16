@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.parse.AdminSocketParser;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.parse.AdminResponseParser;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 
 import java.io.BufferedReader;
@@ -66,13 +66,13 @@ public class AdminReceiverSocket {
     private PlayerRequest parseRequest(String s) {
         String[] split = s.split(";");
         if (split[1].equals("register")) {
-            return AdminSocketParser.pareRegisterRequest(split);
+            return AdminResponseParser.pareRegisterRequest(split);
         }
         if (split[1].equals("see")) {
-            return AdminSocketParser.parseSeeRequest(split);
+            return AdminResponseParser.parseSeeRequest(split);
         }
         if (split[1].equals("move")) {
-            return AdminSocketParser.parseMoveRequest(split);
+            return AdminResponseParser.parseMoveRequest(split);
         }
         return new PlayerRequest("0", "unknown");
     }
@@ -86,7 +86,14 @@ public class AdminReceiverSocket {
 
     // server port on host
     public int getServerPort() {
-        return this.serverSocket.getLocalPort();
+        return serverSocket.getLocalPort();
+    }
+
+    public boolean checkIfConnected() {
+        if (serverSocket == null) {
+            return false;
+        }
+        return serverSocket.isBound();
     }
 
     public void setExit(boolean exit) {

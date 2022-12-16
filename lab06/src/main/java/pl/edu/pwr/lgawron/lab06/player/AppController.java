@@ -9,7 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,11 +33,13 @@ public class AppController {
     @FXML
     public Button see;
     @FXML
-    private Label connectionInfo;
+    public Pane mainPane;
+    @FXML
+    public GridPane mapPane;
+    @FXML
+    public GridPane playerPane;
     @FXML
     public Button startButton;
-    @FXML
-    private HBox mainBox;
     @FXML
     private Button registerButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
@@ -87,7 +90,7 @@ public class AppController {
                             inputEvent.consume();
 
                             // initialization -> joining game
-                            appFlow.startRegistration(values, controlBox);
+                            appFlow.startRegistration(values, controlBox, mapPane, playerPane);
                             //
 
                         } catch (InputDataException e) {
@@ -114,8 +117,6 @@ public class AppController {
 //        System.out.println(linkedList.size());
 
 
-        // tutaj mozna dorobic to wyswietlanie na labelce -> port itd
-
     }
 
     /// temporary
@@ -126,14 +127,17 @@ public class AppController {
 
     @FXML
     public void moveLeft(ActionEvent actionEvent) {
+        appFlow.moveLeft();
     }
 
     @FXML
     public void moveRight(ActionEvent actionEvent) {
+        appFlow.moveRight();
     }
 
     @FXML
     public void moveDown(ActionEvent actionEvent) {
+        appFlow.moveDown();
     }
 
     @FXML

@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.registration;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.parse.AdminSocketParser;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.parse.AdminResponseParser;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 
 import java.io.BufferedReader;
@@ -63,7 +63,7 @@ public class RegisterSocket {
     private PlayerRequest parseRequest(String s) {
         String[] split = s.split(";");
         if (split[1].equals("register")) {
-            return AdminSocketParser.pareRegisterRequest(split);
+            return AdminResponseParser.pareRegisterRequest(split);
         }
         return new PlayerRequest("0", "unknown");
     }

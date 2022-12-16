@@ -44,15 +44,11 @@ public class PlayerReceiverSocket {
 
                     System.out.println(theLine);
                     String s = newLineSignRemover(theLine);
-                    String[] split = s.split(";");
-                    this.handleResponse(split);
-
+                    this.handleResponse(s);
 
                     sc.close();
                 }
-
             } catch (SocketException e) {
-                // jakos obsluzyc podczas zamyknia socketa
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -62,15 +58,15 @@ public class PlayerReceiverSocket {
         thread.start();
     }
 
-    private void handleResponse(String[] split) {
+    private void handleResponse(String s) {
+        String[] split = s.split(";");
         String type = split[1];
 
         if (type.equals("register")) {
-            // 1;register;61595
-            worker.init(Integer.parseInt(split[2]), Integer.parseInt(split[0]));
+            worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4]);
         }
         if (type.equals("see")) {
-
+            worker.handleSeeResponse(split);
         }
 
     }

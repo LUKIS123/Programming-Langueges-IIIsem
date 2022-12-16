@@ -31,13 +31,17 @@ public class BackgroundWorker {
                 // register
                 if (playerRequest.getType().equals(RequestType.REGISTER)) {
                     PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getClientServerPort());
-
+                    if (!playerInstance.isBound()) {
+                        this.tryToSleep();
+                    }
                     playerInstance.getSenderSocket().sendResponse(
                             playerRequest.getClientServerPort(),
                             "localhost",
                             MessageParser.createRegisterMessage(
                                     playerInstance.getId(),
-                                    playerInstance.getReceiverPort(), // cos nie dziala -> null pointer
+                                    playerInstance.getReceiverPort(),
+                                    playerService.getDimensions().getKey(),
+                                    playerService.getDimensions().getValue(),
                                     playerInstance.getPosition())
                     );
                 }
@@ -45,6 +49,7 @@ public class BackgroundWorker {
                 // see
                 if (playerRequest.getType().equals(RequestType.SEE)) {
                     PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
+
                     playerInstance.getSenderSocket().sendResponse(
                             playerInstance.getClientServerPort(),
                             "localhost",
@@ -55,22 +60,33 @@ public class BackgroundWorker {
 
                 // move
                 if (playerRequest.getType().equals(RequestType.MOVE)) {
-                    // PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
                     PlayerInstance playerInstance = playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
+
                     playerInstance.getSenderSocket().sendResponse(
                             playerInstance.getClientServerPort(),
                             proxy,
-                            MessageParser.createMoveMessage(playerRequest.getPlayerId())
+                            MessageParser.createMoveMessage(playerRequest.getPlayerId(), playerInstance.getPosition().getPositionX(), playerInstance.getPosition().getPositionY())
                     );
+                }
+
+                // take
+                if (playerRequest.getType().equals(RequestType.TAKE)) {
 
 
                 }
-
 
             }
 
         });
         thread.start();
+    }
+
+    private void tryToSleep() {
+        try {
+            Thread.sleep(5);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

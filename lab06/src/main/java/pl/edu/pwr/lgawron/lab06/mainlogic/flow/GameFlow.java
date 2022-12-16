@@ -2,7 +2,6 @@ package pl.edu.pwr.lgawron.lab06.mainlogic.flow;
 
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminSenderSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.registration.RegisterSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.PlayerService;
@@ -48,7 +47,7 @@ public class GameFlow {
         this.gameGrid = new ArrayList<>();
 
         // init
-        this.initMap();
+        this.initMapGrid();
         this.mapRenderer = new MapRenderer(mapPane, playerPane, gameGrid, dimensions);
 
         // w tej klasie beda wykonywane komendy
@@ -61,7 +60,7 @@ public class GameFlow {
         backgroundWorker.start();
     }
 
-    private void initMap() {
+    private void initMapGrid() {
         List<String> lines = DataFileUtility.readFileLines("game_map.txt");
 
         int x = 0;

@@ -13,13 +13,13 @@ public class PlayerInstance {
     private final AdminReceiverSocket receiverSocket;
     private final AdminSenderSocket senderSocket;
 
-    public PlayerInstance(int id, int clientServerPort, RequestQueue requestQueue, AdminReceiverSocket adminReceiverSocket) {
+    public PlayerInstance(int id, int clientServerPort, RequestQueue requestQueue) {
         this.id = id;
         this.clientServerPort = clientServerPort;
         this.requestQueue = requestQueue;
-        this.receiverSocket = adminReceiverSocket;
-//        this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
-//        this.receiverSocket.start();
+        // this.receiverSocket = adminReceiverSocket;
+        this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
+        this.receiverSocket.startListening();
         this.senderSocket = new AdminSenderSocket();
     }
 
@@ -53,6 +53,10 @@ public class PlayerInstance {
 
     public int getReceiverPort() {
         return receiverSocket.getServerPort();
+    }
+
+    public boolean isBound() {
+        return receiverSocket.checkIfConnected();
     }
 
     public AdminSenderSocket getSenderSocket() {

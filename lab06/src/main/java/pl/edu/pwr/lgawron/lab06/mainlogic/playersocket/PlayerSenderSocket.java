@@ -2,6 +2,7 @@ package pl.edu.pwr.lgawron.lab06.mainlogic.playersocket;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
@@ -11,9 +12,7 @@ public class PlayerSenderSocket {
         try {
             Socket soc = new Socket(host, port);
 
-            DataOutputStream outputStream = new DataOutputStream(
-                    soc.getOutputStream()
-            );
+            OutputStream outputStream = soc.getOutputStream();
             PrintWriter pw = new PrintWriter(outputStream, false);
             pw.println(command);
             pw.flush();
@@ -21,7 +20,6 @@ public class PlayerSenderSocket {
             soc.close();
 
         } catch (SocketException e) {
-            // jakos obsluzyc podczas zamyknia socketa
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

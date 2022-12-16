@@ -25,7 +25,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pl/edu/pwr/lgawron/lab06/player-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1050, 850);
         stage.setTitle("Treasure Island");
         stage.setScene(scene);
 

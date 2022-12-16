@@ -1,13 +1,12 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.flow;
+package pl.edu.pwr.lgawron.lab06.player.utils;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
@@ -16,7 +15,7 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
 import java.io.File;
 import java.util.List;
 
-public class MapRenderer {
+public class PlayerMapRenderer {
     private final List<List<EnvironmentInstance>> gameGrid;
     private final Pair<Integer, Integer> dimensions;
     private final GridPane mapPane;
@@ -25,43 +24,35 @@ public class MapRenderer {
     private final Node[][] frontTiles;
     private final Image treasureImage = new Image((new File("treasure.png").toURI().toString()));
 
-
-    public MapRenderer(GridPane mapPane, GridPane playerPane, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions) {
+    public PlayerMapRenderer(GridPane mapPane, GridPane playerPane, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions) {
         this.gameGrid = gameGrid;
         this.dimensions = dimensions;
         this.mapPane = mapPane;
         this.playerPane = playerPane;
-
-//        this.fillPlayerPane();
 
         // table of tiles on position x,y
         this.backgroundTiles = new Node[dimensions.getKey()][dimensions.getValue()];
         this.frontTiles = new Node[dimensions.getKey()][dimensions.getValue()];
     }
 
-    public void renderMap() {
-        // playerPane
-        this.fillPlayerPane();
-        // gameMap
-        for (List<EnvironmentInstance> environmentInstances : gameGrid) {
-            for (EnvironmentInstance environmentInstance : environmentInstances) {
-                Rectangle rectangle = new Rectangle(50, 50);
-                int positionX = environmentInstance.getPosition().getPositionX();
-                int positionY = environmentInstance.getPosition().getPositionY();
+    public void firstRender() {
+        Platform.runLater(() -> {
+            // playerPane
+            this.fillPlayerPane();
+            // gameMap
+            for (List<EnvironmentInstance> environmentInstances : gameGrid) {
+                for (EnvironmentInstance environmentInstance : environmentInstances) {
+                    Rectangle rect = new Rectangle(50, 50);
+                    rect.setFill(Color.TRANSPARENT);
 
-                if (environmentInstance.getType().equals("obstacle")) {
-                    rectangle.setStyle("-fx-fill: grey");
+                    int positionX = environmentInstance.getPosition().getPositionX();
+                    int positionY = environmentInstance.getPosition().getPositionY();
+
+                    mapPane.add(rect, positionX, positionY);
+                    backgroundTiles[positionX][positionY] = rect;
                 }
-                if (environmentInstance.getType().equals("path")) {
-                    rectangle.setStyle("-fx-fill: gold");
-                }
-                if (environmentInstance.getType().equals("treasure")) {
-                    rectangle.setFill(new ImagePattern(treasureImage));
-                }
-                mapPane.add(rectangle, positionX, positionY);
-                backgroundTiles[positionX][positionY] = rectangle;
             }
-        }
+        });
     }
 
     private void fillPlayerPane() {
@@ -74,13 +65,11 @@ public class MapRenderer {
         }
     }
 
-    public void renderPlayers(PlayerInstance playerInstance) {
-        int x = playerInstance.getPosition().getPositionX();
-        int y = playerInstance.getPosition().getPositionY();
+    public void renderPlayerSpawned(int x, int y, PlayerData playerData) {
         Platform.runLater(() -> {
             playerPane.getChildren().remove(frontTiles[x][y]);
 
-            Label playerLabel = new Label("Player " + playerInstance.getId());
+            Label playerLabel = new Label("Player " + playerData.getId());
             playerLabel.setAlignment(Pos.CENTER);
             playerLabel.setPrefSize(50, 50);
             playerLabel.setStyle("-fx-background-color: magenta");
@@ -90,7 +79,16 @@ public class MapRenderer {
         });
     }
 
-    public void renderMove(int x, int y, int newX, int newY, PlayerInstance playerInstance) {
+    public void renderSee() {
+        Platform.runLater(() -> {
+
+
+
+
+        });
+    }
+
+    public void renderMove(int x, int y, int newX, int newY, PlayerData playerData) {
         Platform.runLater(() -> {
             playerPane.getChildren().remove(frontTiles[x][y]);
 
@@ -101,7 +99,7 @@ public class MapRenderer {
 
             playerPane.getChildren().remove(frontTiles[newX][newY]);
 
-            Label playerLabel = new Label("Player " + playerInstance.getId());
+            Label playerLabel = new Label("Player " + playerData.getId());
             playerLabel.setAlignment(Pos.CENTER);
             playerLabel.setPrefSize(50, 50);
             playerLabel.setStyle("-fx-background-color: magenta");

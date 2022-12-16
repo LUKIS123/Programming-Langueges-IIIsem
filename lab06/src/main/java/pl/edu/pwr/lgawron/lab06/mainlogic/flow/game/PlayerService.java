@@ -38,7 +38,7 @@ public class PlayerService {
     public PlayerInstance addRegisteredPlayer(int playerServerPort) {
         AdminReceiverSocket adminReceiverSocket = new AdminReceiverSocket(0, requestQueue);
 
-        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue, adminReceiverSocket);
+        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
         newPlayer.setPosition(this.getRandomLocation());
         // printowanie i komenda zwracajaca? -> gracz musi dostac gdzie jest
         playerList.add(newPlayer);
@@ -54,6 +54,11 @@ public class PlayerService {
 
     public PlayerInstance movePlayer(int playerId, int moveX, int moveY) {
         PlayerInstance playerById = this.getPlayerById(playerId);
+
+        if (!this.checkIfMovePossible(playerById, moveX, moveY)) {
+            return playerById;
+        }
+
 
         // render
         mapRenderer.renderMove(
@@ -71,40 +76,59 @@ public class PlayerService {
         return playerById;
     }
 
-    // do poprawy
-    public String[] getNearestEnvironmentParsed(PlayerInstance playerInstance) {
-        Point2D position = playerInstance.getPosition();
-        int x = position.getPositionX();
-        int y = position.getPositionY();
+    private boolean checkIfMovePossible(PlayerInstance player, int moveX, int moveY) {
+        int x = player.getPosition().getPositionX() + moveX;
+        int y = player.getPosition().getPositionY() + moveY;
 
-        String[][] env = new String[3][3];
-
-        if (x > 0 && y > 0 && x < dimensions.getKey() && y < dimensions.getValue()) {
-            List<EnvironmentInstance> upper = gameGrid.get(y - 1);
-            List<EnvironmentInstance> actual = gameGrid.get(y);
-            List<EnvironmentInstance> lower = gameGrid.get(y + 1);
+        if (this.checkIfPlayerPresent(x, y)) {
+            return false;
         }
 
-        if (y > 0 && y < dimensions.getValue()) {
-            if (x > 0 && x < dimensions.getKey()) {
-
+        try {
+            if (gameGrid.get(y).get(x).getType().equals("obstacle")) {
+                return false;
             }
-
-        }
-        if (y == 0) {
-
+        } catch (IndexOutOfBoundsException e) {
+            return false;
         }
 
-        if (y == dimensions.getValue()) {
-
-        }
-
-        // zaimplementowac logike -> sprawdzanie krawedzi
-        String up = String.join(",", env[0]);
-        String cu = String.join(",", env[0]);
-        String dw = String.join(",", env[0]);
-        return new String[]{up, cu, dw};
+        return true;
     }
+
+    // do poprawy
+//    public String[] getNearestEnvironmentParsed(PlayerInstance playerInstance) {
+//        Point2D position = playerInstance.getPosition();
+//        int x = position.getPositionX();
+//        int y = position.getPositionY();
+//
+//        String[][] env = new String[3][3];
+//
+//        if (x > 0 && y > 0 && x < dimensions.getKey() && y < dimensions.getValue()) {
+//            List<EnvironmentInstance> upper = gameGrid.get(y - 1);
+//            List<EnvironmentInstance> actual = gameGrid.get(y);
+//            List<EnvironmentInstance> lower = gameGrid.get(y + 1);
+//        }
+//
+//        if (y > 0 && y < dimensions.getValue()) {
+//            if (x > 0 && x < dimensions.getKey()) {
+//
+//            }
+//
+//        }
+//        if (y == 0) {
+//
+//        }
+//
+//        if (y == dimensions.getValue()) {
+//
+//        }
+//
+//        // zaimplementowac logike -> sprawdzanie krawedzi
+//        String up = String.join(",", env[0]);
+//        String cu = String.join(",", env[0]);
+//        String dw = String.join(",", env[0]);
+//        return new String[]{up, cu, dw};
+//    }
 
     private String parseBack(EnvironmentInstance instance) {
         if (instance.getType().equals("path")) {
@@ -197,11 +221,7 @@ public class PlayerService {
         }
 
         if (isValidPos(i, j, n, m)) {
-            if (this.checkIfPlayerPresent(j, i)) {
-                cur.add("P");
-            } else {
-                cur.add(parseBack(gameGrid.get(i).get(j)));
-            }
+            cur.add(parseBack(gameGrid.get(i).get(j)));
         } else {
             cur.add("-");
         }
@@ -259,5 +279,9 @@ public class PlayerService {
 
     public List<PlayerInstance> getPlayerList() {
         return playerList;
+    }
+
+    public Pair<Integer, Integer> getDimensions() {
+        return dimensions;
     }
 }
