@@ -9,4 +9,8 @@ public class PlayerRequestParser {
     public static String seeRequest(int id) {
         return id + ";see\n";
     }
+
+    public static String moveUpRequest(int id) {
+        return id + ";move;0," + "-1\n";
+    }
 }

@@ -23,9 +23,11 @@ public class AdminReceiverSocket {
         this.port = port;
         this.requestQueue = requestQueue;
         this.exit = false;
+
+        this.startListening();
     }
 
-    public void start() {
+    public void startListening() {
         thread = new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(port);
@@ -82,8 +84,9 @@ public class AdminReceiverSocket {
         return str;
     }
 
+    // server port on host
     public int getServerPort() {
-        return serverSocket.getLocalPort();
+        return this.serverSocket.getLocalPort();
     }
 
     public void setExit(boolean exit) {

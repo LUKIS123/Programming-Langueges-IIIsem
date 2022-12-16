@@ -1,6 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game;
 
 import javafx.util.Pair;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.MapRenderer;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
@@ -35,7 +36,9 @@ public class PlayerService {
     }
 
     public PlayerInstance addRegisteredPlayer(int playerServerPort) {
-        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
+        AdminReceiverSocket adminReceiverSocket = new AdminReceiverSocket(0, requestQueue);
+
+        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue, adminReceiverSocket);
         newPlayer.setPosition(this.getRandomLocation());
         // printowanie i komenda zwracajaca? -> gracz musi dostac gdzie jest
         playerList.add(newPlayer);
@@ -49,8 +52,23 @@ public class PlayerService {
         return playerList.stream().filter(p -> p.getId() == playerId).findFirst().get();
     }
 
-    public void movePlayer(int playerId, int moveX, int moveY) {
+    public PlayerInstance movePlayer(int playerId, int moveX, int moveY) {
+        PlayerInstance playerById = this.getPlayerById(playerId);
 
+        // render
+        mapRenderer.renderMove(
+                playerById.getPosition().getPositionX(),
+                playerById.getPosition().getPositionY(),
+                playerById.getPosition().getPositionX() + moveX,
+                playerById.getPosition().getPositionY() + moveY,
+                playerById
+        );
+
+        // saving data
+        playerById.setX(playerById.getPosition().getPositionX() + moveX);
+        playerById.setY(playerById.getPosition().getPositionY() + moveY);
+
+        return playerById;
     }
 
     // do poprawy

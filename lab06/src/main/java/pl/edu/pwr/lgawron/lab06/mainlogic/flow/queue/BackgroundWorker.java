@@ -13,6 +13,7 @@ public class BackgroundWorker {
     private final RequestQueue queue;
     private final AdminSenderSocket senderSocket;
     private final PlayerService playerService;
+    private final String proxy = "localhost";
 
     public BackgroundWorker(RequestQueue requestQueue, AdminSenderSocket senderSocket, PlayerService playerService) {
         this.queue = requestQueue;
@@ -36,7 +37,7 @@ public class BackgroundWorker {
                             "localhost",
                             MessageParser.createRegisterMessage(
                                     playerInstance.getId(),
-                                    playerInstance.getReceiverPort(),
+                                    playerInstance.getReceiverPort(), // cos nie dziala -> null pointer
                                     playerInstance.getPosition())
                     );
                 }
@@ -55,7 +56,12 @@ public class BackgroundWorker {
                 // move
                 if (playerRequest.getType().equals(RequestType.MOVE)) {
                     // PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
-                    playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
+                    PlayerInstance playerInstance = playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
+                    playerInstance.getSenderSocket().sendResponse(
+                            playerInstance.getClientServerPort(),
+                            proxy,
+                            MessageParser.createMoveMessage(playerRequest.getPlayerId())
+                    );
 
 
                 }

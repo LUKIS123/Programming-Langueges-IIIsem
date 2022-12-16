@@ -45,6 +45,10 @@ public class PlayerWorker {
         senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
     }
 
+    public void sendMoveUpRequest() {
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveUpRequest(playerData.getId()));
+    }
+
     public void setSenderSocket(PlayerSenderSocket senderSocket) {
         this.senderSocket = senderSocket;
     }
@@ -56,4 +60,6 @@ public class PlayerWorker {
     public PlayerData getPlayerData() {
         return playerData;
     }
+
+
 }

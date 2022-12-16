@@ -95,6 +95,7 @@ public class AppController {
     }
 
     public void onStartButtonClick(ActionEvent actionEvent) {
+        game.finishRegistration();
         game.firstRender();
     }
 

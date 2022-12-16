@@ -4,6 +4,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminSenderSocket;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.registration.RegisterSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.PlayerService;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
@@ -21,7 +22,7 @@ import java.util.List;
 public class GameFlow {
     private final ValuesHolder valuesHolder;
     private final RequestQueue requestQueue;
-    private final AdminReceiverSocket registrationReceiverSocket;
+    private final RegisterSocket registrationReceiverSocket;
     private final AdminSenderSocket registrationSenderSocket;
     private final BackgroundWorker backgroundWorker;
     private final PlayerService playerService;
@@ -39,7 +40,8 @@ public class GameFlow {
 
         this.requestQueue = new RequestQueue();
         this.registrationSenderSocket = new AdminSenderSocket();
-        this.registrationReceiverSocket = new AdminReceiverSocket(valuesHolder.getPort(), requestQueue);
+        // this.registrationReceiverSocket = new AdminReceiverSocket(valuesHolder.getPort(), requestQueue);
+        this.registrationReceiverSocket = new RegisterSocket(valuesHolder.getPort(), requestQueue);
 
         // gra
         //this.grid = new ArrayList<>();
@@ -91,4 +93,7 @@ public class GameFlow {
         mapRenderer.renderMap();
     }
 
+    public void finishRegistration() {
+        registrationReceiverSocket.setExit(true);
+    }
 }

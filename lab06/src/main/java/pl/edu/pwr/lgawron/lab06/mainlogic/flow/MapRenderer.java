@@ -87,6 +87,26 @@ public class MapRenderer {
         });
     }
 
+    public void renderMove(int x, int y, int newX, int newY, PlayerInstance playerInstance) {
+        Platform.runLater(() -> {
+            playerPane.getChildren().remove(frontTiles[x][y]);
+
+            Rectangle rect = new Rectangle(50, 50);
+            rect.setFill(Color.TRANSPARENT);
+            playerPane.add(rect, x, y);
+            frontTiles[x][y] = rect;
+
+            playerPane.getChildren().remove(frontTiles[newX][newY]);
+
+            Label playerLabel = new Label("Player " + playerInstance.getId());
+            playerLabel.setAlignment(Pos.CENTER);
+            playerLabel.setPrefSize(50, 50);
+            playerLabel.setStyle("-fx-background-color: magenta");
+            playerPane.add(playerLabel, newX, newY);
+            frontTiles[newX][newY] = playerLabel;
+        });
+    }
+
     public Node[][] getBackgroundTiles() {
         return backgroundTiles;
     }

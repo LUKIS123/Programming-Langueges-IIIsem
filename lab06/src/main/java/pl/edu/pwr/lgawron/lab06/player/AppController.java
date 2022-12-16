@@ -121,6 +121,7 @@ public class AppController {
     /// temporary
     @FXML
     public void moveUp(ActionEvent actionEvent) {
+        appFlow.moveUp();
     }
 
     @FXML

@@ -13,12 +13,13 @@ public class PlayerInstance {
     private final AdminReceiverSocket receiverSocket;
     private final AdminSenderSocket senderSocket;
 
-    public PlayerInstance(int id, int clientServerPort, RequestQueue requestQueue) {
+    public PlayerInstance(int id, int clientServerPort, RequestQueue requestQueue, AdminReceiverSocket adminReceiverSocket) {
         this.id = id;
         this.clientServerPort = clientServerPort;
         this.requestQueue = requestQueue;
-        this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
-        this.receiverSocket.start();
+        this.receiverSocket = adminReceiverSocket;
+//        this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
+//        this.receiverSocket.start();
         this.senderSocket = new AdminSenderSocket();
     }
 
@@ -36,6 +37,14 @@ public class PlayerInstance {
 
     public void setPosition(Point2D position) {
         this.position = position;
+    }
+
+    public void setX(int x) {
+        this.position.setPositionX(x);
+    }
+
+    public void setY(int y) {
+        this.position.setPositionY(y);
     }
 
     public AdminReceiverSocket getReceiverSocket() {

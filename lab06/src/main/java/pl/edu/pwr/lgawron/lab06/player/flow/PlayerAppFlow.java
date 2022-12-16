@@ -37,4 +37,7 @@ public class PlayerAppFlow {
         playerWorker.sendSeeRequest();
     }
 
+    public void moveUp() {
+        playerWorker.sendMoveUpRequest();
+    }
 }
