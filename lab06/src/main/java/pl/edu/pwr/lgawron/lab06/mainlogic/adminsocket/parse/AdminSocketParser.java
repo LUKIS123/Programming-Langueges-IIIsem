@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
+package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.parse;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 

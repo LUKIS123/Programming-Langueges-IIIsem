@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
+package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.registration;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.parse.AdminSocketParser;
@@ -12,14 +12,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class AdminReceiverSocket {
+public class RegisterSocket {
     private Thread thread;
     private int port;
     private ServerSocket serverSocket;
     private boolean exit;
     private final RequestQueue requestQueue;
 
-    public AdminReceiverSocket(int port, RequestQueue requestQueue) {
+    public RegisterSocket(int port, RequestQueue requestQueue) {
         this.port = port;
         this.requestQueue = requestQueue;
         this.exit = false;
@@ -29,7 +29,7 @@ public class AdminReceiverSocket {
         thread = new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(port);
-                System.out.println("ServerSocketSetup");
+                System.out.println("REGISTRATION-SocketSetup");
 
                 while (!exit) {
 
@@ -51,7 +51,6 @@ public class AdminReceiverSocket {
                 }
 
             } catch (SocketException e) {
-                // jakos obsluzyc podczas zamyknia socketa
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -66,12 +65,6 @@ public class AdminReceiverSocket {
         if (split[1].equals("register")) {
             return AdminSocketParser.pareRegisterRequest(split);
         }
-        if (split[1].equals("see")) {
-            return AdminSocketParser.parseSeeRequest(split);
-        }
-        if (split[1].equals("move")) {
-            return AdminSocketParser.parseMoveRequest(split);
-        }
         return new PlayerRequest("0", "unknown");
     }
 
@@ -82,12 +75,9 @@ public class AdminReceiverSocket {
         return str;
     }
 
-    public int getServerPort() {
-        return serverSocket.getLocalPort();
-    }
-
     public void setExit(boolean exit) {
         this.exit = exit;
     }
+
 
 }

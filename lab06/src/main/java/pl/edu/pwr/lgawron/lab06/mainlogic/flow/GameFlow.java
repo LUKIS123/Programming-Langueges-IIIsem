@@ -21,8 +21,8 @@ import java.util.List;
 public class GameFlow {
     private final ValuesHolder valuesHolder;
     private final RequestQueue requestQueue;
-    private final AdminReceiverSocket receiverSocket;
-    private final AdminSenderSocket senderSocket;
+    private final AdminReceiverSocket registrationReceiverSocket;
+    private final AdminSenderSocket registrationSenderSocket;
     private final BackgroundWorker backgroundWorker;
     private final PlayerService playerService;
     //private final List<List<Character>> grid;
@@ -38,8 +38,8 @@ public class GameFlow {
         this.playerPane = playerPane;
 
         this.requestQueue = new RequestQueue();
-        this.senderSocket = new AdminSenderSocket();
-        this.receiverSocket = new AdminReceiverSocket(valuesHolder.getPort(), requestQueue);
+        this.registrationSenderSocket = new AdminSenderSocket();
+        this.registrationReceiverSocket = new AdminReceiverSocket(valuesHolder.getPort(), requestQueue);
 
         // gra
         //this.grid = new ArrayList<>();
@@ -50,12 +50,12 @@ public class GameFlow {
         this.mapRenderer = new MapRenderer(mapPane, playerPane, gameGrid, dimensions);
 
         // w tej klasie beda wykonywane komendy
-        this.playerService = new PlayerService(valuesHolder.getPort(), mapRenderer, gameGrid, dimensions);
-        this.backgroundWorker = new BackgroundWorker(requestQueue, senderSocket, playerService);
+        this.playerService = new PlayerService(valuesHolder.getPort(), mapRenderer, gameGrid, dimensions, requestQueue);
+        this.backgroundWorker = new BackgroundWorker(requestQueue, registrationSenderSocket, playerService);
     }
 
     public void initServer() {
-        receiverSocket.start();
+        registrationReceiverSocket.start();
         backgroundWorker.start();
     }
 

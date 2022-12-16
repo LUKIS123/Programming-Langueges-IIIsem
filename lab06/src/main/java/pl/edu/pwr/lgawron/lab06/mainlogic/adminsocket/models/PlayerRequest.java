@@ -3,7 +3,7 @@ package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models;
 public class PlayerRequest {
     private final int playerId;
     private final RequestType type;
-    private int serverPort;
+    private int clientServerPort;
     private int moveX = 0;
     private int moveY = 0;
 
@@ -36,7 +36,7 @@ public class PlayerRequest {
     }
 
     public PlayerRequest withPort(String port) {
-        serverPort = this.getIntValue(port);
+        clientServerPort = this.getIntValue(port);
         return this;
     }
 
@@ -55,8 +55,8 @@ public class PlayerRequest {
         return type;
     }
 
-    public int getServerPort() {
-        return serverPort;
+    public int getClientServerPort() {
+        return clientServerPort;
     }
 
     public int getMoveX() {

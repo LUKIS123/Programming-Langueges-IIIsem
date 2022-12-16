@@ -29,14 +29,14 @@ public class BackgroundWorker {
 
                 // register
                 if (playerRequest.getType().equals(RequestType.REGISTER)) {
-                    PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getServerPort());
+                    PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getClientServerPort());
 
-                    senderSocket.sendResponse(
-                            playerRequest.getServerPort(),
+                    playerInstance.getSenderSocket().sendResponse(
+                            playerRequest.getClientServerPort(),
                             "localhost",
                             MessageParser.createRegisterMessage(
                                     playerInstance.getId(),
-                                    playerInstance.getServerPort(),
+                                    playerInstance.getReceiverPort(),
                                     playerInstance.getPosition())
                     );
                 }
@@ -44,8 +44,8 @@ public class BackgroundWorker {
                 // see
                 if (playerRequest.getType().equals(RequestType.SEE)) {
                     PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
-                    senderSocket.sendResponse(
-                            playerInstance.getServerPort(),
+                    playerInstance.getSenderSocket().sendResponse(
+                            playerInstance.getClientServerPort(),
                             "localhost",
                             MessageParser.createSeeMessage(playerInstance.getId(),
                                     playerService.getAdjacentParsed(playerInstance))

@@ -1,10 +1,12 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game;
 
 import javafx.util.Pair;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.MapRenderer;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
+import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +19,23 @@ public class PlayerService {
     private final Pair<Integer, Integer> dimensions;
     private final MapRenderer mapRenderer;
     private final int adminServerPort;
+    private final RequestQueue requestQueue;
     private int sequence;
     // private static final int[][] directions = new int[][]{{-1,-1}, {-1,0}, {-1,1},  {0,1}, {1,1},  {1,0},  {1,-1},  {0, -1}};
 
-    public PlayerService(int adminServerPort, MapRenderer mapRenderer, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions) {
+    public PlayerService(int adminServerPort, MapRenderer mapRenderer, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions, RequestQueue requestQueue) {
         this.dimensions = dimensions;
         this.playerList = new ArrayList<>();
         this.gameGrid = gameGrid;
         this.mapRenderer = mapRenderer;
 
         this.adminServerPort = adminServerPort;
+        this.requestQueue = requestQueue;
         this.sequence = 1;
     }
 
     public PlayerInstance addRegisteredPlayer(int playerServerPort) {
-        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort);
+        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
         newPlayer.setPosition(this.getRandomLocation());
         // printowanie i komenda zwracajaca? -> gracz musi dostac gdzie jest
         playerList.add(newPlayer);

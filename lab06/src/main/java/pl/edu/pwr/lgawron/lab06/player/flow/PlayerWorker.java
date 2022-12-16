@@ -16,6 +16,7 @@ public class PlayerWorker {
     private VBox controlBox;
     private PlayerSenderSocket senderSocket;
     private ValuesHolder valuesHolder;
+    private int newReceiverPort;
 
     public PlayerWorker(VBox controlBox, ValuesHolder valuesHolder) {
         this.valuesHolder = valuesHolder;
@@ -23,6 +24,7 @@ public class PlayerWorker {
     }
 
     public void init(int receiverPort, int id) {
+        this.newReceiverPort = receiverPort;
         this.playerData = new PlayerData(receiverPort, id);
         this.gameData = new GameData();
 
@@ -40,7 +42,7 @@ public class PlayerWorker {
         if (playerData == null) {
             return;
         }
-        senderSocket.sendRequest(valuesHolder.getPort(), valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
     }
 
     public void setSenderSocket(PlayerSenderSocket senderSocket) {
