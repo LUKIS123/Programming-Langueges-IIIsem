@@ -71,6 +71,9 @@ public class PlayerReceiverSocket {
         if (type.equals("move")) {
             worker.handleMoveResponse(split);
         }
+        if (type.equals("take")) {
+            worker.handleTakeResponse(split);
+        }
         if (type.equals("over")) {
             // game over -> won or lose
         }

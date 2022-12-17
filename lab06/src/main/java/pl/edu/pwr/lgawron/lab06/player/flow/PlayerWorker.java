@@ -23,12 +23,14 @@ public class PlayerWorker {
     private int newReceiverPort;
     private final PlayerMapRenderer playerMapRenderer;
     private final PlayerAppFlow appFlow;
+    private final Label gameInfo;
 
     public PlayerWorker(VBox controlBox, ValuesHolder valuesHolder, PlayerMapRenderer playerMapRenderer, PlayerAppFlow appFlow) {
         this.appFlow = appFlow;
         this.valuesHolder = valuesHolder;
         this.controlBox = controlBox;
         this.playerMapRenderer = playerMapRenderer;
+        this.gameInfo = new Label();
     }
 
     public void handleRegistrationResponse(int receiverPort, int id, String boardSize, String positions) {
@@ -77,12 +79,12 @@ public class PlayerWorker {
 
     public void handleMoveResponse(String[] splitData) {
         String newPosition = splitData[2];
-        // jesli bedzie sparb to kolejny element arrayu bedzie przechowywal czas w ms podniesienia !!!
         String[] coordinates = newPosition.split(",");
         int newX = Integer.parseInt(coordinates[0]);
         int newY = Integer.parseInt(coordinates[1]);
         int oldX = playerData.getPoint2D().getPositionX();
         int oldY = playerData.getPoint2D().getPositionY();
+        int treasureWaitingTime = Integer.parseInt(splitData[3]);
 
         if (oldX == newX && oldY == newY) {
             return;
@@ -91,6 +93,23 @@ public class PlayerWorker {
         playerMapRenderer.renderMove(oldX, oldY, newX, newY, playerData);
         // save data
         playerData.setNewPosition(newX, newY);
+        // possible treasure -> can be improved
+        playerData.setPossibleCurrentSpotTreasure(treasureWaitingTime);
+    }
+
+    public void handleTakeResponse(String[] split) {
+        boolean result = Boolean.parseBoolean(split[2]);
+        if (result) {
+            int waitTime = Integer.parseInt(split[3]);
+            int treasures = Integer.parseInt(split[4]);
+
+            playerData.setTreasuresPicked(treasures);
+            playerData.setTreasurePickedWaitTime(waitTime);
+            playerData.replaceTile(playerData.getPoint2D().getPositionX(), playerData.getPoint2D().getPositionY(), "*");
+            this.displayTreasureInfo(treasures);
+            // render treasure taken
+            playerMapRenderer.renderAfterTreasurePicked(playerData.getPoint2D().getPositionX(), playerData.getPoint2D().getPositionY());
+        }
     }
 
     public void sendSeeRequest() {
@@ -117,7 +136,7 @@ public class PlayerWorker {
     }
 
     public void sendTakeRequest() {
-        // todo
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.takeTreasureRequest(playerData.getId(), playerData.getPoint2D()));
     }
 
     public void setSenderSocket(PlayerSenderSocket senderSocket) {
@@ -126,12 +145,21 @@ public class PlayerWorker {
 
     @FXML
     private void displayBasicInfo(int receiverPort, int id) {
-        System.out.println("Success;" + id + ";" + receiverPort);
+        Platform.runLater(() -> {
+            controlBox.getChildren().add(new Label("Connected, id=" + id + ", listening on=" + receiverPort));
+            controlBox.getChildren().add(gameInfo);
+        });
+    }
+
+    @FXML
+    private void displayTreasureInfo(int treasures) {
         Platform.runLater(() ->
-                controlBox.getChildren().add(new Label("Connected, id=" + id + ", listening on=" + receiverPort)));
+                gameInfo.setText("Treasures=" + treasures)
+        );
     }
 
     public PlayerData getPlayerData() {
         return playerData;
     }
+
 }

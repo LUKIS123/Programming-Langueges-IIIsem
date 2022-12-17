@@ -1,5 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.player.utils;
 
+import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
+
 public class PlayerRequestParser {
     //command: playerId, type, coordinates itd
     public static String registerRequest(int port) {
@@ -24,5 +26,9 @@ public class PlayerRequestParser {
 
     public static String moveDownRequest(int id) {
         return id + ";move;0," + "1\n";
+    }
+
+    public static String takeTreasureRequest(int id, Point2D point2D) {
+        return id + ";take;" + point2D.getPositionX() + "," + point2D.getPositionY() + "\n";
     }
 }

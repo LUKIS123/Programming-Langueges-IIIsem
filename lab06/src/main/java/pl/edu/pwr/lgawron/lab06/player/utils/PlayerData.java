@@ -9,14 +9,21 @@ public class PlayerData {
     private final int receiverPort;
     private final int id;
     private final Point2D point2D;
-    // grid of objects?
     private List<List<String>> playerGrid;
+    private boolean possibleCurrentSpotTreasure;
+    private int possibleTreasureWaitTime;
+    private int treasuresPicked;
+    private int treasurePickedWaitTime;
 
     public PlayerData(int receiverPort, int id, int posX, int posY) {
         this.receiverPort = receiverPort;
         this.id = id;
         this.point2D = new Point2D(posX, posY);
         this.playerGrid = new ArrayList<>();
+        this.possibleCurrentSpotTreasure = false;
+        this.possibleTreasureWaitTime = 0;
+        this.treasuresPicked = 0;
+        this.treasurePickedWaitTime = 0;
     }
 
     public void fillGrid(int sizeX, int sizeY) {
@@ -32,6 +39,18 @@ public class PlayerData {
     public void replaceTile(int x, int y, String s) {
         List<String> list = playerGrid.get(y);
         list.set(x, s);
+    }
+
+    // AI utility
+    public void setPossibleCurrentSpotTreasure(int waitTime) {
+        if (waitTime == 0) {
+            possibleCurrentSpotTreasure = false;
+            possibleTreasureWaitTime = 0;
+            System.out.println(waitTime);
+        } else {
+            possibleCurrentSpotTreasure = true;
+            possibleTreasureWaitTime = waitTime;
+        }
     }
 
     public void setPlayerGrid(List<List<String>> playerGrid) {
@@ -57,5 +76,37 @@ public class PlayerData {
     public void setNewPosition(int x, int y) {
         point2D.setPositionX(x);
         point2D.setPositionY(y);
+    }
+
+    public boolean isPossibleCurrentSpotTreasure() {
+        return possibleCurrentSpotTreasure;
+    }
+
+    public int getPossibleTreasureWaitTime() {
+        return possibleTreasureWaitTime;
+    }
+
+    public void setPossibleCurrentSpotTreasure(boolean possibleCurrentSpotTreasure) {
+        this.possibleCurrentSpotTreasure = possibleCurrentSpotTreasure;
+    }
+
+    public void setPossibleTreasureWaitTime(int possibleTreasureWaitTime) {
+        this.possibleTreasureWaitTime = possibleTreasureWaitTime;
+    }
+
+    public int getTreasuresPicked() {
+        return treasuresPicked;
+    }
+
+    public int getTreasurePickedWaitTime() {
+        return treasurePickedWaitTime;
+    }
+
+    public void setTreasuresPicked(int treasuresPicked) {
+        this.treasuresPicked = treasuresPicked;
+    }
+
+    public void setTreasurePickedWaitTime(int treasurePickedWaitTime) {
+        this.treasurePickedWaitTime = treasurePickedWaitTime;
     }
 }

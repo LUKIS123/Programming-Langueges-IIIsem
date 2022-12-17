@@ -1,10 +1,10 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game;
 
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.MapRenderer;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
+import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PathInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 
@@ -39,16 +39,10 @@ public class PlayerService {
 
         PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
         newPlayer.setPosition(this.getRandomLocation());
-        // printowanie i komenda zwracajaca? -> gracz musi dostac gdzie jest
         playerList.add(newPlayer);
         mapRenderer.renderPlayerSpawned(newPlayer);
         sequence++;
         return newPlayer;
-    }
-
-    public PlayerInstance getPlayerById(int playerId) {
-        // do poprawy pozniej moze na optionalach
-        return playerList.stream().filter(p -> p.getId() == playerId).findFirst().get();
     }
 
     public PlayerInstance movePlayer(int playerId, int moveX, int moveY) {
@@ -74,6 +68,28 @@ public class PlayerService {
         return playerById;
     }
 
+    // player attempting to take treasure
+    public PlayerInstance takeTreasureAttempt(int playerId, int treasureX, int treasureY) {
+        PlayerInstance playerById = this.getPlayerById(playerId);
+        Optional<EnvironmentInstance> environmentInstance = this.checkForTreasure(treasureX, treasureY);
+
+        if (environmentInstance.isPresent()) {
+            playerById.setCurrentWaitingTime(environmentInstance.get().getWaitingTime());
+            gameGrid.get(treasureY).set(treasureX, new PathInstance(new Point2D(treasureX, treasureY)));
+            playerById.setTakeAttempt(true);
+            playerById.setHowManyTreasuresPicked(playerById.getHowManyTreasuresPicked() + 1);
+
+            // render path instead of treasure
+            mapRenderer.renderAfterTreasureTaken(treasureX, treasureY);
+        }
+        return playerById;
+    }
+
+    public PlayerInstance getPlayerById(int playerId) {
+        // do poprawy pozniej moze na optionalach
+        return playerList.stream().filter(p -> p.getId() == playerId).findFirst().get();
+    }
+
     private boolean checkIfMovePossible(PlayerInstance player, int moveX, int moveY) {
         int x = player.getPosition().getPositionX() + moveX;
         int y = player.getPosition().getPositionY() + moveY;
@@ -92,6 +108,15 @@ public class PlayerService {
 
         return true;
     }
+
+//    private Optional<EnvironmentInstance> getInstanceFromPosition(int x, int y) {
+//        EnvironmentInstance environmentInstance = gameGrid.get(y).get(x);
+//        if (environmentInstance.getType().equals("treasure")) {
+//            return Optional.of(environmentInstance);
+//        } else {
+//            return Optional.empty();
+//        }
+//    }
 
     private String parseBack(EnvironmentInstance instance) {
         if (instance.getType().equals("path")) {
@@ -187,6 +212,16 @@ public class PlayerService {
         return List.of(upp, cur, dwn);
     }
 
+    // searching for treasure on player spot
+    public Optional<EnvironmentInstance> checkForTreasure(int x, int y) {
+        EnvironmentInstance environmentInstance = gameGrid.get(y).get(x);
+        if (environmentInstance.getType().equals("treasure")) {
+            return Optional.of(environmentInstance);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public List<PlayerInstance> getPlayerList() {
         return playerList;
     }
@@ -194,4 +229,5 @@ public class PlayerService {
     public Pair<Integer, Integer> getDimensions() {
         return dimensions;
     }
+
 }

@@ -33,12 +33,12 @@ public class PlayerMapRenderer {
         // table of tiles on position x,y
         this.backgroundTiles = new Node[dimensions.getKey()][dimensions.getValue()];
         this.frontTiles = new Node[dimensions.getKey()][dimensions.getValue()];
+        // fill playerPane
+        this.fillPlayerPane();
     }
 
     public void firstRender() {
         Platform.runLater(() -> {
-            // playerPane
-            this.fillPlayerPane();
             // gameMap
             for (List<EnvironmentInstance> environmentInstances : gameGrid) {
                 for (EnvironmentInstance environmentInstance : environmentInstances) {
@@ -124,6 +124,18 @@ public class PlayerMapRenderer {
         });
     }
 
+    public void renderAfterTreasurePicked(int positionX, int positionY) {
+        Platform.runLater(() -> {
+            mapPane.getChildren().remove(backgroundTiles[positionX][positionY]);
+
+            Rectangle rect = new Rectangle(50, 50);
+            rect.setStyle("-fx-fill: gold");
+            mapPane.add(rect, positionX, positionY);
+
+            backgroundTiles[positionX][positionY] = rect;
+        });
+    }
+
     public Node[][] getBackgroundTiles() {
         return backgroundTiles;
     }
@@ -131,4 +143,5 @@ public class PlayerMapRenderer {
     public Node[][] getFrontTiles() {
         return frontTiles;
     }
+
 }

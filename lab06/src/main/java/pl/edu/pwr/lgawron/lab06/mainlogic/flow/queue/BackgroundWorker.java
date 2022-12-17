@@ -4,8 +4,11 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminSenderSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.PlayerService;
+import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
-import pl.edu.pwr.lgawron.lab06.administrator.utils.MessageParser;
+import pl.edu.pwr.lgawron.lab06.administrator.utils.AdminResponseParser;
+
+import java.util.Optional;
 
 public class BackgroundWorker {
     private boolean exit;
@@ -36,8 +39,8 @@ public class BackgroundWorker {
                     }
                     playerInstance.getSenderSocket().sendResponse(
                             playerRequest.getClientServerPort(),
-                            "localhost",
-                            MessageParser.createRegisterMessage(
+                            proxy,
+                            AdminResponseParser.createRegisterMessage(
                                     playerInstance.getId(),
                                     playerInstance.getReceiverPort(),
                                     playerService.getDimensions().getKey(),
@@ -46,14 +49,17 @@ public class BackgroundWorker {
                     );
                 }
 
+                // game over
+
+
                 // see
                 if (playerRequest.getType().equals(RequestType.SEE)) {
                     PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
 
                     playerInstance.getSenderSocket().sendResponse(
                             playerInstance.getClientServerPort(),
-                            "localhost",
-                            MessageParser.createSeeMessage(playerInstance.getId(),
+                            proxy,
+                            AdminResponseParser.createSeeMessage(playerInstance.getId(),
                                     playerService.getAdjacentParsed(playerInstance))
                     );
                 }
@@ -61,18 +67,34 @@ public class BackgroundWorker {
                 // move
                 if (playerRequest.getType().equals(RequestType.MOVE)) {
                     PlayerInstance playerInstance = playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
+                    Optional<EnvironmentInstance> instanceOnSpot = playerService.checkForTreasure(playerInstance.getPosition().getPositionX(), playerInstance.getPosition().getPositionY());
 
                     playerInstance.getSenderSocket().sendResponse(
                             playerInstance.getClientServerPort(),
                             proxy,
-                            MessageParser.createMoveMessage(playerRequest.getPlayerId(), playerInstance.getPosition().getPositionX(), playerInstance.getPosition().getPositionY())
+                            AdminResponseParser.createMoveMessage(
+                                    playerInstance.getId(),
+                                    playerInstance.getPosition().getPositionX(),
+                                    playerInstance.getPosition().getPositionY(),
+                                    instanceOnSpot)
                     );
                 }
 
                 // take
                 if (playerRequest.getType().equals(RequestType.TAKE)) {
-
-
+                    PlayerInstance playerInstance = playerService.takeTreasureAttempt(playerRequest.getPlayerId(), playerRequest.getTreasureX(), playerRequest.getTreasureY());
+                    // response
+                    playerInstance.getSenderSocket().sendResponse(playerInstance.getClientServerPort(),
+                            proxy,
+                            AdminResponseParser.createTakeMessage(
+                                    playerInstance.getId(),
+                                    playerInstance.isTakeAttempt(),
+                                    playerInstance.getCurrentWaitingTime(),
+                                    playerInstance.getHowManyTreasuresPicked()
+                            )
+                    );
+                    playerInstance.setTakeAttempt(false);
+                    playerInstance.setCurrentWaitingTime(0);
                 }
 
             }
@@ -88,7 +110,6 @@ public class BackgroundWorker {
             throw new RuntimeException(e);
         }
     }
-
 
     public void setExit(boolean exit) {
         this.exit = exit;

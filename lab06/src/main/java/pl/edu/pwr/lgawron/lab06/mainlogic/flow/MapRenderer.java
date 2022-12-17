@@ -110,6 +110,18 @@ public class MapRenderer {
         });
     }
 
+    public void renderAfterTreasureTaken(int treasureX, int treasureY) {
+        Platform.runLater(() -> {
+            mapPane.getChildren().remove(backgroundTiles[treasureX][treasureY]);
+
+            Rectangle rect = new Rectangle(50, 50);
+            rect.setStyle("-fx-fill: gold");
+            mapPane.add(rect, treasureX, treasureY);
+
+            backgroundTiles[treasureX][treasureY] = rect;
+        });
+    }
+
     public Node[][] getBackgroundTiles() {
         return backgroundTiles;
     }
@@ -117,4 +129,5 @@ public class MapRenderer {
     public Node[][] getFrontTiles() {
         return frontTiles;
     }
+
 }

@@ -12,7 +12,9 @@ public class PlayerInstance {
     private final RequestQueue requestQueue;
     private final AdminReceiverSocket receiverSocket;
     private final AdminSenderSocket senderSocket;
-    private int treasuresPicked;
+    private int howManyTreasuresPicked;
+    private boolean takeAttempt;
+    private int currentWaitingTime;
 
     public PlayerInstance(int id, int clientServerPort, RequestQueue requestQueue) {
         this.id = id;
@@ -22,7 +24,9 @@ public class PlayerInstance {
         this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
         this.receiverSocket.startListening();
         this.senderSocket = new AdminSenderSocket();
-        this.treasuresPicked = 0;
+        this.howManyTreasuresPicked = 0;
+        this.takeAttempt = false;
+        this.currentWaitingTime = 0;
     }
 
     public Point2D getPosition() {
@@ -60,15 +64,32 @@ public class PlayerInstance {
     public boolean isBound() {
         return receiverSocket.checkIfConnected();
     }
+
     public AdminSenderSocket getSenderSocket() {
         return senderSocket;
     }
 
-    public int getTreasuresPicked() {
-        return treasuresPicked;
+    public int getHowManyTreasuresPicked() {
+        return howManyTreasuresPicked;
     }
 
-    public void setTreasuresPicked(int treasuresPicked) {
-        this.treasuresPicked = treasuresPicked;
+    public void setHowManyTreasuresPicked(int howManyTreasuresPicked) {
+        this.howManyTreasuresPicked = howManyTreasuresPicked;
+    }
+
+    public boolean isTakeAttempt() {
+        return takeAttempt;
+    }
+
+    public void setTakeAttempt(boolean takeAttempt) {
+        this.takeAttempt = takeAttempt;
+    }
+
+    public int getCurrentWaitingTime() {
+        return currentWaitingTime;
+    }
+
+    public void setCurrentWaitingTime(int currentWaitingTime) {
+        this.currentWaitingTime = currentWaitingTime;
     }
 }

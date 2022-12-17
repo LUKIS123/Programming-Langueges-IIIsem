@@ -69,7 +69,6 @@ public class PlayerAppFlow {
 
 
     public void see() {
-        //senderSocket.sendRequest(valuesHolder.getPort(), valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
         playerWorker.sendSeeRequest();
     }
 

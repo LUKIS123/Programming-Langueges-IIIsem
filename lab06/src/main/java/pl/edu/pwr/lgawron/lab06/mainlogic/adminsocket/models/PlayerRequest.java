@@ -6,6 +6,8 @@ public class PlayerRequest {
     private int clientServerPort;
     private int moveX = 0;
     private int moveY = 0;
+    private int treasureX;
+    private int treasureY;
 
     public PlayerRequest(String playerId, String type) {
         this.playerId = this.getIntValue(playerId);
@@ -47,6 +49,13 @@ public class PlayerRequest {
         return this;
     }
 
+    public PlayerRequest withTreasureLocation(String coordinates) {
+        String[] split = coordinates.split(",");
+        treasureX = Integer.parseInt(split[0]);
+        treasureY = Integer.parseInt(split[1]);
+        return this;
+    }
+
     public int getPlayerId() {
         return playerId;
     }
@@ -65,5 +74,13 @@ public class PlayerRequest {
 
     public int getMoveY() {
         return moveY;
+    }
+
+    public int getTreasureX() {
+        return treasureX;
+    }
+
+    public int getTreasureY() {
+        return treasureY;
     }
 }
