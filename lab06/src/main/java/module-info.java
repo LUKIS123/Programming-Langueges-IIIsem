@@ -9,6 +9,7 @@ module pl.edu.pwr.lgawron.lab06 {
     exports pl.edu.pwr.lgawron.lab06.player;
     exports pl.edu.pwr.lgawron.lab06.mainlogic.parse;
     exports pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances;
+    exports pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket;
     opens pl.edu.pwr.lgawron.lab06.mainlogic.parse to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab06.mainlogic.frame;
     opens pl.edu.pwr.lgawron.lab06.mainlogic.frame to javafx.fxml;

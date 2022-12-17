@@ -7,10 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
 
 import java.io.File;
 import java.util.List;
@@ -61,6 +61,7 @@ public class PlayerMapRenderer {
                 Rectangle rect = new Rectangle(50, 50);
                 rect.setFill(Color.TRANSPARENT);
                 playerPane.add(rect, j, i);
+                frontTiles[j][i] = rect;
             }
         }
     }
@@ -79,12 +80,27 @@ public class PlayerMapRenderer {
         });
     }
 
-    public void renderSee() {
+    public void renderSee(int x, int y, String s) {
         Platform.runLater(() -> {
-
-
-
-
+            Rectangle rectangle = new Rectangle(50, 50);
+            if (s.equals("-")) {
+                return;
+            }
+            if (s.equals("*")) {
+                rectangle.setStyle("-fx-fill: gold");
+            }
+            if (s.equals("#")) {
+                rectangle.setStyle("-fx-fill: grey");
+            }
+            if (s.equals("T")) {
+                rectangle.setFill(new ImagePattern(treasureImage));
+            }
+            if (s.equals("P")) {
+                rectangle.setStyle("-fx-fill: red");
+            }
+            mapPane.getChildren().remove(backgroundTiles[x][y]);
+            mapPane.add(rectangle, x, y);
+            backgroundTiles[x][y] = rectangle;
         });
     }
 

@@ -2,7 +2,6 @@ package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game;
 
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminReceiverSocket;
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.MapRenderer;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
@@ -22,7 +21,6 @@ public class PlayerService {
     private final int adminServerPort;
     private final RequestQueue requestQueue;
     private int sequence;
-    // private static final int[][] directions = new int[][]{{-1,-1}, {-1,0}, {-1,1},  {0,1}, {1,1},  {1,0},  {1,-1},  {0, -1}};
 
     public PlayerService(int adminServerPort, MapRenderer mapRenderer, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions, RequestQueue requestQueue) {
         this.dimensions = dimensions;
@@ -36,13 +34,14 @@ public class PlayerService {
     }
 
     public PlayerInstance addRegisteredPlayer(int playerServerPort) {
-        AdminReceiverSocket adminReceiverSocket = new AdminReceiverSocket(0, requestQueue);
+        // do wywalenia
+        // AdminReceiverSocket adminReceiverSocket = new AdminReceiverSocket(0, requestQueue);
 
         PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
         newPlayer.setPosition(this.getRandomLocation());
         // printowanie i komenda zwracajaca? -> gracz musi dostac gdzie jest
         playerList.add(newPlayer);
-        mapRenderer.renderPlayers(newPlayer);
+        mapRenderer.renderPlayerSpawned(newPlayer);
         sequence++;
         return newPlayer;
     }
@@ -58,7 +57,6 @@ public class PlayerService {
         if (!this.checkIfMovePossible(playerById, moveX, moveY)) {
             return playerById;
         }
-
 
         // render
         mapRenderer.renderMove(
@@ -94,41 +92,6 @@ public class PlayerService {
 
         return true;
     }
-
-    // do poprawy
-//    public String[] getNearestEnvironmentParsed(PlayerInstance playerInstance) {
-//        Point2D position = playerInstance.getPosition();
-//        int x = position.getPositionX();
-//        int y = position.getPositionY();
-//
-//        String[][] env = new String[3][3];
-//
-//        if (x > 0 && y > 0 && x < dimensions.getKey() && y < dimensions.getValue()) {
-//            List<EnvironmentInstance> upper = gameGrid.get(y - 1);
-//            List<EnvironmentInstance> actual = gameGrid.get(y);
-//            List<EnvironmentInstance> lower = gameGrid.get(y + 1);
-//        }
-//
-//        if (y > 0 && y < dimensions.getValue()) {
-//            if (x > 0 && x < dimensions.getKey()) {
-//
-//            }
-//
-//        }
-//        if (y == 0) {
-//
-//        }
-//
-//        if (y == dimensions.getValue()) {
-//
-//        }
-//
-//        // zaimplementowac logike -> sprawdzanie krawedzi
-//        String up = String.join(",", env[0]);
-//        String cu = String.join(",", env[0]);
-//        String dw = String.join(",", env[0]);
-//        return new String[]{up, cu, dw};
-//    }
 
     private String parseBack(EnvironmentInstance instance) {
         if (instance.getType().equals("path")) {
@@ -173,99 +136,46 @@ public class PlayerService {
     }
 
     public List<List<String>> getAdjacent(int i, int j) {
-        int n = dimensions.getValue();
-        int m = dimensions.getKey();
+        int height = dimensions.getValue();
+        int length = dimensions.getKey();
 
         List<String> upp = new ArrayList<>();
         List<String> cur = new ArrayList<>();
         List<String> dwn = new ArrayList<>();
 
-        if (isValidPos(i - 1, j - 1, n, m)) {
-            if (this.checkIfPlayerPresent(j - 1, i - 1)) {
-                upp.add("P");
-            } else {
-                upp.add(parseBack(gameGrid.get(i - 1).get(j - 1)));
+        for (int y = -1; y < 2; y++) {
+            for (int x = -1; x < 2; x++) {
+                List<String> stringList = upp;
+                if (y == -1) {
+                    stringList = upp;
+                }
+                if (y == 0) {
+                    stringList = cur;
+                }
+                if (y == 1) {
+                    stringList = dwn;
+                }
+
+                if (x == 0 && y == 0) {
+                    if (isValidPos(i, j, height, length)) {
+                        stringList.add(parseBack(gameGrid.get(i).get(j)));
+                    } else {
+                        stringList.add("-");
+                    }
+                } else {
+                    if (isValidPos(i + y, j + x, height, length)) {
+                        if (this.checkIfPlayerPresent(j + x, i + y)) {
+                            stringList.add("P");
+                        } else {
+                            stringList.add(parseBack(gameGrid.get(i + y).get(j + x)));
+                        }
+                    } else {
+                        stringList.add("-");
+                    }
+                }
+
             }
-        } else {
-            upp.add("-");
         }
-
-        if (isValidPos(i - 1, j, n, m)) {
-            if (this.checkIfPlayerPresent(j, i - 1)) {
-                upp.add("P");
-            } else {
-                upp.add(parseBack(gameGrid.get(i - 1).get(j)));
-            }
-        } else {
-            upp.add("-");
-        }
-
-        if (isValidPos(i - 1, j + 1, n, m)) {
-            if (this.checkIfPlayerPresent(j + 1, i - 1)) {
-                upp.add("P");
-            } else {
-                upp.add(parseBack(gameGrid.get(i - 1).get(j + 1)));
-            }
-        } else {
-            upp.add("-");
-        }
-
-        if (isValidPos(i, j - 1, n, m)) {
-            if (this.checkIfPlayerPresent(j - 1, i)) {
-                cur.add("P");
-            } else {
-                cur.add(parseBack(gameGrid.get(i).get(j - 1)));
-            }
-        } else {
-            cur.add("-");
-        }
-
-        if (isValidPos(i, j, n, m)) {
-            cur.add(parseBack(gameGrid.get(i).get(j)));
-        } else {
-            cur.add("-");
-        }
-
-        if (isValidPos(i, j + 1, n, m)) {
-            if (this.checkIfPlayerPresent(j + 1, i)) {
-                cur.add("P");
-            } else {
-                cur.add(parseBack(gameGrid.get(i).get(j + 1)));
-            }
-        } else {
-            cur.add("-");
-        }
-
-        if (isValidPos(i + 1, j - 1, n, m)) {
-            if (this.checkIfPlayerPresent(j - 1, i + 1)) {
-                dwn.add("P");
-            } else {
-                dwn.add(parseBack(gameGrid.get(i + 1).get(j - 1)));
-            }
-        } else {
-            dwn.add("-");
-        }
-
-        if (isValidPos(i + 1, j, n, m)) {
-            if (this.checkIfPlayerPresent(j, i + 1)) {
-                dwn.add("P");
-            } else {
-                dwn.add(parseBack(gameGrid.get(i + 1).get(j)));
-            }
-        } else {
-            dwn.add("-");
-        }
-
-        if (isValidPos(i + 1, j + 1, n, m)) {
-            if (this.checkIfPlayerPresent(j + 1, i + 1)) {
-                dwn.add("P");
-            } else {
-                dwn.add(parseBack(gameGrid.get(i + 1).get(j + 1)));
-            }
-        } else {
-            dwn.add("-");
-        }
-
         return List.of(upp, cur, dwn);
     }
 

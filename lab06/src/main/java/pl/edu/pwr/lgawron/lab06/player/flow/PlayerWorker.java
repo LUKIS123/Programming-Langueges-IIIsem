@@ -44,6 +44,7 @@ public class PlayerWorker {
         // render
         // mozna przeniesc do innej metody, zeby wyrenderowac po starcie gry
         appFlow.setDimensions(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
+        playerData.fillGrid(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
         playerMapRenderer.firstRender();
         playerMapRenderer.renderPlayerSpawned(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), playerData);
     }
@@ -57,11 +58,39 @@ public class PlayerWorker {
             List<String> strings = Arrays.asList(rows[i].split(","));
             stringGrid.add(strings);
         }
-        // add grid to playersGrid, parsed or not?
-        playerData.setSurroundingGrid(stringGrid);
 
+        // loop for replacement in grid & render
+        int currentX = playerData.getPoint2D().getPositionX();
+        int currentY = playerData.getPoint2D().getPositionY();
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                // replacement
+                if (stringGrid.get(1 + i).get(1 + j).equals("-")) {
+                    continue;
+                }
+                playerData.replaceTile(currentX + j, currentY + i, stringGrid.get(1 + i).get(1 + j));
+                // render
+                playerMapRenderer.renderSee(currentX + j, currentY + i, stringGrid.get(1 + i).get(1 + j));
+            }
+        }
+    }
+
+    public void handleMoveResponse(String[] splitData) {
+        String newPosition = splitData[2];
+        // jesli bedzie sparb to kolejny element arrayu bedzie przechowywal czas w ms podniesienia !!!
+        String[] coordinates = newPosition.split(",");
+        int newX = Integer.parseInt(coordinates[0]);
+        int newY = Integer.parseInt(coordinates[1]);
+        int oldX = playerData.getPoint2D().getPositionX();
+        int oldY = playerData.getPoint2D().getPositionY();
+
+        if (oldX == newX && oldY == newY) {
+            return;
+        }
         // render
-
+        playerMapRenderer.renderMove(oldX, oldY, newX, newY, playerData);
+        // save data
+        playerData.setNewPosition(newX, newY);
     }
 
     public void sendSeeRequest() {
@@ -85,6 +114,10 @@ public class PlayerWorker {
 
     public void sendMoveDownRequest() {
         senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveDownRequest(playerData.getId()));
+    }
+
+    public void sendTakeRequest() {
+        // todo
     }
 
     public void setSenderSocket(PlayerSenderSocket senderSocket) {

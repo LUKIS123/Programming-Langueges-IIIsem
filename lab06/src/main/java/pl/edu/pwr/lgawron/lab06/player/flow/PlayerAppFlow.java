@@ -89,8 +89,13 @@ public class PlayerAppFlow {
         playerWorker.sendMoveDownRequest();
     }
 
+    public void take() {
+        playerWorker.sendTakeRequest();
+    }
+
     public Pair<Integer, Integer> setDimensions(int sizeX, int sizeY) {
         this.dimensions = new Pair<>(sizeX, sizeY);
         return dimensions;
     }
+
 }

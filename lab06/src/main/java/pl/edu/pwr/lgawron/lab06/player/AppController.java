@@ -41,6 +41,8 @@ public class AppController {
     @FXML
     public Button startButton;
     @FXML
+    public Button take;
+    @FXML
     private Button registerButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
     private final PlayerAppFlow appFlow = new PlayerAppFlow();
@@ -144,9 +146,15 @@ public class AppController {
     public void see(ActionEvent actionEvent) {
         appFlow.see();
     }
+
+    @FXML
+    public void takeTreasure(ActionEvent actionEvent) {
+        appFlow.take();
+    }
     /// end of temporary
 
     public void onExitApplication() {
 
     }
+
 }

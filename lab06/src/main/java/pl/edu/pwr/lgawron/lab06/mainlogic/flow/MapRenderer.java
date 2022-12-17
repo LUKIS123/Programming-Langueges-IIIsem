@@ -32,16 +32,15 @@ public class MapRenderer {
         this.mapPane = mapPane;
         this.playerPane = playerPane;
 
-//        this.fillPlayerPane();
-
         // table of tiles on position x,y
         this.backgroundTiles = new Node[dimensions.getKey()][dimensions.getValue()];
         this.frontTiles = new Node[dimensions.getKey()][dimensions.getValue()];
+
+        // fill playerPane
+        this.fillPlayerPane();
     }
 
     public void renderMap() {
-        // playerPane
-        this.fillPlayerPane();
         // gameMap
         for (List<EnvironmentInstance> environmentInstances : gameGrid) {
             for (EnvironmentInstance environmentInstance : environmentInstances) {
@@ -70,11 +69,12 @@ public class MapRenderer {
                 Rectangle rect = new Rectangle(50, 50);
                 rect.setFill(Color.TRANSPARENT);
                 playerPane.add(rect, j, i);
+                frontTiles[j][i] = rect;
             }
         }
     }
 
-    public void renderPlayers(PlayerInstance playerInstance) {
+    public void renderPlayerSpawned(PlayerInstance playerInstance) {
         int x = playerInstance.getPosition().getPositionX();
         int y = playerInstance.getPosition().getPositionY();
         Platform.runLater(() -> {

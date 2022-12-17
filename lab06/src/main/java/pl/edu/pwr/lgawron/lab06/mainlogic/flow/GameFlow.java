@@ -25,7 +25,6 @@ public class GameFlow {
     private final AdminSenderSocket registrationSenderSocket;
     private final BackgroundWorker backgroundWorker;
     private final PlayerService playerService;
-    //private final List<List<Character>> grid;
     private final List<List<EnvironmentInstance>> gameGrid;
     private Pair<Integer, Integer> dimensions;
     private final MapRenderer mapRenderer;
@@ -39,18 +38,16 @@ public class GameFlow {
 
         this.requestQueue = new RequestQueue();
         this.registrationSenderSocket = new AdminSenderSocket();
-        // this.registrationReceiverSocket = new AdminReceiverSocket(valuesHolder.getPort(), requestQueue);
         this.registrationReceiverSocket = new RegisterSocket(valuesHolder.getPort(), requestQueue);
 
-        // gra
-        //this.grid = new ArrayList<>();
+        // game
         this.gameGrid = new ArrayList<>();
 
         // init
         this.initMapGrid();
         this.mapRenderer = new MapRenderer(mapPane, playerPane, gameGrid, dimensions);
 
-        // w tej klasie beda wykonywane komendy
+        // logic
         this.playerService = new PlayerService(valuesHolder.getPort(), mapRenderer, gameGrid, dimensions, requestQueue);
         this.backgroundWorker = new BackgroundWorker(requestQueue, registrationSenderSocket, playerService);
     }
