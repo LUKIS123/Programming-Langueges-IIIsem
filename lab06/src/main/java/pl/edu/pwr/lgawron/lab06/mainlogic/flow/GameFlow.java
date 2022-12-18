@@ -92,4 +92,12 @@ public class GameFlow {
     public void finishRegistration() {
         registrationReceiverSocket.setExit(true);
     }
+
+    public void killApp() {
+        if (!registrationReceiverSocket.isExit()) {
+            registrationReceiverSocket.setExit(true);
+        }
+        backgroundWorker.setExit(true);
+        playerService.getPlayerList().forEach(playerInstance -> playerInstance.getReceiverSocket().setExit(true));
+    }
 }

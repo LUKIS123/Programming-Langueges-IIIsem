@@ -7,7 +7,6 @@ public enum RequestType {
 // take
     // logout
     REGISTER,
-    JOIN,
     SEE,
     MOVE,
     TAKE,

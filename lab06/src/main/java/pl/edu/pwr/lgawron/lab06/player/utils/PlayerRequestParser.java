@@ -28,7 +28,12 @@ public class PlayerRequestParser {
         return id + ";move;0," + "1\n";
     }
 
+    public static String artificialMoveRequest(int id, int x, int y) {
+        return id + ";move;" + x + "," + y + "\n";
+    }
+
     public static String takeTreasureRequest(int id, Point2D point2D) {
         return id + ";take;" + point2D.getPositionX() + "," + point2D.getPositionY() + "\n";
     }
+
 }

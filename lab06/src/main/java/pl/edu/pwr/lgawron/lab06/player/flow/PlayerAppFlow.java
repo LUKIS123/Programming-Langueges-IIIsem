@@ -9,6 +9,8 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstanc
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
 import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerSenderSocket;
+import pl.edu.pwr.lgawron.lab06.player.ai.PlayerAlgorithm;
+import pl.edu.pwr.lgawron.lab06.player.ai.TaskQueue;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
 
 import java.util.ArrayList;
@@ -21,14 +23,15 @@ public class PlayerAppFlow {
     private PlayerWorker playerWorker;
     private final List<List<EnvironmentInstance>> gameGrid;
     private Pair<Integer, Integer> dimensions = new Pair<>(20, 15);
-    // do poprawy -> aby serwer przesyłał wymiary przy rejestracji
     private GridPane mapPane;
     private GridPane playerPane;
     private PlayerMapRenderer mapRenderer;
+    private PlayerAlgorithm algorithm;
+    private TaskQueue taskQueue;
 
     public PlayerAppFlow() {
-        //this.playerWorker = new PlayerWorker(controls);
         this.gameGrid = new ArrayList<>();
+        this.taskQueue = new TaskQueue();
     }
 
     public void startRegistration(ValuesHolder valuesHolder, VBox controls, GridPane mapPane, GridPane playerPane) {
@@ -43,12 +46,15 @@ public class PlayerAppFlow {
 
         // main player logic
         this.playerWorker = new PlayerWorker(controls, valuesHolder, mapRenderer, this);
-        senderSocket = new PlayerSenderSocket();
-        receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerWorker);
-        receiverSocket.start();
+        this.senderSocket = new PlayerSenderSocket();
+        this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerWorker, taskQueue);
+        this.receiverSocket.start();
 
         // worker
-        playerWorker.setSenderSocket(senderSocket);
+        this.playerWorker.setSenderSocket(senderSocket);
+
+        // algo
+        this.algorithm = new PlayerAlgorithm(playerWorker, taskQueue);
     }
 
     private void initPlayerGrid() {
@@ -67,6 +73,12 @@ public class PlayerAppFlow {
         }
     }
 
+    public void startAlgo() {
+        if (algorithm == null) {
+            return;
+        }
+        algorithm.start();
+    }
 
     public void see() {
         playerWorker.sendSeeRequest();
@@ -95,6 +107,15 @@ public class PlayerAppFlow {
     public Pair<Integer, Integer> setDimensions(int sizeX, int sizeY) {
         this.dimensions = new Pair<>(sizeX, sizeY);
         return dimensions;
+    }
+
+    public void killApp() {
+        if (algorithm != null) {
+            algorithm.setExit(true);
+        }
+        if (receiverSocket != null) {
+            receiverSocket.setExit(true);
+        }
     }
 
 }

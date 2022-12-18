@@ -99,8 +99,11 @@ public class AppController {
         game.firstRender();
     }
 
-
     public void onExitApplication() {
-
+        if (game == null) {
+            return;
+        }
+        game.killApp();
     }
+
 }

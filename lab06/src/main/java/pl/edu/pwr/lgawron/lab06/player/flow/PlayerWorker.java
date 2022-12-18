@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PlayerWorker {
-    //private GameData gameData;
     private PlayerData playerData;
     private VBox controlBox;
     private PlayerSenderSocket senderSocket;
@@ -40,11 +39,9 @@ public class PlayerWorker {
         String[] coordinates = positions.split(",");
 
         this.playerData = new PlayerData(receiverPort, id, Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
-        // this.gameData = new GameData();
         this.displayBasicInfo(receiverPort, id);
 
         // render
-        // mozna przeniesc do innej metody, zeby wyrenderowac po starcie gry
         appFlow.setDimensions(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
         playerData.fillGrid(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
         playerMapRenderer.firstRender();
@@ -119,6 +116,16 @@ public class PlayerWorker {
         senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
     }
 
+    public void sendArtificialMoveRequest(int x, int y) {
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.artificialMoveRequest(playerData.getId(), x, y));
+    }
+
+    public boolean checkPositionIfPossibleToMove(int x, int y) {
+        return playerData.checkIfPositionPossibleToMove(x, y);
+    }
+
+    // controls
+
     public void sendMoveUpRequest() {
         senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveUpRequest(playerData.getId()));
     }
@@ -138,6 +145,8 @@ public class PlayerWorker {
     public void sendTakeRequest() {
         senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.takeTreasureRequest(playerData.getId(), playerData.getPoint2D()));
     }
+
+    // controls
 
     public void setSenderSocket(PlayerSenderSocket senderSocket) {
         this.senderSocket = senderSocket;

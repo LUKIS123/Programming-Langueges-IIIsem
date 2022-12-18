@@ -19,9 +19,7 @@ public class AdminSenderSocket {
             pw.close();
             soc.close();
 
-
         } catch (SocketException e) {
-            // jakos obsluzyc podczas zamyknia socketa
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

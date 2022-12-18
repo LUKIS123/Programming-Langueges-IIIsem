@@ -46,11 +46,23 @@ public class PlayerData {
         if (waitTime == 0) {
             possibleCurrentSpotTreasure = false;
             possibleTreasureWaitTime = 0;
-            System.out.println(waitTime);
         } else {
             possibleCurrentSpotTreasure = true;
             possibleTreasureWaitTime = waitTime;
         }
+    }
+
+    // AI utility
+    public boolean checkIfPositionPossibleToMove(int x, int y) {
+        try {
+            String gameObject = playerGrid.get(point2D.getPositionY() + y).get(point2D.getPositionX() + x);
+            if (gameObject.equals("*") || gameObject.equals("T")) {
+                return true;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+        return false;
     }
 
     public void setPlayerGrid(List<List<String>> playerGrid) {

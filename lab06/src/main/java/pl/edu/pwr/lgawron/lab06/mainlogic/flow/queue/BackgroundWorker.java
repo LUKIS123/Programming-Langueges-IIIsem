@@ -49,9 +49,6 @@ public class BackgroundWorker {
                     );
                 }
 
-                // game over
-
-
                 // see
                 if (playerRequest.getType().equals(RequestType.SEE)) {
                     PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());

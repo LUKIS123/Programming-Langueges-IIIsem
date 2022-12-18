@@ -41,7 +41,6 @@ public class AdminReceiverSocket {
                     BufferedReader br = new BufferedReader(isr);
                     String theLine = br.readLine();
 
-                    // do wywalenia
                     System.out.println(theLine);
 
                     // command: playerId, type, coordinates itd

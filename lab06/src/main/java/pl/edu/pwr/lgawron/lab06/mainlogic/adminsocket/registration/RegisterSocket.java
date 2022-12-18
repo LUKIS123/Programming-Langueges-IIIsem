@@ -39,7 +39,6 @@ public class RegisterSocket {
                     BufferedReader br = new BufferedReader(isr);
                     String theLine = br.readLine();
 
-                    // do wywalenia
                     System.out.println(theLine);
 
                     // command: playerId, type, coordinates itd
@@ -75,9 +74,12 @@ public class RegisterSocket {
         return str;
     }
 
+    public boolean isExit() {
+        return exit;
+    }
+
     public void setExit(boolean exit) {
         this.exit = exit;
     }
-
 
 }

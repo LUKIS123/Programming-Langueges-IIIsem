@@ -34,9 +34,6 @@ public class PlayerService {
     }
 
     public PlayerInstance addRegisteredPlayer(int playerServerPort) {
-        // do wywalenia
-        // AdminReceiverSocket adminReceiverSocket = new AdminReceiverSocket(0, requestQueue);
-
         PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
         newPlayer.setPosition(this.getRandomLocation());
         playerList.add(newPlayer);
@@ -86,7 +83,6 @@ public class PlayerService {
     }
 
     public PlayerInstance getPlayerById(int playerId) {
-        // do poprawy pozniej moze na optionalach
         return playerList.stream().filter(p -> p.getId() == playerId).findFirst().get();
     }
 
@@ -108,15 +104,6 @@ public class PlayerService {
 
         return true;
     }
-
-//    private Optional<EnvironmentInstance> getInstanceFromPosition(int x, int y) {
-//        EnvironmentInstance environmentInstance = gameGrid.get(y).get(x);
-//        if (environmentInstance.getType().equals("treasure")) {
-//            return Optional.of(environmentInstance);
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
 
     private String parseBack(EnvironmentInstance instance) {
         if (instance.getType().equals("path")) {

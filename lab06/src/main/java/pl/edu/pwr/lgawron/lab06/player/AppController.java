@@ -112,16 +112,10 @@ public class AppController {
     }
 
     public void onStartButtonClick(ActionEvent actionEvent) {
-//        LinkedList<Integer> linkedList = new LinkedList<>();
-//        linkedList.add(1);
-//        linkedList.add(2);
-//        System.out.println(linkedList.pop());
-//        System.out.println(linkedList.size());
-
-
+        appFlow.startAlgo();
     }
 
-    /// temporary
+    /// controls
     @FXML
     public void moveUp(ActionEvent actionEvent) {
         appFlow.moveUp();
@@ -151,10 +145,10 @@ public class AppController {
     public void takeTreasure(ActionEvent actionEvent) {
         appFlow.take();
     }
-    /// end of temporary
 
+    /// end of controls
     public void onExitApplication() {
-
+        appFlow.killApp();
     }
 
 }

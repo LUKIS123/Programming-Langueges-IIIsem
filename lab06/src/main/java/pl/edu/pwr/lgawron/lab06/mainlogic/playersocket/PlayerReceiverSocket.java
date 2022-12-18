@@ -1,5 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.playersocket;
 
+import pl.edu.pwr.lgawron.lab06.player.ai.TaskQueue;
 import pl.edu.pwr.lgawron.lab06.player.flow.PlayerWorker;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestParser;
 
@@ -15,13 +16,15 @@ public class PlayerReceiverSocket {
     private ServerSocket serverSocket;
     private final PlayerSenderSocket senderSocket;
     private final PlayerWorker worker;
+    private final TaskQueue taskQueue;
     private boolean exit;
 
-    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerWorker worker) {
+    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerWorker worker, TaskQueue taskQueue) {
         this.port = port;
         this.proxy = proxy;
         this.senderSocket = senderSocket;
         this.worker = worker;
+        this.taskQueue = taskQueue;
         this.exit = false;
     }
 
@@ -43,6 +46,7 @@ public class PlayerReceiverSocket {
                     String theLine = br.readLine();
 
                     System.out.println(theLine);
+
                     String s = newLineSignRemover(theLine);
                     this.handleResponse(s);
 
@@ -61,23 +65,11 @@ public class PlayerReceiverSocket {
     private void handleResponse(String s) {
         String[] split = s.split(";");
         String type = split[1];
-
         if (type.equals("register")) {
             worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4]);
+        } else {
+            taskQueue.addTask(split);
         }
-        if (type.equals("see")) {
-            worker.handleSeeResponse(split);
-        }
-        if (type.equals("move")) {
-            worker.handleMoveResponse(split);
-        }
-        if (type.equals("take")) {
-            worker.handleTakeResponse(split);
-        }
-        if (type.equals("over")) {
-            // game over -> won or lose
-        }
-
     }
 
     private String newLineSignRemover(String str) {
