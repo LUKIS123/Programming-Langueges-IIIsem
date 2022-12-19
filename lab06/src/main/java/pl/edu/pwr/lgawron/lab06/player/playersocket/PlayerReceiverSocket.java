@@ -1,8 +1,8 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.playersocket;
+package pl.edu.pwr.lgawron.lab06.player.playersocket;
 
-import pl.edu.pwr.lgawron.lab06.player.ai.TaskQueue;
+import pl.edu.pwr.lgawron.lab06.player.ai.TaskRepository;
 import pl.edu.pwr.lgawron.lab06.player.flow.PlayerWorker;
-import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestParser;
+import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -11,20 +11,20 @@ import java.net.SocketException;
 
 public class PlayerReceiverSocket {
     private Thread thread;
-    private int port;
-    String proxy;
+    private final int port;
+    private final String proxy;
     private ServerSocket serverSocket;
     private final PlayerSenderSocket senderSocket;
     private final PlayerWorker worker;
-    private final TaskQueue taskQueue;
+    private final TaskRepository taskRepository;
     private boolean exit;
 
-    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerWorker worker, TaskQueue taskQueue) {
+    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerWorker worker, TaskRepository taskRepository) {
         this.port = port;
         this.proxy = proxy;
         this.senderSocket = senderSocket;
         this.worker = worker;
-        this.taskQueue = taskQueue;
+        this.taskRepository = taskRepository;
         this.exit = false;
     }
 
@@ -34,9 +34,8 @@ public class PlayerReceiverSocket {
                 serverSocket = new ServerSocket(0);
                 System.out.println("PlayerServerSocketSetup");
                 senderSocket.sendRequest(
-                        port, proxy, PlayerRequestParser.registerRequest(serverSocket.getLocalPort())
+                        port, proxy, PlayerRequestCreator.registerRequest(serverSocket.getLocalPort(), serverSocket.getInetAddress())
                 );
-
 
                 while (!exit) {
                     Socket sc = serverSocket.accept();
@@ -52,8 +51,7 @@ public class PlayerReceiverSocket {
 
                     sc.close();
                 }
-            } catch (SocketException e) {
-                e.printStackTrace();
+            } catch (SocketException ignored) {
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -67,8 +65,10 @@ public class PlayerReceiverSocket {
         String type = split[1];
         if (type.equals("register")) {
             worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4]);
+        } else if (type.equals("over")) {
+            worker.handleGameOverResponse(split);
         } else {
-            taskQueue.addTask(split);
+            taskRepository.addTask(split);
         }
     }
 
@@ -81,5 +81,10 @@ public class PlayerReceiverSocket {
 
     public void setExit(boolean exit) {
         this.exit = exit;
+        try {
+            serverSocket.close();
+        } catch (IOException ignored) {
+        }
+        System.out.println("Player Socket Closed");
     }
 }

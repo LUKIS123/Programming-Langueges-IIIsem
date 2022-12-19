@@ -12,22 +12,24 @@
 
         <VBox fx:id="controlBox" alignment="TOP_CENTER">
             <HBox>
-                <Button fx:id="registerButton" text="Register To Game" alignment="TOP_CENTER"
+                <Button fx:id="registerButton" text="Join Game" alignment="TOP_CENTER"
                         onAction="#onRegisterButtonClick"/>
-                <Button fx:id="startButton" text="Start" alignment="TOP_CENTER" onAction="#onStartButtonClick"/>
+                <Button fx:id="startButton" text="Start Algorithm" alignment="TOP_CENTER"
+                        onAction="#onStartButtonClick"/>
             </HBox>
         </VBox>
+        <!-- stuff for movement    -->
 
-        <!--   temporary stuff for movement    -->
-        <HBox>
-            <Button fx:id="up" text="up" onAction="#moveUp"/>
-            <Button fx:id="left" text="left" onAction="#moveLeft"/>
-            <Button fx:id="right" text="right" onAction="#moveRight"/>
-            <Button fx:id="down" text="down" onAction="#moveDown"/>
-            <Button fx:id="see" text="see" onAction="#see"/>
-            <Button fx:id="take" text="take" onAction="#takeTreasure"/>
-        </HBox>
+        <!--        <HBox>-->
+        <!--            <Button fx:id="up" text="up" onAction="#moveUp"/>-->
+        <!--            <Button fx:id="left" text="left" onAction="#moveLeft"/>-->
+        <!--            <Button fx:id="right" text="right" onAction="#moveRight"/>-->
+        <!--            <Button fx:id="down" text="down" onAction="#moveDown"/>-->
+        <!--            <Button fx:id="see" text="see" onAction="#see"/>-->
+        <!--            <Button fx:id="take" text="take" onAction="#takeTreasure"/>-->
+        <!--        </HBox>-->
 
+        <!-- stuff for movement    -->
     </HBox>
 
 

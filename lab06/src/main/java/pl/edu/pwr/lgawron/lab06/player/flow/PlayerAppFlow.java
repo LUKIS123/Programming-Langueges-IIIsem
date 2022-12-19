@@ -7,10 +7,10 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.BlankInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
-import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerReceiverSocket;
-import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerSenderSocket;
+import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerReceiverSocket;
+import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerSenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.ai.PlayerAlgorithm;
-import pl.edu.pwr.lgawron.lab06.player.ai.TaskQueue;
+import pl.edu.pwr.lgawron.lab06.player.ai.TaskRepository;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
 
 import java.util.ArrayList;
@@ -27,11 +27,11 @@ public class PlayerAppFlow {
     private GridPane playerPane;
     private PlayerMapRenderer mapRenderer;
     private PlayerAlgorithm algorithm;
-    private TaskQueue taskQueue;
+    private final TaskRepository taskRepository;
 
     public PlayerAppFlow() {
         this.gameGrid = new ArrayList<>();
-        this.taskQueue = new TaskQueue();
+        this.taskRepository = new TaskRepository();
     }
 
     public void startRegistration(ValuesHolder valuesHolder, VBox controls, GridPane mapPane, GridPane playerPane) {
@@ -47,14 +47,14 @@ public class PlayerAppFlow {
         // main player logic
         this.playerWorker = new PlayerWorker(controls, valuesHolder, mapRenderer, this);
         this.senderSocket = new PlayerSenderSocket();
-        this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerWorker, taskQueue);
+        this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerWorker, taskRepository);
         this.receiverSocket.start();
 
         // worker
         this.playerWorker.setSenderSocket(senderSocket);
 
         // algo
-        this.algorithm = new PlayerAlgorithm(playerWorker, taskQueue);
+        this.algorithm = new PlayerAlgorithm(playerWorker, taskRepository);
     }
 
     private void initPlayerGrid() {

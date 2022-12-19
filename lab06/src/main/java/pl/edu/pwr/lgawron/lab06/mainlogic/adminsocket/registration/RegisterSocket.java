@@ -14,7 +14,7 @@ import java.net.SocketException;
 
 public class RegisterSocket {
     private Thread thread;
-    private int port;
+    private final int port;
     private ServerSocket serverSocket;
     private boolean exit;
     private final RequestQueue requestQueue;
@@ -49,8 +49,7 @@ public class RegisterSocket {
                     pSocket.close();
                 }
 
-            } catch (SocketException e) {
-                e.printStackTrace();
+            } catch (SocketException ignored) {
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -80,6 +79,15 @@ public class RegisterSocket {
 
     public void setExit(boolean exit) {
         this.exit = exit;
+    }
+
+    public void kilThread() {
+        this.thread.interrupt();
+        try {
+            this.serverSocket.close();
+        } catch (IOException ignored) {
+        }
+        System.out.println("RegisterSocket closed");
     }
 
 }

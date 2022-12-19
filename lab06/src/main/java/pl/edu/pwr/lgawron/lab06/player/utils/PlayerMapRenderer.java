@@ -82,6 +82,17 @@ public class PlayerMapRenderer {
 
     public void renderSee(int x, int y, String s) {
         Platform.runLater(() -> {
+            if (s.equals("P")) {
+                // rectangle.setStyle("-fx-fill: red");
+                Label enemy = new Label("RIVAL");
+                enemy.setAlignment(Pos.CENTER);
+                enemy.setPrefSize(50, 50);
+                enemy.setStyle("-fx-background-color: red");
+                mapPane.getChildren().remove(backgroundTiles[x][y]);
+                mapPane.add(enemy, x, y);
+                backgroundTiles[x][y] = enemy;
+                return;
+            }
             Rectangle rectangle = new Rectangle(50, 50);
             if (s.equals("-")) {
                 return;
@@ -94,9 +105,6 @@ public class PlayerMapRenderer {
             }
             if (s.equals("T")) {
                 rectangle.setFill(new ImagePattern(treasureImage));
-            }
-            if (s.equals("P")) {
-                rectangle.setStyle("-fx-fill: red");
             }
             mapPane.getChildren().remove(backgroundTiles[x][y]);
             mapPane.add(rectangle, x, y);

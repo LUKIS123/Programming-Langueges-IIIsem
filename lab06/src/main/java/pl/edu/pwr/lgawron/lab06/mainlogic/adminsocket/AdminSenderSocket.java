@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class AdminSenderSocket {
-    //komenda: playerId, type, coordinates itd
+    // command: playerId, type, coordinates etc
     public void sendResponse(int port, String host, String message) {
         try {
 
@@ -19,8 +19,7 @@ public class AdminSenderSocket {
             pw.close();
             soc.close();
 
-        } catch (SocketException e) {
-            e.printStackTrace();
+        } catch (SocketException ignored) {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

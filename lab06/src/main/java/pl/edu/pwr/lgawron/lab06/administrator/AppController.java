@@ -27,8 +27,6 @@ public class AppController {
     @FXML
     public Pane mainPane;
     @FXML
-    private Button startButton;
-    @FXML
     private Button hostButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
     private final ValuesHolder values = new ValuesHolder();
@@ -94,9 +92,10 @@ public class AppController {
         );
     }
 
-    public void onStartButtonClick(ActionEvent actionEvent) {
+    public void onStartButtonClick() {
         game.finishRegistration();
         game.firstRender();
+        playerPane.setVisible(true);
     }
 
     public void onExitApplication() {

@@ -1,26 +1,23 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue;
 
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminSenderSocket;
+import pl.edu.pwr.lgawron.lab06.administrator.utils.AdminResponseCreator;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.RequestType;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.PlayerService;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.PlayerInstance;
-import pl.edu.pwr.lgawron.lab06.administrator.utils.AdminResponseParser;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BackgroundWorker {
     private boolean exit;
     private Thread thread;
     private final RequestQueue queue;
-    private final AdminSenderSocket senderSocket;
     private final PlayerService playerService;
-    private final String proxy = "localhost";
 
-    public BackgroundWorker(RequestQueue requestQueue, AdminSenderSocket senderSocket, PlayerService playerService) {
+    public BackgroundWorker(RequestQueue requestQueue, PlayerService playerService) {
         this.queue = requestQueue;
-        this.senderSocket = senderSocket;
         this.playerService = playerService;
         this.exit = false;
     }
@@ -33,14 +30,14 @@ public class BackgroundWorker {
 
                 // register
                 if (playerRequest.getType().equals(RequestType.REGISTER)) {
-                    PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getClientServerPort());
+                    PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getClientServerPort(), playerRequest.getProxyAddress());
                     if (!playerInstance.isBound()) {
                         this.tryToSleep();
                     }
                     playerInstance.getSenderSocket().sendResponse(
                             playerRequest.getClientServerPort(),
-                            proxy,
-                            AdminResponseParser.createRegisterMessage(
+                            playerInstance.getProxy(),
+                            AdminResponseCreator.createRegisterMessage(
                                     playerInstance.getId(),
                                     playerInstance.getReceiverPort(),
                                     playerService.getDimensions().getKey(),
@@ -55,8 +52,8 @@ public class BackgroundWorker {
 
                     playerInstance.getSenderSocket().sendResponse(
                             playerInstance.getClientServerPort(),
-                            proxy,
-                            AdminResponseParser.createSeeMessage(playerInstance.getId(),
+                            playerInstance.getProxy(),
+                            AdminResponseCreator.createSeeMessage(playerInstance.getId(),
                                     playerService.getAdjacentParsed(playerInstance))
                     );
                 }
@@ -68,8 +65,8 @@ public class BackgroundWorker {
 
                     playerInstance.getSenderSocket().sendResponse(
                             playerInstance.getClientServerPort(),
-                            proxy,
-                            AdminResponseParser.createMoveMessage(
+                            playerInstance.getProxy(),
+                            AdminResponseCreator.createMoveMessage(
                                     playerInstance.getId(),
                                     playerInstance.getPosition().getPositionX(),
                                     playerInstance.getPosition().getPositionY(),
@@ -82,8 +79,8 @@ public class BackgroundWorker {
                     PlayerInstance playerInstance = playerService.takeTreasureAttempt(playerRequest.getPlayerId(), playerRequest.getTreasureX(), playerRequest.getTreasureY());
                     // response
                     playerInstance.getSenderSocket().sendResponse(playerInstance.getClientServerPort(),
-                            proxy,
-                            AdminResponseParser.createTakeMessage(
+                            playerInstance.getProxy(),
+                            AdminResponseCreator.createTakeMessage(
                                     playerInstance.getId(),
                                     playerInstance.isTakeAttempt(),
                                     playerInstance.getCurrentWaitingTime(),
@@ -92,6 +89,36 @@ public class BackgroundWorker {
                     );
                     playerInstance.setTakeAttempt(false);
                     playerInstance.setCurrentWaitingTime(0);
+                }
+
+                // game over
+                if (playerRequest.getType().equals(RequestType.GAME_OVER)) {
+                    List<PlayerInstance> playerList = playerService.getPlayerList();
+                    PlayerInstance whoWon = playerService.getWhoWon();
+                    for (PlayerInstance instance : playerList) {
+                        if (instance != whoWon) {
+                            instance.getSenderSocket().sendResponse(
+                                    instance.getClientServerPort(),
+                                    instance.getProxy(),
+                                    AdminResponseCreator.createGameOverMessage(
+                                            instance.getId(),
+                                            whoWon.getHowManyTreasuresPicked())
+                            );
+                        }
+                    }
+                    whoWon.getSenderSocket().sendResponse(
+                            whoWon.getClientServerPort(),
+                            whoWon.getProxy(),
+                            AdminResponseCreator.createYouWonMessage(
+                                    whoWon.getId(),
+                                    whoWon.getHowManyTreasuresPicked()
+                            )
+                    );
+                }
+
+                // exit Background Worker Thread
+                if (playerRequest.getType().equals(RequestType.EXIT)) {
+                    this.setExit(true);
                 }
 
             }
@@ -110,5 +137,8 @@ public class BackgroundWorker {
 
     public void setExit(boolean exit) {
         this.exit = exit;
+        this.thread.interrupt();
+        System.out.println("BackGroundWorker killed");
     }
+
 }

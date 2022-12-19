@@ -2,7 +2,7 @@ package pl.edu.pwr.lgawron.lab06.mainlogic.flow;
 
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.AdminSenderSocket;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.registration.RegisterSocket;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.PlayerService;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
@@ -22,7 +22,6 @@ public class GameFlow {
     private final ValuesHolder valuesHolder;
     private final RequestQueue requestQueue;
     private final RegisterSocket registrationReceiverSocket;
-    private final AdminSenderSocket registrationSenderSocket;
     private final BackgroundWorker backgroundWorker;
     private final PlayerService playerService;
     private final List<List<EnvironmentInstance>> gameGrid;
@@ -30,14 +29,15 @@ public class GameFlow {
     private final MapRenderer mapRenderer;
     private final GridPane mapPane;
     private final GridPane playerPane;
+    private int howManyTreasuresLeft;
 
     public GameFlow(ValuesHolder valuesHolder, GridPane mapPane, GridPane playerPane) {
         this.valuesHolder = valuesHolder;
         this.mapPane = mapPane;
         this.playerPane = playerPane;
+        this.howManyTreasuresLeft = 0;
 
         this.requestQueue = new RequestQueue();
-        this.registrationSenderSocket = new AdminSenderSocket();
         this.registrationReceiverSocket = new RegisterSocket(valuesHolder.getPort(), requestQueue);
 
         // game
@@ -48,8 +48,8 @@ public class GameFlow {
         this.mapRenderer = new MapRenderer(mapPane, playerPane, gameGrid, dimensions);
 
         // logic
-        this.playerService = new PlayerService(valuesHolder.getPort(), mapRenderer, gameGrid, dimensions, requestQueue);
-        this.backgroundWorker = new BackgroundWorker(requestQueue, registrationSenderSocket, playerService);
+        this.playerService = new PlayerService(valuesHolder.getPort(), mapRenderer, gameGrid, dimensions, requestQueue, howManyTreasuresLeft);
+        this.backgroundWorker = new BackgroundWorker(requestQueue, playerService);
     }
 
     public void initServer() {
@@ -75,6 +75,7 @@ public class GameFlow {
                 }
                 if (character.equals('T')) {
                     row.add(new TreasureInstance(new Point2D(x, y)));
+                    howManyTreasuresLeft++;
                 }
                 x++;
             }
@@ -94,10 +95,14 @@ public class GameFlow {
     }
 
     public void killApp() {
-        if (!registrationReceiverSocket.isExit()) {
-            registrationReceiverSocket.setExit(true);
-        }
-        backgroundWorker.setExit(true);
-        playerService.getPlayerList().forEach(playerInstance -> playerInstance.getReceiverSocket().setExit(true));
+        registrationReceiverSocket.setExit(true);
+        registrationReceiverSocket.kilThread();
+
+        requestQueue.addElement(new PlayerRequest("0", "exit"));
+
+        playerService.getPlayerList().forEach(playerInstance -> {
+            playerInstance.getReceiverSocket().setExit(true);
+            playerInstance.getReceiverSocket().kilThread();
+        });
     }
 }

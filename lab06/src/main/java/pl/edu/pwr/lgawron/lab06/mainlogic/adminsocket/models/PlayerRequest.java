@@ -2,6 +2,7 @@ package pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models;
 
 public class PlayerRequest {
     private final int playerId;
+    private String proxyAddress;
     private final RequestType type;
     private int clientServerPort;
     private int moveX = 0;
@@ -28,7 +29,10 @@ public class PlayerRequest {
             return RequestType.TAKE;
         }
         if (type.equals("logout")) {
-            return RequestType.LOGOUT;
+            return RequestType.GAME_OVER;
+        }
+        if (type.equals("exit")) {
+            return RequestType.EXIT;
         }
         return RequestType.UNKNOWN;
     }
@@ -39,6 +43,15 @@ public class PlayerRequest {
 
     public PlayerRequest withPort(String port) {
         clientServerPort = this.getIntValue(port);
+        return this;
+    }
+
+    public PlayerRequest withProxy(String proxy) {
+        if (proxy.equals("0.0.0.0/0.0.0.0")) {
+            this.setProxyAddress("localhost");
+        } else {
+            this.proxyAddress = proxy;
+        }
         return this;
     }
 
@@ -66,6 +79,14 @@ public class PlayerRequest {
 
     public int getClientServerPort() {
         return clientServerPort;
+    }
+
+    public String getProxyAddress() {
+        return proxyAddress;
+    }
+
+    public void setProxyAddress(String proxyAddress) {
+        this.proxyAddress = proxyAddress;
     }
 
     public int getMoveX() {

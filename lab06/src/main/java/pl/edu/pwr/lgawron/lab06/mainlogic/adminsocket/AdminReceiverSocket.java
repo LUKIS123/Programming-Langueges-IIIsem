@@ -14,7 +14,7 @@ import java.net.SocketException;
 
 public class AdminReceiverSocket {
     private Thread thread;
-    private int port;
+    private final int port;
     private ServerSocket serverSocket;
     private boolean exit;
     private final RequestQueue requestQueue;
@@ -23,7 +23,6 @@ public class AdminReceiverSocket {
         this.port = port;
         this.requestQueue = requestQueue;
         this.exit = false;
-
         this.startListening();
     }
 
@@ -51,9 +50,8 @@ public class AdminReceiverSocket {
                     pSocket.close();
                 }
 
-            } catch (SocketException e) {
-                // jakos obsluzyc podczas zamyknia socketa
-                e.printStackTrace();
+            } catch (SocketException ignored) {
+
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -100,6 +98,15 @@ public class AdminReceiverSocket {
 
     public void setExit(boolean exit) {
         this.exit = exit;
+    }
+
+    public void kilThread() {
+        thread.interrupt();
+        try {
+            serverSocket.close();
+        } catch (IOException ignored) {
+        }
+        System.out.println("PlayerSocket Closed");
     }
 
 }

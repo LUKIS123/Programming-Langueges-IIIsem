@@ -1,6 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.flow.game;
 
 import javafx.util.Pair;
+import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.MapRenderer;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
@@ -21,20 +22,22 @@ public class PlayerService {
     private final int adminServerPort;
     private final RequestQueue requestQueue;
     private int sequence;
+    private int howManyTreasuresLeft;
 
-    public PlayerService(int adminServerPort, MapRenderer mapRenderer, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions, RequestQueue requestQueue) {
+    public PlayerService(int adminServerPort, MapRenderer mapRenderer, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions, RequestQueue requestQueue, int howManyTreasuresLeft) {
         this.dimensions = dimensions;
         this.playerList = new ArrayList<>();
         this.gameGrid = gameGrid;
         this.mapRenderer = mapRenderer;
+        this.howManyTreasuresLeft = howManyTreasuresLeft;
 
         this.adminServerPort = adminServerPort;
         this.requestQueue = requestQueue;
         this.sequence = 1;
     }
 
-    public PlayerInstance addRegisteredPlayer(int playerServerPort) {
-        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, requestQueue);
+    public PlayerInstance addRegisteredPlayer(int playerServerPort, String proxyAddress) {
+        PlayerInstance newPlayer = new PlayerInstance(sequence, playerServerPort, proxyAddress, requestQueue);
         newPlayer.setPosition(this.getRandomLocation());
         playerList.add(newPlayer);
         mapRenderer.renderPlayerSpawned(newPlayer);
@@ -75,9 +78,13 @@ public class PlayerService {
             gameGrid.get(treasureY).set(treasureX, new PathInstance(new Point2D(treasureX, treasureY)));
             playerById.setTakeAttempt(true);
             playerById.setHowManyTreasuresPicked(playerById.getHowManyTreasuresPicked() + 1);
+            howManyTreasuresLeft--;
 
             // render path instead of treasure
             mapRenderer.renderAfterTreasureTaken(treasureX, treasureY);
+            if (howManyTreasuresLeft == 0) {
+                requestQueue.addElement(new PlayerRequest("0", "logout"));
+            }
         }
         return playerById;
     }
@@ -207,6 +214,16 @@ public class PlayerService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public PlayerInstance getWhoWon() {
+        PlayerInstance first = playerList.stream().findFirst().get();
+        for (PlayerInstance instance : playerList) {
+            if (instance.getHowManyTreasuresPicked() > first.getHowManyTreasuresPicked()) {
+                first = instance;
+            }
+        }
+        return first;
     }
 
     public List<PlayerInstance> getPlayerList() {

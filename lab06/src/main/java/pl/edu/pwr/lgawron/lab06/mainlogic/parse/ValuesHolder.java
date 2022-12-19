@@ -1,7 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.mainlogic.parse;
 
 public class ValuesHolder {
-
     private String server;
     private int port;
 

@@ -9,34 +9,34 @@ public class PlayerAlgorithm {
     private boolean exit;
     private final int minSleepTime;
     private final PlayerWorker worker;
-    private Thread thread;
-    private final TaskQueue taskQueue;
+    private final Thread thread;
+    private final TaskRepository taskRepository;
     private PlayerData playerData;
 
-    public PlayerAlgorithm(PlayerWorker worker, TaskQueue taskQueue) {
+    public PlayerAlgorithm(PlayerWorker worker, TaskRepository taskRepository) {
         this.worker = worker;
-        this.taskQueue = taskQueue;
+        this.taskRepository = taskRepository;
         this.exit = false;
         this.minSleepTime = 1000;
 
         this.thread = new Thread(() -> {
-            if (worker.getPlayerData() == null) {
+            while (worker.getPlayerData() == null) {
                 tryToSleep(100);
             }
             playerData = worker.getPlayerData();
 
             while (!exit) {
                 makeSeeRequest();
-                String[] first = taskQueue.popTask();
+                String[] first = taskRepository.popTask();
                 makeAction(first);
 
                 makeMoveRequest();
-                String[] second = taskQueue.popTask();
+                String[] second = taskRepository.popTask();
                 makeAction(second);
 
                 if (playerData.isPossibleCurrentSpotTreasure()) {
                     makeTakeRequest();
-                    String[] third = taskQueue.popTask();
+                    String[] third = taskRepository.popTask();
                     makeAction(third);
                 }
             }
@@ -51,20 +51,21 @@ public class PlayerAlgorithm {
         String type = split[1];
         if (type.equals("register")) {
             worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4]);
-            this.tryToSleep(1000);
+            this.tryToSleep(700);
         }
         if (type.equals("see")) {
             worker.handleSeeResponse(split);
-            this.tryToSleep(1000);
+            this.tryToSleep(500);
         }
         if (type.equals("move")) {
             worker.handleMoveResponse(split);
-            this.tryToSleep(1000);
+            this.tryToSleep(700);
         }
         if (type.equals("take")) {
             worker.handleTakeResponse(split);
             playerData.setPossibleCurrentSpotTreasure(false);
-            this.tryToSleep(1000);
+            this.tryToSleep(playerData.getTreasurePickedWaitTime());
+            playerData.setTreasurePickedWaitTime(0);
         }
 
     }
@@ -74,7 +75,6 @@ public class PlayerAlgorithm {
     }
 
     private void makeMoveRequest() {
-        // sprawdzanie czy w zasiegu wzroku skarb
         Random random = new Random();
         int x;
         int y;

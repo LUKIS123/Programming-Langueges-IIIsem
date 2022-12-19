@@ -19,12 +19,13 @@
 
     <HBox alignment="TOP_CENTER" spacing="20">
         <Button fx:id="hostButton" text="Start Game Server" alignment="TOP_CENTER" onAction="#onHostButtonClick"/>
-        <Button fx:id="startButton" text="Start Game" alignment="TOP_CENTER" onAction="#onStartButtonClick"/>
+        <Button fx:id="startButton" text="End Registration Stage" alignment="TOP_CENTER"
+                onAction="#onStartButtonClick"/>
     </HBox>
 
     <Pane fx:id="mainPane">
         <GridPane fx:id="mapPane" prefWidth="1000" prefHeight="750"/>
-        <GridPane fx:id="playerPane" prefWidth="1000" prefHeight="750"/>
+        <GridPane fx:id="playerPane" prefWidth="1000" prefHeight="750" visible="false"/>
     </Pane>
 
 </VBox>

@@ -5,7 +5,7 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.adminsocket.models.PlayerRequest;
 public class ClientCommandParser {
     // commands
     public static PlayerRequest pareRegisterRequest(String[] split) {
-        return new PlayerRequest(split[0], split[1]).withPort(split[2]);
+        return new PlayerRequest(split[0], split[1]).withPort(split[2]).withProxy(split[3]);
     }
 
     public static PlayerRequest parseSeeRequest(String[] split) {

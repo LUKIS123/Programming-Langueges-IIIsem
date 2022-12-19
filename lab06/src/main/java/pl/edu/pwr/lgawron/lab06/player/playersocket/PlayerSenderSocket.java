@@ -1,6 +1,5 @@
-package pl.edu.pwr.lgawron.lab06.mainlogic.playersocket;
+package pl.edu.pwr.lgawron.lab06.player.playersocket;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -19,8 +18,7 @@ public class PlayerSenderSocket {
             pw.close();
             soc.close();
 
-        } catch (SocketException e) {
-            e.printStackTrace();
+        } catch (SocketException ignored) {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

@@ -2,10 +2,12 @@ package pl.edu.pwr.lgawron.lab06.player.utils;
 
 import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
 
-public class PlayerRequestParser {
+import java.net.InetAddress;
+
+public class PlayerRequestCreator {
     //command: playerId, type, coordinates itd
-    public static String registerRequest(int port) {
-        return 0 + ";register;" + port + "\n";
+    public static String registerRequest(int port, InetAddress inetAddress) {
+        return 0 + ";register;" + port + ";" + inetAddress + "\n";
     }
 
     public static String seeRequest(int id) {

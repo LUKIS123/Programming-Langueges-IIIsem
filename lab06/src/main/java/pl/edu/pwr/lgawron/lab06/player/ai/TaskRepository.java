@@ -2,17 +2,17 @@ package pl.edu.pwr.lgawron.lab06.player.ai;
 
 import java.util.LinkedList;
 
-public class TaskQueue {
+public class TaskRepository {
     private final LinkedList<String[]> tasks;
 
-    public TaskQueue() {
+    public TaskRepository() {
         this.tasks = new LinkedList<>();
     }
 
     public synchronized void addTask(String[] s) {
         if (tasks.isEmpty()) {
             tasks.add(s);
-            notify();
+            notifyAll();
         } else {
             tasks.add(s);
         }

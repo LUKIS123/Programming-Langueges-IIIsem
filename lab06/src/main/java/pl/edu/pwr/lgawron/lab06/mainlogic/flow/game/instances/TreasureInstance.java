@@ -8,7 +8,7 @@ public class TreasureInstance implements EnvironmentInstance {
 
     public TreasureInstance(Point2D position) {
         this.position = position;
-        this.waitingTime = 1000 + (int) (Math.random() * 300);
+        this.waitingTime = 1000 + (int) (Math.random() * 5000);
     }
 
     @Override

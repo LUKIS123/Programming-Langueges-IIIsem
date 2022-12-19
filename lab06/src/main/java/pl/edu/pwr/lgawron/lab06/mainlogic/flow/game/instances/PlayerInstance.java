@@ -8,6 +8,7 @@ import pl.edu.pwr.lgawron.lab06.mainlogic.flow.queue.RequestQueue;
 public class PlayerInstance {
     private final int id;
     private final int clientServerPort;
+    private final String proxy;
     private Point2D position;
     private final RequestQueue requestQueue;
     private final AdminReceiverSocket receiverSocket;
@@ -16,11 +17,11 @@ public class PlayerInstance {
     private boolean takeAttempt;
     private int currentWaitingTime;
 
-    public PlayerInstance(int id, int clientServerPort, RequestQueue requestQueue) {
+    public PlayerInstance(int id, int clientServerPort, String proxy, RequestQueue requestQueue) {
         this.id = id;
         this.clientServerPort = clientServerPort;
+        this.proxy = proxy;
         this.requestQueue = requestQueue;
-        // this.receiverSocket = adminReceiverSocket;
         this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
         this.receiverSocket.startListening();
         this.senderSocket = new AdminSenderSocket();
@@ -63,6 +64,10 @@ public class PlayerInstance {
 
     public boolean isBound() {
         return receiverSocket.checkIfConnected();
+    }
+
+    public String getProxy() {
+        return proxy;
     }
 
     public AdminSenderSocket getSenderSocket() {

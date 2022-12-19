@@ -5,10 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
-import pl.edu.pwr.lgawron.lab06.mainlogic.playersocket.PlayerSenderSocket;
+import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerSenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
-import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestParser;
+import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +16,9 @@ import java.util.List;
 
 public class PlayerWorker {
     private PlayerData playerData;
-    private VBox controlBox;
+    private final VBox controlBox;
     private PlayerSenderSocket senderSocket;
-    private ValuesHolder valuesHolder;
+    private final ValuesHolder valuesHolder;
     private int newReceiverPort;
     private final PlayerMapRenderer playerMapRenderer;
     private final PlayerAppFlow appFlow;
@@ -109,15 +109,26 @@ public class PlayerWorker {
         }
     }
 
+    public void handleGameOverResponse(String[] split) {
+        String status = split[2];
+        if (status.equals("win")) {
+            this.displayWonInfo(Integer.parseInt(split[3]));
+        }
+        if (status.equals("lose")) {
+            this.displayLostInfo(Integer.parseInt(split[3]));
+        }
+        appFlow.killApp();
+    }
+
     public void sendSeeRequest() {
         if (playerData == null) {
             return;
         }
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.seeRequest(playerData.getId()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.seeRequest(playerData.getId()));
     }
 
     public void sendArtificialMoveRequest(int x, int y) {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.artificialMoveRequest(playerData.getId(), x, y));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
     }
 
     public boolean checkPositionIfPossibleToMove(int x, int y) {
@@ -127,23 +138,23 @@ public class PlayerWorker {
     // controls
 
     public void sendMoveUpRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveUpRequest(playerData.getId()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerData.getId()));
     }
 
     public void sendMoveLeftRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveLeftRequest(playerData.getId()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveLeftRequest(playerData.getId()));
     }
 
     public void sendMoveRightRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveRightRequest(playerData.getId()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveRightRequest(playerData.getId()));
     }
 
     public void sendMoveDownRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.moveDownRequest(playerData.getId()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveDownRequest(playerData.getId()));
     }
 
     public void sendTakeRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestParser.takeTreasureRequest(playerData.getId(), playerData.getPoint2D()));
+        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.takeTreasureRequest(playerData.getId(), playerData.getPoint2D()));
     }
 
     // controls
@@ -164,6 +175,20 @@ public class PlayerWorker {
     private void displayTreasureInfo(int treasures) {
         Platform.runLater(() ->
                 gameInfo.setText("Treasures=" + treasures)
+        );
+    }
+
+    @FXML
+    private void displayLostInfo(int treasures) {
+        Platform.runLater(() ->
+                gameInfo.setText("YOU LOSE! Most treasures taken by another player=" + treasures)
+        );
+    }
+
+    @FXML
+    private void displayWonInfo(int treasures) {
+        Platform.runLater(() ->
+                gameInfo.setText("YOU WIN! Your score is=" + treasures + " treasures!")
         );
     }
 

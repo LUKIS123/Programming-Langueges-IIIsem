@@ -111,38 +111,38 @@ public class AppController {
         );
     }
 
-    public void onStartButtonClick(ActionEvent actionEvent) {
+    public void onStartButtonClick() {
         appFlow.startAlgo();
     }
 
     /// controls
     @FXML
-    public void moveUp(ActionEvent actionEvent) {
+    public void moveUp() {
         appFlow.moveUp();
     }
 
     @FXML
-    public void moveLeft(ActionEvent actionEvent) {
+    public void moveLeft() {
         appFlow.moveLeft();
     }
 
     @FXML
-    public void moveRight(ActionEvent actionEvent) {
+    public void moveRight() {
         appFlow.moveRight();
     }
 
     @FXML
-    public void moveDown(ActionEvent actionEvent) {
+    public void moveDown() {
         appFlow.moveDown();
     }
 
     @FXML
-    public void see(ActionEvent actionEvent) {
+    public void see() {
         appFlow.see();
     }
 
     @FXML
-    public void takeTreasure(ActionEvent actionEvent) {
+    public void takeTreasure() {
         appFlow.take();
     }
 
