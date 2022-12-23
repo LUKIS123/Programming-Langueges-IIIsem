@@ -82,9 +82,11 @@ public class RegisterSocket {
     }
 
     public void kilThread() {
-        this.thread.interrupt();
+        thread.interrupt();
         try {
-            this.serverSocket.close();
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
         } catch (IOException ignored) {
         }
         System.out.println("RegisterSocket closed");

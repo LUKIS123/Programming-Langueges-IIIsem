@@ -103,7 +103,9 @@ public class AdminReceiverSocket {
     public void kilThread() {
         thread.interrupt();
         try {
-            serverSocket.close();
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
         } catch (IOException ignored) {
         }
         System.out.println("PlayerSocket Closed");

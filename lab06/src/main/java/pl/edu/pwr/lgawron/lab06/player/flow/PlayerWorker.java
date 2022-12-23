@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
 import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerSenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
@@ -13,20 +14,24 @@ import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class PlayerWorker {
     private PlayerData playerData;
     private final VBox controlBox;
     private PlayerSenderSocket senderSocket;
     private final ValuesHolder valuesHolder;
+    private final Pair<Integer, Integer> dimensions;
     private int newReceiverPort;
     private final PlayerMapRenderer playerMapRenderer;
     private final PlayerAppFlow appFlow;
     private final Label gameInfo;
 
-    public PlayerWorker(VBox controlBox, ValuesHolder valuesHolder, PlayerMapRenderer playerMapRenderer, PlayerAppFlow appFlow) {
+    public PlayerWorker(VBox controlBox, ValuesHolder valuesHolder, Pair<Integer, Integer> dimensions, PlayerMapRenderer playerMapRenderer, PlayerAppFlow appFlow) {
         this.appFlow = appFlow;
         this.valuesHolder = valuesHolder;
+        this.dimensions = dimensions;
+
         this.controlBox = controlBox;
         this.playerMapRenderer = playerMapRenderer;
         this.gameInfo = new Label();
@@ -109,6 +114,38 @@ public class PlayerWorker {
         }
     }
 
+    // getting coordinates of treasure in field of view, if not -> random point
+    public int[] getNextPointToMove() {
+        for (int i = -1; i < 2; i++) {
+            if (playerData.getPoint2D().getPositionY() + i < 0 || playerData.getPoint2D().getPositionY() + i >= dimensions.getValue()) {
+                continue;
+            }
+            List<String> currentRow = playerData.getPlayerGrid().get(playerData.getPoint2D().getPositionY() + i);
+            for (int j = -1; j < 2; j++) {
+                if (playerData.getPoint2D().getPositionX() + j < 0 || playerData.getPoint2D().getPositionX() + j >= dimensions.getKey()) {
+                    continue;
+                }
+                if (currentRow.get(playerData.getPoint2D().getPositionX() + j).equals("T")) {
+                    return new int[]{j, i};
+                }
+            }
+        }
+        return this.getRandomAvailablePoint();
+    }
+
+    // no treasures nearby -> getting random point
+    private int[] getRandomAvailablePoint() {
+        Random random = new Random();
+        int x;
+        int y;
+        do {
+            x = random.nextInt(-1, 2);
+            y = random.nextInt(-1, 2);
+        } while (!this.checkPositionIfPossibleToMove(x, y));
+
+        return new int[]{x, y};
+    }
+
     public void handleGameOverResponse(String[] split) {
         String status = split[2];
         if (status.equals("win")) {
@@ -181,7 +218,7 @@ public class PlayerWorker {
     @FXML
     private void displayLostInfo(int treasures) {
         Platform.runLater(() ->
-                gameInfo.setText("YOU LOSE! Most treasures taken by another player=" + treasures)
+                gameInfo.setText("YOU LOSE! Most treasures taken by another player=" + treasures + ", your score was=" + playerData.getTreasuresPicked())
         );
     }
 

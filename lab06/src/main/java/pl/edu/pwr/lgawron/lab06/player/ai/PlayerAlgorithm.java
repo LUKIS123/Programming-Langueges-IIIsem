@@ -21,23 +21,24 @@ public class PlayerAlgorithm {
 
         this.thread = new Thread(() -> {
             while (worker.getPlayerData() == null) {
-                tryToSleep(100);
+                this.tryToSleep(100);
             }
             playerData = worker.getPlayerData();
 
             while (!exit) {
-                makeSeeRequest();
+                this.makeSeeRequest();
                 String[] first = taskRepository.popTask();
-                makeAction(first);
+                this.makeAction(first);
 
-                makeMoveRequest();
+                // this.makeMoveRequest();
+                this.makeMoveRequestWithinFiledOfView();
                 String[] second = taskRepository.popTask();
-                makeAction(second);
+                this.makeAction(second);
 
                 if (playerData.isPossibleCurrentSpotTreasure()) {
-                    makeTakeRequest();
+                    this.makeTakeRequest();
                     String[] third = taskRepository.popTask();
-                    makeAction(third);
+                    this.makeAction(third);
                 }
             }
         });
@@ -55,7 +56,7 @@ public class PlayerAlgorithm {
         }
         if (type.equals("see")) {
             worker.handleSeeResponse(split);
-            this.tryToSleep(500);
+            this.tryToSleep(200);
         }
         if (type.equals("move")) {
             worker.handleMoveResponse(split);
@@ -75,6 +76,8 @@ public class PlayerAlgorithm {
     }
 
     private void makeMoveRequest() {
+        // todo: get a point on which is treasure, if not move random -> PlayerWorker
+        // done
         Random random = new Random();
         int x;
         int y;
@@ -83,6 +86,14 @@ public class PlayerAlgorithm {
             y = random.nextInt(-1, 2);
         } while (!worker.checkPositionIfPossibleToMove(x, y));
         worker.sendArtificialMoveRequest(x, y);
+    }
+
+    private void makeMoveRequestWithinFiledOfView() {
+        // todo -> przeniesc algorytm do innej klasy niz worker, zrobic drugi algorytm wyszukiwania drogi
+        // przy ktorym gracz bedzie poruszal sie w tym samym kierunku do napotkania pierwszej przeszkody, wtedy odbije sie
+
+        int[] nextPointToMove = worker.getNextPointToMove();
+        worker.sendArtificialMoveRequest(nextPointToMove[0], nextPointToMove[1]);
     }
 
     private void makeTakeRequest() {

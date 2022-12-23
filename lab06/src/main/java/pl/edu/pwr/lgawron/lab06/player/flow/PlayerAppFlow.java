@@ -22,7 +22,7 @@ public class PlayerAppFlow {
     private ValuesHolder valuesHolder;
     private PlayerWorker playerWorker;
     private final List<List<EnvironmentInstance>> gameGrid;
-    private Pair<Integer, Integer> dimensions = new Pair<>(20, 15);
+    private Pair<Integer, Integer> dimensions;
     private GridPane mapPane;
     private GridPane playerPane;
     private PlayerMapRenderer mapRenderer;
@@ -36,6 +36,7 @@ public class PlayerAppFlow {
 
     public void startRegistration(ValuesHolder valuesHolder, VBox controls, GridPane mapPane, GridPane playerPane) {
         this.valuesHolder = valuesHolder;
+        this.dimensions = new Pair<>(20, 15);
 
         this.mapPane = mapPane;
         this.playerPane = playerPane;
@@ -45,7 +46,7 @@ public class PlayerAppFlow {
         this.mapRenderer = new PlayerMapRenderer(mapPane, playerPane, gameGrid, dimensions);
 
         // main player logic
-        this.playerWorker = new PlayerWorker(controls, valuesHolder, mapRenderer, this);
+        this.playerWorker = new PlayerWorker(controls, valuesHolder, dimensions, mapRenderer, this);
         this.senderSocket = new PlayerSenderSocket();
         this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerWorker, taskRepository);
         this.receiverSocket.start();
