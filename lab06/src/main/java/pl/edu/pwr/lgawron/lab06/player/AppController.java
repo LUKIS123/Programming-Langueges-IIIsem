@@ -10,28 +10,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import pl.edu.pwr.lgawron.lab06.mainlogic.frame.RegisterPopUp;
-import pl.edu.pwr.lgawron.lab06.mainlogic.parse.InputDataException;
-import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
+import pl.edu.pwr.lgawron.lab06.common.frame.RegisterPopUp;
+import pl.edu.pwr.lgawron.lab06.common.input.InputDataException;
+import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
 import pl.edu.pwr.lgawron.lab06.player.flow.PlayerAppFlow;
 
 public class AppController {
     @FXML
     public VBox controlBox;
-    @FXML
-    public Button up;
-    @FXML
-    public Button left;
-    @FXML
-    public Button right;
-    @FXML
-    public Button down;
-    @FXML
-    public Button see;
     @FXML
     public Pane mainPane;
     @FXML
@@ -42,6 +33,8 @@ public class AppController {
     public Button startButton;
     @FXML
     public Button take;
+    @FXML
+    public Button playManuallyButton;
     @FXML
     private Button registerButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
@@ -60,7 +53,7 @@ public class AppController {
 
         registerButton.setOnAction(
                 event -> {
-                    VBox dialogVbox = registerPopUp.renderPopUp();
+                    VBox dialogVbox = registerPopUp.renderPopUp("Please enter server host and port:");
 
                     TextField server = new TextField();
                     server.setPromptText("Server");
@@ -111,42 +104,101 @@ public class AppController {
         );
     }
 
+    @FXML
     public void onStartButtonClick() {
+        if (values == null) {
+            return;
+        }
         appFlow.startAlgo();
     }
 
-    /// controls
     @FXML
-    public void moveUp() {
-        appFlow.moveUp();
+    public void onPlayManuallyButtonCLick(ActionEvent openControlsEvent) {
+        if (values == null) {
+            return;
+        }
+        appFlow.startManualExecutor();
+
+        Node node = (Node) openControlsEvent.getSource();
+        Stage thisStage = (Stage) node.getScene().getWindow();
+        playManuallyButton.setOnAction(event -> {
+            VBox dialogVbox = registerPopUp.renderPopUp("Controls:");
+
+            Button see = new Button("SEE");
+            Button take = new Button("TAKE");
+            HBox seeAndTake = new HBox(20);
+            seeAndTake.setAlignment(Pos.TOP_CENTER);
+
+            EventHandler<ActionEvent> takeTreasure = takeEvent -> appFlow.take();
+            take.setOnAction(takeTreasure);
+            EventHandler<ActionEvent> seeEnv = seeEvent -> appFlow.see();
+
+            see.setOnAction(seeEnv);
+            seeAndTake.getChildren().add(see);
+            seeAndTake.getChildren().add(take);
+            dialogVbox.getChildren().add(seeAndTake);
+
+            Button up = new Button("UP");
+            Button left_up = new Button("LEFT-UP");
+            Button right_up = new Button("RIGHT-UP");
+            HBox upper = new HBox();
+            upper.setAlignment(Pos.BOTTOM_CENTER);
+
+            EventHandler<ActionEvent> moveUp = moveEvent -> appFlow.moveUp(0);
+            up.setOnAction(moveUp);
+            EventHandler<ActionEvent> moveLeftUp = moveEvent -> appFlow.moveUp(-1);
+            left_up.setOnAction(moveLeftUp);
+            EventHandler<ActionEvent> moveRightUp = moveEvent -> appFlow.moveUp(1);
+            right_up.setOnAction(moveRightUp);
+
+            upper.getChildren().add(left_up);
+            upper.getChildren().add(up);
+            upper.getChildren().add(right_up);
+            dialogVbox.getChildren().add(upper);
+
+            Button left = new Button("LEFT");
+            Button right = new Button("RIGHT");
+            HBox level = new HBox();
+            level.setAlignment(Pos.BOTTOM_CENTER);
+
+            EventHandler<ActionEvent> moveLeft = moveEvent -> appFlow.moveLeft();
+            left.setOnAction(moveLeft);
+            EventHandler<ActionEvent> moveRight = moveEvent -> appFlow.moveRight();
+            right.setOnAction(moveRight);
+
+            level.getChildren().add(left);
+            level.getChildren().add(right);
+            dialogVbox.getChildren().add(level);
+
+            Button down = new Button("DOWN");
+            Button left_down = new Button("LEFT-DOWN");
+            Button right_down = new Button("RIGHT-DOWN");
+            HBox lower = new HBox();
+            lower.setAlignment(Pos.BOTTOM_CENTER);
+
+            EventHandler<ActionEvent> moveDown = moveEvent -> appFlow.moveDown(0);
+            down.setOnAction(moveDown);
+            EventHandler<ActionEvent> moveLeftDown = moveEvent -> appFlow.moveDown(-1);
+            left_down.setOnAction(moveLeftDown);
+            EventHandler<ActionEvent> moveRightDown = moveEvent -> appFlow.moveDown(1);
+            right_down.setOnAction(moveRightDown);
+
+            lower.getChildren().add(left_down);
+            lower.getChildren().add(down);
+            lower.getChildren().add(right_down);
+            dialogVbox.getChildren().add(lower);
+
+            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(thisStage);
+            dialog.setScene(dialogScene);
+
+            dialog.setScene(dialogScene);
+            dialog.show();
+        });
     }
 
-    @FXML
-    public void moveLeft() {
-        appFlow.moveLeft();
-    }
-
-    @FXML
-    public void moveRight() {
-        appFlow.moveRight();
-    }
-
-    @FXML
-    public void moveDown() {
-        appFlow.moveDown();
-    }
-
-    @FXML
-    public void see() {
-        appFlow.see();
-    }
-
-    @FXML
-    public void takeTreasure() {
-        appFlow.take();
-    }
-
-    /// end of controls
     public void onExitApplication() {
         appFlow.killApp();
     }

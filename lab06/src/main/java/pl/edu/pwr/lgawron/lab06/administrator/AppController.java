@@ -14,10 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.GameFlow;
-import pl.edu.pwr.lgawron.lab06.mainlogic.frame.RegisterPopUp;
-import pl.edu.pwr.lgawron.lab06.mainlogic.parse.InputDataException;
-import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
+import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow.GameFlow;
+import pl.edu.pwr.lgawron.lab06.common.frame.RegisterPopUp;
+import pl.edu.pwr.lgawron.lab06.common.input.InputDataException;
+import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
 
 public class AppController {
     @FXML
@@ -42,7 +42,7 @@ public class AppController {
 
         hostButton.setOnAction(
                 event -> {
-                    VBox dialogVbox = registerPopUp.renderPopUp();
+                    VBox dialogVbox = registerPopUp.renderPopUp("Please enter host and port:");
 
                     TextField server = new TextField();
                     server.setPromptText("Server");

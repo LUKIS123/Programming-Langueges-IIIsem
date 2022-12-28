@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.player.playersocket;
 
-import pl.edu.pwr.lgawron.lab06.player.ai.TaskRepository;
-import pl.edu.pwr.lgawron.lab06.player.flow.PlayerWorker;
+import pl.edu.pwr.lgawron.lab06.player.executor.PlayerTasks;
+import pl.edu.pwr.lgawron.lab06.player.flow.PlayerClientService;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
 
 import java.io.*;
@@ -15,16 +15,16 @@ public class PlayerReceiverSocket {
     private final String proxy;
     private ServerSocket serverSocket;
     private final PlayerSenderSocket senderSocket;
-    private final PlayerWorker worker;
-    private final TaskRepository taskRepository;
+    private final PlayerClientService worker;
+    private final PlayerTasks playerTasks;
     private boolean exit;
 
-    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerWorker worker, TaskRepository taskRepository) {
+    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerClientService worker, PlayerTasks playerTasks) {
         this.port = port;
         this.proxy = proxy;
         this.senderSocket = senderSocket;
         this.worker = worker;
-        this.taskRepository = taskRepository;
+        this.playerTasks = playerTasks;
         this.exit = false;
     }
 
@@ -64,11 +64,11 @@ public class PlayerReceiverSocket {
         String[] split = s.split(";");
         String type = split[1];
         if (type.equals("register")) {
-            worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4]);
+            worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], this.getPort());
         } else if (type.equals("over")) {
             worker.handleGameOverResponse(split);
         } else {
-            taskRepository.addTask(split);
+            playerTasks.addTask(split);
         }
     }
 
@@ -77,6 +77,10 @@ public class PlayerReceiverSocket {
             str = str.substring(0, str.length() - 1);
         }
         return str;
+    }
+
+    public int getPort() {
+        return serverSocket.getLocalPort();
     }
 
     public void setExit(boolean exit) {

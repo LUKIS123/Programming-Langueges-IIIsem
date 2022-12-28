@@ -3,14 +3,16 @@ package pl.edu.pwr.lgawron.lab06.player.flow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.BlankInstance;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
-import pl.edu.pwr.lgawron.lab06.mainlogic.parse.ValuesHolder;
+import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
+import pl.edu.pwr.lgawron.lab06.common.game.objects.BlankInstance;
+import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
+import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab06.player.executor.Executor;
+import pl.edu.pwr.lgawron.lab06.player.executor.ManualTaskExecutor;
 import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerSenderSocket;
-import pl.edu.pwr.lgawron.lab06.player.ai.PlayerAlgorithm;
-import pl.edu.pwr.lgawron.lab06.player.ai.TaskRepository;
+import pl.edu.pwr.lgawron.lab06.player.executor.PlayerAIAlgorithm;
+import pl.edu.pwr.lgawron.lab06.player.executor.PlayerTasks;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
 
 import java.util.ArrayList;
@@ -20,42 +22,48 @@ public class PlayerAppFlow {
     private PlayerReceiverSocket receiverSocket;
     private PlayerSenderSocket senderSocket;
     private ValuesHolder valuesHolder;
-    private PlayerWorker playerWorker;
-    private final List<List<EnvironmentInstance>> gameGrid;
+    private PlayerClientService playerClientService;
+    private final List<List<GameInstance>> gameGrid;
     private Pair<Integer, Integer> dimensions;
     private GridPane mapPane;
     private GridPane playerPane;
     private PlayerMapRenderer mapRenderer;
-    private PlayerAlgorithm algorithm;
-    private final TaskRepository taskRepository;
+    private Executor executor;
+    private final PlayerTasks playerTasks;
 
     public PlayerAppFlow() {
         this.gameGrid = new ArrayList<>();
-        this.taskRepository = new TaskRepository();
+        this.playerTasks = new PlayerTasks();
     }
 
     public void startRegistration(ValuesHolder valuesHolder, VBox controls, GridPane mapPane, GridPane playerPane) {
         this.valuesHolder = valuesHolder;
-        this.dimensions = new Pair<>(20, 15);
 
         this.mapPane = mapPane;
         this.playerPane = playerPane;
 
-        // map render
-        this.initPlayerGrid();
-        this.mapRenderer = new PlayerMapRenderer(mapPane, playerPane, gameGrid, dimensions);
-
         // main player logic
-        this.playerWorker = new PlayerWorker(controls, valuesHolder, dimensions, mapRenderer, this);
+        this.playerClientService = new PlayerClientService(controls, valuesHolder, this);
         this.senderSocket = new PlayerSenderSocket();
-        this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerWorker, taskRepository);
+        this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerClientService, playerTasks);
         this.receiverSocket.start();
 
         // worker
-        this.playerWorker.setSenderSocket(senderSocket);
+        this.playerClientService.setSenderSocket(senderSocket);
+    }
 
-        // algo
-        this.algorithm = new PlayerAlgorithm(playerWorker, taskRepository);
+    public Pair<Integer, Integer> setDimensionsAndInitGrid(int sizeX, int sizeY) {
+        // setting board dimensions
+        this.dimensions = new Pair<>(sizeX, sizeY);
+        // init player grid
+        this.initPlayerGrid();
+
+        return dimensions;
+    }
+
+    public PlayerMapRenderer initMapRenderer() {
+        this.mapRenderer = new PlayerMapRenderer(mapPane, playerPane, gameGrid, dimensions);
+        return mapRenderer;
     }
 
     private void initPlayerGrid() {
@@ -63,7 +71,7 @@ public class PlayerAppFlow {
         int y = 0;
 
         for (int i = 0; i < dimensions.getValue(); i++) {
-            List<EnvironmentInstance> row = new ArrayList<>();
+            List<GameInstance> row = new ArrayList<>();
             for (int j = 0; j < dimensions.getKey(); j++) {
                 row.add(new BlankInstance(new Point2D(x, y)));
                 x++;
@@ -75,44 +83,75 @@ public class PlayerAppFlow {
     }
 
     public void startAlgo() {
-        if (algorithm == null) {
+        if (valuesHolder == null || executor != null) {
             return;
         }
-        algorithm.start();
+        playerPane.setVisible(true);
+        executor = new PlayerAIAlgorithm(playerClientService, playerTasks, receiverSocket);
+        executor.start();
+    }
+
+    public void startManualExecutor() {
+        if (valuesHolder == null || executor != null) {
+            return;
+        }
+        playerPane.setVisible(true);
+        executor = new ManualTaskExecutor(playerClientService, receiverSocket, playerTasks);
+        executor.start();
     }
 
     public void see() {
-        playerWorker.sendSeeRequest();
+        if (this.checkForTreasureWaitTime()) {
+            return;
+        }
+        playerClientService.sendSeeRequest();
     }
 
-    public void moveUp() {
-        playerWorker.sendMoveUpRequest();
+    public void moveUp(int direction) {
+        if (this.checkForTreasureWaitTime()) {
+            return;
+        }
+        playerClientService.sendMoveUpRequest(direction);
     }
 
     public void moveLeft() {
-        playerWorker.sendMoveLeftRequest();
+        if (this.checkForTreasureWaitTime()) {
+            return;
+        }
+        playerClientService.sendMoveLeftRequest();
     }
 
     public void moveRight() {
-        playerWorker.sendMoveRightRequest();
+        if (this.checkForTreasureWaitTime()) {
+            return;
+        }
+        playerClientService.sendMoveRightRequest();
     }
 
-    public void moveDown() {
-        playerWorker.sendMoveDownRequest();
+    public void moveDown(int direction) {
+        if (this.checkForTreasureWaitTime()) {
+            return;
+        }
+        playerClientService.sendMoveDownRequest(direction);
     }
 
     public void take() {
-        playerWorker.sendTakeRequest();
+        if (this.checkForTreasureWaitTime()) {
+            return;
+        }
+        playerClientService.sendTakeRequest();
     }
 
-    public Pair<Integer, Integer> setDimensions(int sizeX, int sizeY) {
-        this.dimensions = new Pair<>(sizeX, sizeY);
-        return dimensions;
+    private boolean checkForTreasureWaitTime() {
+        if (playerClientService.getPlayerData() == null) {
+            return true;
+        }
+        return playerClientService.getPlayerData().getTreasurePickedWaitTime() != 0;
     }
 
     public void killApp() {
-        if (algorithm != null) {
-            algorithm.setExit(true);
+        if (executor != null) {
+            executor.setExit(true);
         }
         if (receiverSocket != null) {
             receiverSocket.setExit(true);

@@ -10,32 +10,22 @@
     </padding>
     <HBox alignment="TOP_CENTER" spacing="20">
 
-        <VBox fx:id="controlBox" alignment="TOP_CENTER">
-            <HBox>
+        <VBox fx:id="controlBox" alignment="TOP_CENTER" spacing="5">
+            <HBox spacing="10">
                 <Button fx:id="registerButton" text="Join Game" alignment="TOP_CENTER"
                         onAction="#onRegisterButtonClick"/>
                 <Button fx:id="startButton" text="Start Algorithm" alignment="TOP_CENTER"
                         onAction="#onStartButtonClick"/>
+                <Button fx:id="playManuallyButton" text="Play Manually" alignment="TOP_CENTER"
+                        onAction="#onPlayManuallyButtonCLick"/>
             </HBox>
         </VBox>
-        <!-- stuff for movement    -->
-
-        <!--        <HBox>-->
-        <!--            <Button fx:id="up" text="up" onAction="#moveUp"/>-->
-        <!--            <Button fx:id="left" text="left" onAction="#moveLeft"/>-->
-        <!--            <Button fx:id="right" text="right" onAction="#moveRight"/>-->
-        <!--            <Button fx:id="down" text="down" onAction="#moveDown"/>-->
-        <!--            <Button fx:id="see" text="see" onAction="#see"/>-->
-        <!--            <Button fx:id="take" text="take" onAction="#takeTreasure"/>-->
-        <!--        </HBox>-->
-
-        <!-- stuff for movement    -->
     </HBox>
 
 
     <Pane fx:id="mainPane">
         <GridPane fx:id="mapPane" prefWidth="1000" prefHeight="750"/>
-        <GridPane fx:id="playerPane" prefWidth="1000" prefHeight="750"/>
+        <GridPane fx:id="playerPane" prefWidth="1000" prefHeight="750" visible="false"/>
     </Pane>
 
 </VBox>

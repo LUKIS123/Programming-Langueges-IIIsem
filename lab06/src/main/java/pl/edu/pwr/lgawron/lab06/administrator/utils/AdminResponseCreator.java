@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab06.administrator.utils;
 
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
+import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
+import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class AdminResponseCreator {
         return playerId + ";see;" + mapFragment.get(0) + ":" + mapFragment.get(1) + ":" + mapFragment.get(2) + "\n";
     }
 
-    public static String createMoveMessage(int playerId, int positionX, int positionY, Optional<EnvironmentInstance> instanceOptional) {
+    public static String createMoveMessage(int playerId, int positionX, int positionY, Optional<GameInstance> instanceOptional) {
         if (instanceOptional.isEmpty()) {
             return playerId + ";move;" + positionX + "," + positionY + ";" + 0 + "\n";
         } else {

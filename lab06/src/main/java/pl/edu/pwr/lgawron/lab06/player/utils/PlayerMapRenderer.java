@@ -10,13 +10,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.instances.EnvironmentInstance;
+import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
 
 import java.io.File;
 import java.util.List;
 
 public class PlayerMapRenderer {
-    private final List<List<EnvironmentInstance>> gameGrid;
+    private final List<List<GameInstance>> gameGrid;
     private final Pair<Integer, Integer> dimensions;
     private final GridPane mapPane;
     private final GridPane playerPane;
@@ -24,7 +24,7 @@ public class PlayerMapRenderer {
     private final Node[][] frontTiles;
     private final Image treasureImage = new Image((new File("treasure.png").toURI().toString()));
 
-    public PlayerMapRenderer(GridPane mapPane, GridPane playerPane, List<List<EnvironmentInstance>> gameGrid, Pair<Integer, Integer> dimensions) {
+    public PlayerMapRenderer(GridPane mapPane, GridPane playerPane, List<List<GameInstance>> gameGrid, Pair<Integer, Integer> dimensions) {
         this.gameGrid = gameGrid;
         this.dimensions = dimensions;
         this.mapPane = mapPane;
@@ -37,33 +37,35 @@ public class PlayerMapRenderer {
         this.fillPlayerPane();
     }
 
+    private void fillPlayerPane() {
+        Platform.runLater(() -> {
+            for (int i = 0; i < dimensions.getValue(); i++) {
+                for (int j = 0; j < dimensions.getKey(); j++) {
+                    Rectangle rect = new Rectangle(50, 50);
+                    rect.setFill(Color.TRANSPARENT);
+                    playerPane.add(rect, j, i);
+                    frontTiles[j][i] = rect;
+                }
+            }
+        });
+    }
+
     public void firstRender() {
         Platform.runLater(() -> {
             // gameMap
-            for (List<EnvironmentInstance> environmentInstances : gameGrid) {
-                for (EnvironmentInstance environmentInstance : environmentInstances) {
+            for (List<GameInstance> gameInstances : gameGrid) {
+                for (GameInstance gameInstance : gameInstances) {
                     Rectangle rect = new Rectangle(50, 50);
                     rect.setFill(Color.TRANSPARENT);
 
-                    int positionX = environmentInstance.getPosition().getPositionX();
-                    int positionY = environmentInstance.getPosition().getPositionY();
+                    int positionX = gameInstance.position().getPositionX();
+                    int positionY = gameInstance.position().getPositionY();
 
                     mapPane.add(rect, positionX, positionY);
                     backgroundTiles[positionX][positionY] = rect;
                 }
             }
         });
-    }
-
-    private void fillPlayerPane() {
-        for (int i = 0; i < dimensions.getValue(); i++) {
-            for (int j = 0; j < dimensions.getKey(); j++) {
-                Rectangle rect = new Rectangle(50, 50);
-                rect.setFill(Color.TRANSPARENT);
-                playerPane.add(rect, j, i);
-                frontTiles[j][i] = rect;
-            }
-        }
     }
 
     public void renderPlayerSpawned(int x, int y, PlayerData playerData) {
@@ -142,14 +144,6 @@ public class PlayerMapRenderer {
 
             backgroundTiles[positionX][positionY] = rect;
         });
-    }
-
-    public Node[][] getBackgroundTiles() {
-        return backgroundTiles;
-    }
-
-    public Node[][] getFrontTiles() {
-        return frontTiles;
     }
 
 }

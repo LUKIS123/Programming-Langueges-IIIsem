@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.player.utils;
 
-import pl.edu.pwr.lgawron.lab06.mainlogic.flow.game.geometry.Point2D;
+import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
 
 import java.net.InetAddress;
 
@@ -14,8 +14,8 @@ public class PlayerRequestCreator {
         return id + ";see\n";
     }
 
-    public static String moveUpRequest(int id) {
-        return id + ";move;0," + "-1\n";
+    public static String moveUpRequest(int id, int direction) {
+        return id + ";move;" + direction + "," + "-1\n";
     }
 
     public static String moveLeftRequest(int id) {
@@ -26,8 +26,8 @@ public class PlayerRequestCreator {
         return id + ";move;1," + "0\n";
     }
 
-    public static String moveDownRequest(int id) {
-        return id + ";move;0," + "1\n";
+    public static String moveDownRequest(int id, int direction) {
+        return id + ";move;" + direction + "," + "1\n";
     }
 
     public static String artificialMoveRequest(int id, int x, int y) {
