@@ -47,6 +47,9 @@ public class PlayerService {
     public PlayerInstance movePlayer(int playerId, int moveX, int moveY) {
         PlayerInstance playerById = this.getPlayerById(playerId);
 
+        if (playerById.getId() == -1) {
+            return playerById;
+        }
         if (!this.checkIfMovePossible(playerById, moveX, moveY)) {
             return playerById;
         }
@@ -70,6 +73,11 @@ public class PlayerService {
     // player attempting to take treasure
     public PlayerInstance takeTreasureAttempt(int playerId, int treasureX, int treasureY) {
         PlayerInstance playerById = this.getPlayerById(playerId);
+
+        if (playerById.getId() == -1) {
+            return playerById;
+        }
+
         Optional<GameInstance> environmentInstance = this.checkForTreasure(treasureX, treasureY);
 
         if (environmentInstance.isPresent()) {
@@ -89,7 +97,8 @@ public class PlayerService {
     }
 
     public PlayerInstance getPlayerById(int playerId) {
-        return playerList.stream().filter(p -> p.getId() == playerId).findFirst().get();
+        Optional<PlayerInstance> first = playerList.stream().filter(p -> p.getId() == playerId).findFirst();
+        return first.orElseGet(() -> new PlayerInstance(-1, -1, "error", requestQueue));
     }
 
     private boolean checkIfMovePossible(PlayerInstance player, int moveX, int moveY) {
@@ -215,14 +224,19 @@ public class PlayerService {
         }
     }
 
-    public PlayerInstance getWhoWon() {
-        PlayerInstance first = playerList.stream().findFirst().get();
-        for (PlayerInstance instance : playerList) {
-            if (instance.getHowManyTreasuresPicked() > first.getHowManyTreasuresPicked()) {
-                first = instance;
+    public Optional<PlayerInstance> getWhoWon() {
+        Optional<PlayerInstance> found = playerList.stream().findFirst();
+        if (found.isPresent()) {
+            PlayerInstance first = found.get();
+            for (PlayerInstance instance : playerList) {
+                if (instance.getHowManyTreasuresPicked() > first.getHowManyTreasuresPicked()) {
+                    first = instance;
+                }
             }
+            return Optional.of(first);
+        } else {
+            return found;
         }
-        return first;
     }
 
     public List<PlayerInstance> getPlayerList() {

@@ -51,25 +51,26 @@ public class PlayerAIAlgorithm implements Executor {
     public void makeAction(String[] split) {
         String type = split[1];
 
-        if (type.equals("see")) {
-            worker.handleSeeResponse(split);
-            this.tryToSleep(700);
-        }
-        if (type.equals("move")) {
-            worker.handleMoveResponse(split);
-            this.tryToSleep(200);
-        }
-        if (type.equals("take")) {
-            worker.handleTakeResponse(split);
-            playerData.setPossibleCurrentSpotTreasure(false);
-            this.tryToSleep(playerData.getTreasurePickedWaitTime());
-            playerData.setTreasurePickedWaitTime(0);
-        }
-        if (type.equals("register")) {
-            worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], receiverSocket.getPort());
-        }
-        if (type.equals("exit")) {
-            thread.interrupt();
+        switch (type) {
+            case "see" -> {
+                worker.handleSeeResponse(split);
+                this.tryToSleep(600);
+            }
+            case "move" -> {
+                worker.handleMoveResponse(split);
+                this.tryToSleep(200);
+            }
+            case "take" -> {
+                worker.handleTakeResponse(split);
+                playerData.setPossibleCurrentSpotTreasure(false);
+                this.tryToSleep(playerData.getTreasurePickedWaitTime());
+                playerData.setTreasurePickedWaitTime(0);
+            }
+            case "register" ->
+                    worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], receiverSocket.getPort());
+            case "exit" -> thread.interrupt();
+            default -> {
+            }
         }
     }
 

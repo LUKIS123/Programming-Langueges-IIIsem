@@ -183,6 +183,10 @@ public class PlayerClientService {
         senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
     }
 
+    public void sendExitGameRequest() {
+        // todo kick
+    }
+
     // manual controls
     public void sendMoveUpRequest(int direction) {
         senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerData.getId(), direction));

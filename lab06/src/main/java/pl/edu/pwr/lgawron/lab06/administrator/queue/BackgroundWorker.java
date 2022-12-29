@@ -26,90 +26,110 @@ public class BackgroundWorker {
         thread = new Thread(() -> {
             // todo: dodac listenera po obu stronach
             // dodac eventy logout aby usuwalo graczy po opuszczeniu
-            // obsluzyc gety w playerService po stronie serwera
 
             // registration stage
             this.registrationStage();
 
-            // game stage
+            // -> game stage
             while (!exit) {
                 PlayerRequest playerRequest = queue.popLatest();
+                switch (playerRequest.getType()) {
+                    case SEE -> {
+                        PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
 
-                // see
-                if (playerRequest.getType().equals(RequestType.SEE)) {
-                    PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
+                        if (playerInstance.getId() == -1) {
+                            break;
+                        }
 
-                    playerInstance.getSenderSocket().sendMessage(
-                            playerInstance.getClientServerPort(),
-                            playerInstance.getProxy(),
-                            AdminResponseCreator.createSeeMessage(playerInstance.getId(),
-                                    playerService.getAdjacentParsed(playerInstance))
-                    );
-                }
+                        playerInstance.getSenderSocket().sendMessage(
+                                playerInstance.getClientServerPort(),
+                                playerInstance.getProxy(),
+                                AdminResponseCreator.createSeeMessage(playerInstance.getId(),
+                                        playerService.getAdjacentParsed(playerInstance))
+                        );
+                    }
 
-                // move
-                if (playerRequest.getType().equals(RequestType.MOVE)) {
-                    PlayerInstance playerInstance = playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
-                    Optional<GameInstance> instanceOnSpot = playerService.checkForTreasure(playerInstance.getPosition().getPositionX(), playerInstance.getPosition().getPositionY());
+                    case MOVE -> {
+                        PlayerInstance playerInstance = playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
+                        if (playerInstance.getId() == -1) {
+                            break;
+                        }
 
-                    playerInstance.getSenderSocket().sendMessage(
-                            playerInstance.getClientServerPort(),
-                            playerInstance.getProxy(),
-                            AdminResponseCreator.createMoveMessage(
-                                    playerInstance.getId(),
-                                    playerInstance.getPosition().getPositionX(),
-                                    playerInstance.getPosition().getPositionY(),
-                                    instanceOnSpot)
-                    );
-                }
+                        Optional<GameInstance> instanceOnSpot = playerService.checkForTreasure(playerInstance.getPosition().getPositionX(), playerInstance.getPosition().getPositionY());
 
-                // take
-                if (playerRequest.getType().equals(RequestType.TAKE)) {
-                    PlayerInstance playerInstance = playerService.takeTreasureAttempt(playerRequest.getPlayerId(), playerRequest.getTreasureX(), playerRequest.getTreasureY());
-                    // response
-                    playerInstance.getSenderSocket().sendMessage(playerInstance.getClientServerPort(),
-                            playerInstance.getProxy(),
-                            AdminResponseCreator.createTakeMessage(
-                                    playerInstance.getId(),
-                                    playerInstance.isTakeAttempt(),
-                                    playerInstance.getCurrentWaitingTime(),
-                                    playerInstance.getHowManyTreasuresPicked()
-                            )
-                    );
-                    playerInstance.setTakeAttempt(false);
-                    playerInstance.setCurrentWaitingTime(0);
-                }
+                        playerInstance.getSenderSocket().sendMessage(
+                                playerInstance.getClientServerPort(),
+                                playerInstance.getProxy(),
+                                AdminResponseCreator.createMoveMessage(
+                                        playerInstance.getId(),
+                                        playerInstance.getPosition().getPositionX(),
+                                        playerInstance.getPosition().getPositionY(),
+                                        instanceOnSpot)
+                        );
+                    }
 
-                // game over
-                if (playerRequest.getType().equals(RequestType.GAME_OVER)) {
-                    List<PlayerInstance> playerList = playerService.getPlayerList();
-                    PlayerInstance whoWon = playerService.getWhoWon();
-                    for (PlayerInstance instance : playerList) {
-                        if (instance != whoWon) {
-                            instance.getSenderSocket().sendMessage(
-                                    instance.getClientServerPort(),
-                                    instance.getProxy(),
-                                    AdminResponseCreator.createGameOverMessage(
-                                            instance.getId(),
-                                            whoWon.getHowManyTreasuresPicked())
+                    case TAKE -> {
+                        PlayerInstance playerInstance = playerService.takeTreasureAttempt(playerRequest.getPlayerId(), playerRequest.getTreasureX(), playerRequest.getTreasureY());
+                        if (playerInstance.getId() == -1) {
+                            break;
+                        }
+
+                        playerInstance.getSenderSocket().sendMessage(playerInstance.getClientServerPort(),
+                                playerInstance.getProxy(),
+                                AdminResponseCreator.createTakeMessage(
+                                        playerInstance.getId(),
+                                        playerInstance.isTakeAttempt(),
+                                        playerInstance.getCurrentWaitingTime(),
+                                        playerInstance.getHowManyTreasuresPicked()
+                                )
+                        );
+                        playerInstance.setTakeAttempt(false);
+                        playerInstance.setCurrentWaitingTime(0);
+                    }
+
+                    case GAME_OVER -> {
+                        List<PlayerInstance> playerList = playerService.getPlayerList();
+                        Optional<PlayerInstance> found = playerService.getWhoWon();
+                        if (found.isPresent()) {
+                            PlayerInstance whoWon = found.get();
+                            for (PlayerInstance instance : playerList) {
+                                if (instance != whoWon) {
+                                    instance.getSenderSocket().sendMessage(
+                                            instance.getClientServerPort(),
+                                            instance.getProxy(),
+                                            AdminResponseCreator.createGameOverMessage(
+                                                    instance.getId(),
+                                                    whoWon.getHowManyTreasuresPicked())
+                                    );
+                                }
+                            }
+                            whoWon.getSenderSocket().sendMessage(
+                                    whoWon.getClientServerPort(),
+                                    whoWon.getProxy(),
+                                    AdminResponseCreator.createYouWonMessage(
+                                            whoWon.getId(),
+                                            whoWon.getHowManyTreasuresPicked()
+                                    )
                             );
+                        } else {
+                            for (PlayerInstance instance : playerList) {
+                                instance.getSenderSocket().sendMessage(
+                                        instance.getClientServerPort(),
+                                        instance.getProxy(),
+                                        AdminResponseCreator.createGameOverMessage(
+                                                instance.getId(),
+                                                instance.getHowManyTreasuresPicked())
+                                );
+                            }
                         }
                     }
-                    whoWon.getSenderSocket().sendMessage(
-                            whoWon.getClientServerPort(),
-                            whoWon.getProxy(),
-                            AdminResponseCreator.createYouWonMessage(
-                                    whoWon.getId(),
-                                    whoWon.getHowManyTreasuresPicked()
-                            )
-                    );
-                }
 
-                // exit Background Worker Thread
-                if (playerRequest.getType().equals(RequestType.EXIT)) {
-                    this.setExit(true);
-                }
+                    case EXIT -> this.setExit(true);
 
+                    default -> {
+                    }
+
+                }
             }
 
         });
