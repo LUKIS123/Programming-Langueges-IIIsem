@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.administrator.adminsocket;
 
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.administrator.parse.ClientCommandParser;
 import pl.edu.pwr.lgawron.lab06.administrator.queue.RequestQueue;
 
@@ -26,14 +26,13 @@ public class AdminReceiverSocket {
         this.startListening();
     }
 
-    public void startListening() {
+    private void startListening() {
         thread = new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(port);
                 System.out.println("ServerSocketSetup");
 
                 while (!exit) {
-
                     Socket pSocket = serverSocket.accept();
                     DataInputStream ins = new DataInputStream(pSocket.getInputStream());
                     InputStreamReader isr = new InputStreamReader(ins);

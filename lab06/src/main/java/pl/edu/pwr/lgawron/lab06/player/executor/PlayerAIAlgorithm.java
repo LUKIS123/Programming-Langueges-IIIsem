@@ -8,8 +8,8 @@ public class PlayerAIAlgorithm implements Executor {
     private boolean exit;
     private final PlayerClientService worker;
     private final Thread thread;
-    private final PlayerReceiverSocket receiverSocket;
     private final PlayerTasks playerTasks;
+    private final PlayerReceiverSocket receiverSocket;
     private PlayerData playerData;
 
     public PlayerAIAlgorithm(PlayerClientService worker, PlayerTasks playerTasks, PlayerReceiverSocket receiverSocket) {
@@ -68,7 +68,9 @@ public class PlayerAIAlgorithm implements Executor {
         if (type.equals("register")) {
             worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], receiverSocket.getPort());
         }
-
+        if (type.equals("exit")) {
+            thread.interrupt();
+        }
     }
 
     private void makeSeeRequest() {
@@ -96,6 +98,7 @@ public class PlayerAIAlgorithm implements Executor {
     @Override
     public void setExit(boolean exit) {
         this.exit = exit;
+        playerTasks.addTask(new String[]{"0", "exit"});
     }
 
 }

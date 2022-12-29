@@ -1,5 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.player.playersocket;
 
+import pl.edu.pwr.lgawron.lab06.common.sockets.SenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.executor.PlayerTasks;
 import pl.edu.pwr.lgawron.lab06.player.flow.PlayerClientService;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
@@ -14,12 +15,12 @@ public class PlayerReceiverSocket {
     private final int port;
     private final String proxy;
     private ServerSocket serverSocket;
-    private final PlayerSenderSocket senderSocket;
+    private final SenderSocket senderSocket;
     private final PlayerClientService worker;
     private final PlayerTasks playerTasks;
     private boolean exit;
 
-    public PlayerReceiverSocket(int port, String proxy, PlayerSenderSocket senderSocket, PlayerClientService worker, PlayerTasks playerTasks) {
+    public PlayerReceiverSocket(int port, String proxy, SenderSocket senderSocket, PlayerClientService worker, PlayerTasks playerTasks) {
         this.port = port;
         this.proxy = proxy;
         this.senderSocket = senderSocket;
@@ -33,7 +34,7 @@ public class PlayerReceiverSocket {
             try {
                 serverSocket = new ServerSocket(0);
                 System.out.println("PlayerServerSocketSetup");
-                senderSocket.sendRequest(
+                senderSocket.sendMessage(
                         port, proxy, PlayerRequestCreator.registerRequest(serverSocket.getLocalPort(), serverSocket.getInetAddress())
                 );
 
@@ -83,8 +84,9 @@ public class PlayerReceiverSocket {
         return serverSocket.getLocalPort();
     }
 
-    public void setExit(boolean exit) {
+    public void exit(boolean exit) {
         this.exit = exit;
+        thread.interrupt();
         try {
             serverSocket.close();
         } catch (IOException ignored) {

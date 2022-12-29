@@ -54,6 +54,9 @@ public class ManualTaskExecutor implements Executor {
         if (type.equals("register")) {
             worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], receiverSocket.getPort());
         }
+        if (type.equals("exit")) {
+            thread.interrupt();
+        }
     }
 
     @Override
@@ -68,5 +71,6 @@ public class ManualTaskExecutor implements Executor {
     @Override
     public void setExit(boolean exit) {
         this.exit = exit;
+        playerTasks.addTask(new String[]{"0", "exit"});
     }
 }

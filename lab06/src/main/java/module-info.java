@@ -13,7 +13,9 @@ module pl.edu.pwr.lgawron.lab06 {
     exports pl.edu.pwr.lgawron.lab06.administrator.adminsocket;
     exports pl.edu.pwr.lgawron.lab06.player.executor;
     exports pl.edu.pwr.lgawron.lab06.administrator.queue;
-    exports pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models;
+    exports pl.edu.pwr.lgawron.lab06.administrator.models;
+    exports pl.edu.pwr.lgawron.lab06.administrator.flow;
+    exports pl.edu.pwr.lgawron.lab06.common.sockets;
     opens pl.edu.pwr.lgawron.lab06.common.input to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab06.common.frame;
     opens pl.edu.pwr.lgawron.lab06.common.frame to javafx.fxml;
@@ -26,5 +28,4 @@ module pl.edu.pwr.lgawron.lab06 {
     exports pl.edu.pwr.lgawron.lab06.player.playersocket;
     opens pl.edu.pwr.lgawron.lab06.player.playersocket to javafx.fxml;
     opens pl.edu.pwr.lgawron.lab06.common.game.geometry to javafx.fxml;
-    exports pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow;
 }

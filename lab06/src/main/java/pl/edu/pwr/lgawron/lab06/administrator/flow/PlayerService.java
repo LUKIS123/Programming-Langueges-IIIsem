@@ -1,11 +1,11 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow;
+package pl.edu.pwr.lgawron.lab06.administrator.flow;
 
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.PathInstance;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerInstance;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerInstance;
 import pl.edu.pwr.lgawron.lab06.administrator.queue.RequestQueue;
 
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class PlayerService {
             playerById.setHowManyTreasuresPicked(playerById.getHowManyTreasuresPicked() + 1);
             howManyTreasuresLeft--;
 
-            // render path instead of treasure
+            // render a path instead of treasure
             mapRenderer.renderAfterTreasureTaken(treasureX, treasureY);
             if (howManyTreasuresLeft == 0) {
                 requestQueue.addElement(new PlayerRequest("0", "logout"));

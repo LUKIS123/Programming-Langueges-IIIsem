@@ -1,7 +1,7 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models;
+package pl.edu.pwr.lgawron.lab06.administrator.models;
 
 import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.AdminReceiverSocket;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.AdminSenderSocket;
+import pl.edu.pwr.lgawron.lab06.common.sockets.SenderSocket;
 import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.administrator.queue.RequestQueue;
 
@@ -12,7 +12,7 @@ public class PlayerInstance {
     private Point2D position;
     private final RequestQueue requestQueue;
     private final AdminReceiverSocket receiverSocket;
-    private final AdminSenderSocket senderSocket;
+    private final SenderSocket senderSocket;
     private int howManyTreasuresPicked;
     private boolean takeAttempt;
     private int currentWaitingTime;
@@ -23,8 +23,7 @@ public class PlayerInstance {
         this.proxy = proxy;
         this.requestQueue = requestQueue;
         this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
-        this.receiverSocket.startListening();
-        this.senderSocket = new AdminSenderSocket();
+        this.senderSocket = new SenderSocket();
         this.howManyTreasuresPicked = 0;
         this.takeAttempt = false;
         this.currentWaitingTime = 0;
@@ -70,7 +69,7 @@ public class PlayerInstance {
         return proxy;
     }
 
-    public AdminSenderSocket getSenderSocket() {
+    public SenderSocket getSenderSocket() {
         return senderSocket;
     }
 

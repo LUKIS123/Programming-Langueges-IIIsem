@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.registration;
 
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.administrator.parse.ClientCommandParser;
 import pl.edu.pwr.lgawron.lab06.administrator.queue.RequestQueue;
 
@@ -12,14 +12,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class RegisterSocket {
+public class RegistrationReceiverSocket {
     private Thread thread;
     private final int port;
     private ServerSocket serverSocket;
     private boolean exit;
     private final RequestQueue requestQueue;
 
-    public RegisterSocket(int port, RequestQueue requestQueue) {
+    public RegistrationReceiverSocket(int port, RequestQueue requestQueue) {
         this.port = port;
         this.requestQueue = requestQueue;
         this.exit = false;
@@ -32,7 +32,6 @@ public class RegisterSocket {
                 System.out.println("REGISTRATION-SocketSetup");
 
                 while (!exit) {
-
                     Socket pSocket = serverSocket.accept();
                     DataInputStream ins = new DataInputStream(pSocket.getInputStream());
                     InputStreamReader isr = new InputStreamReader(ins);

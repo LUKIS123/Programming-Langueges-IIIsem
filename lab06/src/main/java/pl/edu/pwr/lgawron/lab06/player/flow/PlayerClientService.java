@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+import pl.edu.pwr.lgawron.lab06.common.sockets.SenderSocket;
 import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
-import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerSenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
@@ -19,7 +19,7 @@ import java.util.Random;
 public class PlayerClientService {
     private PlayerData playerData;
     private final VBox controlBox;
-    private PlayerSenderSocket senderSocket;
+    private SenderSocket senderSocket;
     private final ValuesHolder valuesHolder;
     private Pair<Integer, Integer> dimensions;
     private int newReceiverPort;
@@ -56,8 +56,15 @@ public class PlayerClientService {
         playerMapRenderer.renderPlayerSpawned(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), playerData);
 
         // setting starting moving directions
-        playerData.setMovingDirectionX(random.nextInt(-1, 2));
-        playerData.setMovingDirectionY(random.nextInt(-1, 2));
+        while (true) {
+            int x = random.nextInt(-1, 2);
+            int y = random.nextInt(-1, 2);
+            if (x != 0 || y != 0) {
+                playerData.setMovingDirectionX(x);
+                playerData.setMovingDirectionY(y);
+                break;
+            }
+        }
     }
 
     public void handleSeeResponse(String[] splitData) {
@@ -137,11 +144,11 @@ public class PlayerClientService {
                 }
             }
         }
-        return this.getRandomAvailablePoint();
+        return this.setRandomAvailableMovingDirections();
     }
 
     // no treasures nearby -> getting next direction
-    private int[] getRandomAvailablePoint() {
+    private int[] setRandomAvailableMovingDirections() {
         int x;
         int y;
 
@@ -169,39 +176,36 @@ public class PlayerClientService {
     }
 
     public void sendSeeRequest() {
-        if (playerData == null) {
-            return;
-        }
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.seeRequest(playerData.getId()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.seeRequest(playerData.getId()));
     }
 
     public void sendArtificialMoveRequest(int x, int y) {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
     }
 
     // manual controls
     public void sendMoveUpRequest(int direction) {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerData.getId(), direction));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerData.getId(), direction));
     }
 
     public void sendMoveLeftRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveLeftRequest(playerData.getId()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveLeftRequest(playerData.getId()));
     }
 
     public void sendMoveRightRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveRightRequest(playerData.getId()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveRightRequest(playerData.getId()));
     }
 
     public void sendMoveDownRequest(int direction) {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveDownRequest(playerData.getId(), direction));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveDownRequest(playerData.getId(), direction));
     }
 
     public void sendTakeRequest() {
-        senderSocket.sendRequest(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.takeTreasureRequest(playerData.getId(), playerData.getLocation2DPoint()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.takeTreasureRequest(playerData.getId(), playerData.getLocation2DPoint()));
     }
     // manual controls
 
-    public void setSenderSocket(PlayerSenderSocket senderSocket) {
+    public void setSenderSocket(SenderSocket senderSocket) {
         this.senderSocket = senderSocket;
     }
 

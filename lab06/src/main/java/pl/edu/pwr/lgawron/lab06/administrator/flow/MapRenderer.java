@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow;
+package pl.edu.pwr.lgawron.lab06.administrator.flow;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -11,7 +11,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerInstance;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerInstance;
 
 import java.io.File;
 import java.util.List;

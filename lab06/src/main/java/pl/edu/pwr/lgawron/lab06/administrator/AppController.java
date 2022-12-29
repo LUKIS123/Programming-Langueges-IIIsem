@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow.GameFlow;
+import pl.edu.pwr.lgawron.lab06.administrator.flow.GameFlow;
 import pl.edu.pwr.lgawron.lab06.common.frame.RegisterPopUp;
 import pl.edu.pwr.lgawron.lab06.common.input.InputDataException;
 import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
@@ -26,6 +26,8 @@ public class AppController {
     public GridPane playerPane;
     @FXML
     public Pane mainPane;
+    @FXML
+    public Button startButton;
     @FXML
     private Button hostButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
@@ -49,7 +51,7 @@ public class AppController {
                     server.setText("localhost");
                     TextField port = new TextField();
                     port.setPromptText("Port");
-                    port.setText("8080");
+                    port.setText("8085");
                     Button button = new Button("Login");
                     button.setAlignment(Pos.BOTTOM_CENTER);
                     Label communicate = new Label();

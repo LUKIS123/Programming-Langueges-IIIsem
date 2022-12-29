@@ -53,6 +53,10 @@ public class PlayerData {
                 || location2DPoint.getPositionX() + x < 0 || location2DPoint.getPositionX() >= dimensions.getKey()) {
             return false;
         }
+        if ((x == 0 && y == 0)) {
+            return false;
+        }
+
         try {
             String gameObject = playerGrid.get(location2DPoint.getPositionY() + y).get(location2DPoint.getPositionX() + x);
             if (gameObject.equals("*") || gameObject.equals("T")) {
@@ -61,6 +65,7 @@ public class PlayerData {
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
+
         return false;
     }
 

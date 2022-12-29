@@ -3,6 +3,7 @@ package pl.edu.pwr.lgawron.lab06.player.flow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
+import pl.edu.pwr.lgawron.lab06.common.sockets.SenderSocket;
 import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.BlankInstance;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
@@ -10,7 +11,6 @@ import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
 import pl.edu.pwr.lgawron.lab06.player.executor.Executor;
 import pl.edu.pwr.lgawron.lab06.player.executor.ManualTaskExecutor;
 import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerReceiverSocket;
-import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerSenderSocket;
 import pl.edu.pwr.lgawron.lab06.player.executor.PlayerAIAlgorithm;
 import pl.edu.pwr.lgawron.lab06.player.executor.PlayerTasks;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class PlayerAppFlow {
     private PlayerReceiverSocket receiverSocket;
-    private PlayerSenderSocket senderSocket;
+    private SenderSocket senderSocket;
     private ValuesHolder valuesHolder;
     private PlayerClientService playerClientService;
     private final List<List<GameInstance>> gameGrid;
@@ -44,7 +44,7 @@ public class PlayerAppFlow {
 
         // main player logic
         this.playerClientService = new PlayerClientService(controls, valuesHolder, this);
-        this.senderSocket = new PlayerSenderSocket();
+        this.senderSocket = new SenderSocket();
         this.receiverSocket = new PlayerReceiverSocket(valuesHolder.getPort(), valuesHolder.getServer(), senderSocket, playerClientService, playerTasks);
         this.receiverSocket.start();
 
@@ -154,7 +154,7 @@ public class PlayerAppFlow {
             executor.setExit(true);
         }
         if (receiverSocket != null) {
-            receiverSocket.setExit(true);
+            receiverSocket.exit(true);
         }
     }
 

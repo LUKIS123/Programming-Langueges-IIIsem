@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models;
+package pl.edu.pwr.lgawron.lab06.administrator.models;
 
 public class PlayerRequest {
     private final int playerId;
@@ -33,6 +33,9 @@ public class PlayerRequest {
         }
         if (type.equals("exit")) {
             return RequestType.EXIT;
+        }
+        if (type.equals("finish_registration")) {
+            return RequestType.FINISH_REGISTRATION;
         }
         return RequestType.UNKNOWN;
     }

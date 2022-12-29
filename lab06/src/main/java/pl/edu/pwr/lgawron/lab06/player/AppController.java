@@ -60,7 +60,7 @@ public class AppController {
                     server.setText("localhost");
                     TextField port = new TextField();
                     port.setPromptText("Port");
-                    port.setText("8080");
+                    port.setText("8085");
                     Button button = new Button("Login");
                     button.setAlignment(Pos.BOTTOM_CENTER);
                     Label communicate = new Label();
@@ -124,9 +124,9 @@ public class AppController {
         playManuallyButton.setOnAction(event -> {
             VBox dialogVbox = registerPopUp.renderPopUp("Controls:");
 
-            Button see = new Button("SEE");
+            Button see = new Button("SEE ");
             Button take = new Button("TAKE");
-            HBox seeAndTake = new HBox(20);
+            HBox seeAndTake = new HBox(30);
             seeAndTake.setAlignment(Pos.TOP_CENTER);
 
             EventHandler<ActionEvent> takeTreasure = takeEvent -> appFlow.take();
@@ -138,11 +138,11 @@ public class AppController {
             seeAndTake.getChildren().add(take);
             dialogVbox.getChildren().add(seeAndTake);
 
-            Button up = new Button("UP");
-            Button left_up = new Button("LEFT-UP");
-            Button right_up = new Button("RIGHT-UP");
+            Button up = new Button("↑");
+            Button left_up = new Button("↖");
+            Button right_up = new Button("↗");
             HBox upper = new HBox();
-            upper.setAlignment(Pos.BOTTOM_CENTER);
+            upper.setAlignment(Pos.CENTER);
 
             EventHandler<ActionEvent> moveUp = moveEvent -> appFlow.moveUp(0);
             up.setOnAction(moveUp);
@@ -156,10 +156,10 @@ public class AppController {
             upper.getChildren().add(right_up);
             dialogVbox.getChildren().add(upper);
 
-            Button left = new Button("LEFT");
-            Button right = new Button("RIGHT");
+            Button left = new Button("←");
+            Button right = new Button("→");
             HBox level = new HBox();
-            level.setAlignment(Pos.BOTTOM_CENTER);
+            level.setAlignment(Pos.CENTER);
 
             EventHandler<ActionEvent> moveLeft = moveEvent -> appFlow.moveLeft();
             left.setOnAction(moveLeft);
@@ -170,11 +170,11 @@ public class AppController {
             level.getChildren().add(right);
             dialogVbox.getChildren().add(level);
 
-            Button down = new Button("DOWN");
-            Button left_down = new Button("LEFT-DOWN");
-            Button right_down = new Button("RIGHT-DOWN");
+            Button down = new Button("↓");
+            Button left_down = new Button("↙");
+            Button right_down = new Button("↘");
             HBox lower = new HBox();
-            lower.setAlignment(Pos.BOTTOM_CENTER);
+            lower.setAlignment(Pos.CENTER);
 
             EventHandler<ActionEvent> moveDown = moveEvent -> appFlow.moveDown(0);
             down.setOnAction(moveDown);

@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models;
+package pl.edu.pwr.lgawron.lab06.administrator.models;
 
 public enum RequestType {
     REGISTER,
@@ -7,5 +7,6 @@ public enum RequestType {
     TAKE,
     GAME_OVER,
     UNKNOWN,
-    EXIT;
+    EXIT,
+    FINISH_REGISTRATION;
 }

@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.administrator.parse;
 
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 
 public class ClientCommandParser {
     // commands

@@ -1,9 +1,9 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow;
+package pl.edu.pwr.lgawron.lab06.administrator.flow;
 
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.registration.RegisterSocket;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.registration.RegistrationReceiverSocket;
 import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.ObstacleInstance;
@@ -20,7 +20,7 @@ import java.util.List;
 public class GameFlow {
     private final ValuesHolder valuesHolder;
     private final RequestQueue requestQueue;
-    private final RegisterSocket registrationReceiverSocket;
+    private final RegistrationReceiverSocket registrationReceiverSocket;
     private final BackgroundWorker backgroundWorker;
     private final PlayerService playerService;
     private final List<List<GameInstance>> gameGrid;
@@ -37,7 +37,7 @@ public class GameFlow {
         this.howManyTreasuresLeft = 0;
 
         this.requestQueue = new RequestQueue();
-        this.registrationReceiverSocket = new RegisterSocket(valuesHolder.getPort(), requestQueue);
+        this.registrationReceiverSocket = new RegistrationReceiverSocket(valuesHolder.getPort(), requestQueue);
 
         // game
         this.gameGrid = new ArrayList<>();
@@ -90,6 +90,7 @@ public class GameFlow {
 
     public void finishRegistration() {
         registrationReceiverSocket.setExit(true);
+        requestQueue.addElement(new PlayerRequest("0", "finish_registration"));
     }
 
     public void killApp() {

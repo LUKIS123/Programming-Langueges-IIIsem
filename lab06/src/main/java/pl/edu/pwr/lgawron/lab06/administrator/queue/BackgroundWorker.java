@@ -1,11 +1,11 @@
 package pl.edu.pwr.lgawron.lab06.administrator.queue;
 
 import pl.edu.pwr.lgawron.lab06.administrator.utils.AdminResponseCreator;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.RequestType;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.flow.PlayerService;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.models.RequestType;
+import pl.edu.pwr.lgawron.lab06.administrator.flow.PlayerService;
 import pl.edu.pwr.lgawron.lab06.common.game.objects.GameInstance;
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerInstance;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerInstance;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,39 +24,22 @@ public class BackgroundWorker {
 
     public void start() {
         thread = new Thread(() -> {
-            // todo: zrobic dodatkowa petle na rejestracje, zawierajaca tylko 2 typy: register i exit (exit aby wyjsc z petli register)
-            //  jesli przycisk end registration -> przejscie do nastepnej petli
-            // dodac listenera po obu stronach
-            // zmienic sendersocket na tylko jeden
+            // todo: dodac listenera po obu stronach
             // dodac eventy logout aby usuwalo graczy po opuszczeniu
             // obsluzyc gety w playerService po stronie serwera
 
+            // registration stage
+            this.registrationStage();
+
+            // game stage
             while (!exit) {
                 PlayerRequest playerRequest = queue.popLatest();
-
-                // register
-                if (playerRequest.getType().equals(RequestType.REGISTER)) {
-                    PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getClientServerPort(), playerRequest.getProxyAddress());
-                    if (!playerInstance.isBound()) {
-                        this.tryToSleep();
-                    }
-                    playerInstance.getSenderSocket().sendResponse(
-                            playerRequest.getClientServerPort(),
-                            playerInstance.getProxy(),
-                            AdminResponseCreator.createRegisterMessage(
-                                    playerInstance.getId(),
-                                    playerInstance.getReceiverPort(),
-                                    playerService.getDimensions().getKey(),
-                                    playerService.getDimensions().getValue(),
-                                    playerInstance.getPosition())
-                    );
-                }
 
                 // see
                 if (playerRequest.getType().equals(RequestType.SEE)) {
                     PlayerInstance playerInstance = playerService.getPlayerById(playerRequest.getPlayerId());
 
-                    playerInstance.getSenderSocket().sendResponse(
+                    playerInstance.getSenderSocket().sendMessage(
                             playerInstance.getClientServerPort(),
                             playerInstance.getProxy(),
                             AdminResponseCreator.createSeeMessage(playerInstance.getId(),
@@ -69,7 +52,7 @@ public class BackgroundWorker {
                     PlayerInstance playerInstance = playerService.movePlayer(playerRequest.getPlayerId(), playerRequest.getMoveX(), playerRequest.getMoveY());
                     Optional<GameInstance> instanceOnSpot = playerService.checkForTreasure(playerInstance.getPosition().getPositionX(), playerInstance.getPosition().getPositionY());
 
-                    playerInstance.getSenderSocket().sendResponse(
+                    playerInstance.getSenderSocket().sendMessage(
                             playerInstance.getClientServerPort(),
                             playerInstance.getProxy(),
                             AdminResponseCreator.createMoveMessage(
@@ -84,7 +67,7 @@ public class BackgroundWorker {
                 if (playerRequest.getType().equals(RequestType.TAKE)) {
                     PlayerInstance playerInstance = playerService.takeTreasureAttempt(playerRequest.getPlayerId(), playerRequest.getTreasureX(), playerRequest.getTreasureY());
                     // response
-                    playerInstance.getSenderSocket().sendResponse(playerInstance.getClientServerPort(),
+                    playerInstance.getSenderSocket().sendMessage(playerInstance.getClientServerPort(),
                             playerInstance.getProxy(),
                             AdminResponseCreator.createTakeMessage(
                                     playerInstance.getId(),
@@ -103,7 +86,7 @@ public class BackgroundWorker {
                     PlayerInstance whoWon = playerService.getWhoWon();
                     for (PlayerInstance instance : playerList) {
                         if (instance != whoWon) {
-                            instance.getSenderSocket().sendResponse(
+                            instance.getSenderSocket().sendMessage(
                                     instance.getClientServerPort(),
                                     instance.getProxy(),
                                     AdminResponseCreator.createGameOverMessage(
@@ -112,7 +95,7 @@ public class BackgroundWorker {
                             );
                         }
                     }
-                    whoWon.getSenderSocket().sendResponse(
+                    whoWon.getSenderSocket().sendMessage(
                             whoWon.getClientServerPort(),
                             whoWon.getProxy(),
                             AdminResponseCreator.createYouWonMessage(
@@ -131,6 +114,34 @@ public class BackgroundWorker {
 
         });
         thread.start();
+    }
+
+    private void registrationStage() {
+        while (true) {
+            PlayerRequest playerRequest = queue.popLatest();
+
+            if (playerRequest.getType().equals(RequestType.REGISTER)) {
+
+                PlayerInstance playerInstance = playerService.addRegisteredPlayer(playerRequest.getClientServerPort(), playerRequest.getProxyAddress());
+                while (!playerInstance.isBound()) {
+                    this.tryToSleep();
+                }
+                playerInstance.getSenderSocket().sendMessage(
+                        playerRequest.getClientServerPort(),
+                        playerInstance.getProxy(),
+                        AdminResponseCreator.createRegisterMessage(
+                                playerInstance.getId(),
+                                playerInstance.getReceiverPort(),
+                                playerService.getDimensions().getKey(),
+                                playerService.getDimensions().getValue(),
+                                playerInstance.getPosition())
+                );
+
+            } else if (playerRequest.getType().equals(RequestType.FINISH_REGISTRATION)) {
+                System.out.println("Exiting registration stage");
+                break;
+            }
+        }
     }
 
     private void tryToSleep() {

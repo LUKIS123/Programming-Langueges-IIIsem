@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.administrator.queue;
 
-import pl.edu.pwr.lgawron.lab06.administrator.adminsocket.models.PlayerRequest;
+import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 
 import java.util.LinkedList;
 

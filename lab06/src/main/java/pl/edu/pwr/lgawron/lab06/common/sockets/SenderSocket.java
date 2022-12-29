@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab06.administrator.adminsocket;
+package pl.edu.pwr.lgawron.lab06.common.sockets;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,9 +6,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class AdminSenderSocket {
+public class SenderSocket {
     // command: playerId, type, coordinates etc
-    public void sendResponse(int port, String host, String message) {
+    public void sendMessage(int port, String host, String message) {
         try {
             Socket soc = new Socket(host, port);
             OutputStream out = soc.getOutputStream();
@@ -17,8 +17,8 @@ public class AdminSenderSocket {
             pw.flush();
             pw.close();
             soc.close();
-
-        } catch (SocketException ignored) {
+        } catch (SocketException socketException) {
+            System.out.println("SenderException");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
