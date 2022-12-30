@@ -1,9 +1,9 @@
 module pl.edu.pwr.lgawron.lab07 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires gadgets;
 
     exports pl.edu.pwr.lgawron.lab07.common;
-
     exports pl.edu.pwr.lgawron.lab07.shop;
     opens pl.edu.pwr.lgawron.lab07.shop to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab07.client;
