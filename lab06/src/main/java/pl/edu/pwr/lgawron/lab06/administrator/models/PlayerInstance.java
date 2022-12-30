@@ -10,7 +10,6 @@ public class PlayerInstance {
     private final int clientServerPort;
     private final String proxy;
     private Point2D position;
-    private final RequestQueue requestQueue;
     private final AdminReceiverSocket receiverSocket;
     private final SenderSocket senderSocket;
     private int howManyTreasuresPicked;
@@ -21,7 +20,6 @@ public class PlayerInstance {
         this.id = id;
         this.clientServerPort = clientServerPort;
         this.proxy = proxy;
-        this.requestQueue = requestQueue;
         this.receiverSocket = new AdminReceiverSocket(0, requestQueue);
         this.senderSocket = new SenderSocket();
         this.howManyTreasuresPicked = 0;

@@ -24,8 +24,7 @@ public class BackgroundWorker {
 
     public void start() {
         thread = new Thread(() -> {
-            // todo: dodac listenera po obu stronach
-            // dodac eventy logout aby usuwalo graczy po opuszczeniu
+            // todo: dodac listenera po obu stronach receiverSocket
 
             // registration stage
             this.registrationStage();
@@ -123,6 +122,8 @@ public class BackgroundWorker {
                             }
                         }
                     }
+
+                    case LEAVE -> playerService.kickPlayer(playerRequest.getPlayerId());
 
                     case EXIT -> this.setExit(true);
 

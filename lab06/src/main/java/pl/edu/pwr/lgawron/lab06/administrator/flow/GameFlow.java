@@ -1,5 +1,6 @@
 package pl.edu.pwr.lgawron.lab06.administrator.flow;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
@@ -30,7 +31,7 @@ public class GameFlow {
     private final GridPane playerPane;
     private int howManyTreasuresLeft;
 
-    public GameFlow(ValuesHolder valuesHolder, GridPane mapPane, GridPane playerPane) {
+    public GameFlow(ValuesHolder valuesHolder, GridPane mapPane, GridPane playerPane, Label playerInfo) {
         this.valuesHolder = valuesHolder;
         this.mapPane = mapPane;
         this.playerPane = playerPane;
@@ -47,7 +48,7 @@ public class GameFlow {
         this.mapRenderer = new MapRenderer(mapPane, playerPane, gameGrid, dimensions);
 
         // logic
-        this.playerService = new PlayerService(valuesHolder.getPort(), mapRenderer, gameGrid, dimensions, requestQueue, howManyTreasuresLeft);
+        this.playerService = new PlayerService(mapRenderer, gameGrid, dimensions, requestQueue, howManyTreasuresLeft, playerInfo);
         this.backgroundWorker = new BackgroundWorker(requestQueue, playerService);
     }
 

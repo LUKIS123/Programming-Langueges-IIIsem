@@ -85,7 +85,6 @@ public class PlayerMapRenderer {
     public void renderSee(int x, int y, String s) {
         Platform.runLater(() -> {
             if (s.equals("P")) {
-                // rectangle.setStyle("-fx-fill: red");
                 Label enemy = new Label("RIVAL");
                 enemy.setAlignment(Pos.CENTER);
                 enemy.setPrefSize(50, 50);

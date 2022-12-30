@@ -38,4 +38,7 @@ public class PlayerRequestCreator {
         return id + ";take;" + point2D.getPositionX() + "," + point2D.getPositionY() + "\n";
     }
 
+    public static String leaveGameRequest(int id) {
+        return id + ";leave";
+    }
 }

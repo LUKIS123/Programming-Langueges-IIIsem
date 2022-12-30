@@ -11,13 +11,15 @@
     <HBox alignment="TOP_CENTER" spacing="20">
 
         <VBox fx:id="controlBox" alignment="TOP_CENTER" spacing="5">
-            <HBox spacing="10">
-                <Button fx:id="registerButton" text="Join Game" alignment="TOP_CENTER"
-                        onAction="#onRegisterButtonClick"/>
-                <Button fx:id="startButton" text="Start Algorithm" alignment="TOP_CENTER"
-                        onAction="#onStartButtonClick"/>
-                <Button fx:id="playManuallyButton" text="Play Manually" alignment="TOP_CENTER"
-                        onAction="#onPlayManuallyButtonCLick"/>
+            <HBox spacing="5">
+                <HBox spacing="10">
+                    <Button fx:id="registerButton" text="Join Game" alignment="TOP_CENTER"
+                            onAction="#onRegisterButtonClick"/>
+                    <Button fx:id="startButton" text="Start Algorithm" alignment="TOP_CENTER"
+                            onAction="#onStartButtonClick"/>
+                    <Button fx:id="playManuallyButton" text="Play Manually" alignment="TOP_CENTER"
+                            onAction="#onPlayManuallyButtonCLick"/>
+                </HBox>
             </HBox>
         </VBox>
     </HBox>

@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,19 +21,15 @@ import pl.edu.pwr.lgawron.lab06.player.flow.PlayerAppFlow;
 
 public class AppController {
     @FXML
-    public VBox controlBox;
+    private VBox controlBox;
     @FXML
-    public Pane mainPane;
+    private GridPane mapPane;
     @FXML
-    public GridPane mapPane;
+    private GridPane playerPane;
     @FXML
-    public GridPane playerPane;
+    private Button startButton;
     @FXML
-    public Button startButton;
-    @FXML
-    public Button take;
-    @FXML
-    public Button playManuallyButton;
+    private Button playManuallyButton;
     @FXML
     private Button registerButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();

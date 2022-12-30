@@ -150,6 +150,8 @@ public class PlayerAppFlow {
     }
 
     public void killApp() {
+        playerClientService.sendLeaveGameRequest();
+
         if (executor != null) {
             executor.setExit(true);
         }

@@ -62,6 +62,9 @@ public class RegistrationReceiverSocket {
         if (split[1].equals("register")) {
             return ClientCommandParser.pareRegisterRequest(split);
         }
+        if (split[1].equals("leave")) {
+            return ClientCommandParser.parseLeaveRequest(split);
+        }
         return new PlayerRequest("0", "unknown");
     }
 

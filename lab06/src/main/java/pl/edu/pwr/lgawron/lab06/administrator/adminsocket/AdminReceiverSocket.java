@@ -73,6 +73,9 @@ public class AdminReceiverSocket {
         if (split[1].equals("take")) {
             return ClientCommandParser.parseTakeRequest(split);
         }
+        if (split[1].equals("leave")) {
+            return ClientCommandParser.parseLeaveRequest(split);
+        }
         return new PlayerRequest("0", "unknown");
     }
 

@@ -179,15 +179,12 @@ public class PlayerClientService {
         senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.seeRequest(playerData.getId()));
     }
 
-    public void sendArtificialMoveRequest(int x, int y) {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
-    }
-
-    public void sendExitGameRequest() {
-        // todo kick
+    public void sendLeaveGameRequest() {
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.leaveGameRequest(playerData.getId()));
     }
 
     // manual controls
+
     public void sendMoveUpRequest(int direction) {
         senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerData.getId(), direction));
     }
@@ -198,6 +195,10 @@ public class PlayerClientService {
 
     public void sendMoveRightRequest() {
         senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveRightRequest(playerData.getId()));
+    }
+
+    public void sendArtificialMoveRequest(int x, int y) {
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
     }
 
     public void sendMoveDownRequest(int direction) {

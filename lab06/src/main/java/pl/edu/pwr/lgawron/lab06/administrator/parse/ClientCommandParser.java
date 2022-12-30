@@ -19,4 +19,8 @@ public class ClientCommandParser {
     public static PlayerRequest parseTakeRequest(String[] split) {
         return new PlayerRequest(split[0], split[1]).withTreasureLocation(split[2]);
     }
+
+    public static PlayerRequest parseLeaveRequest(String[] split) {
+        return new PlayerRequest(split[0], split[1]);
+    }
 }

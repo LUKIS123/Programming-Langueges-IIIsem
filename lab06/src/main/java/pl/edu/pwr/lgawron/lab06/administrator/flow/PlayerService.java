@@ -1,5 +1,8 @@
 package pl.edu.pwr.lgawron.lab06.administrator.flow;
 
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.common.game.geometry.Point2D;
@@ -17,20 +20,20 @@ public class PlayerService {
     private final List<PlayerInstance> playerList;
     private final List<List<GameInstance>> gameGrid;
     private final Pair<Integer, Integer> dimensions;
+    private final Label playerInfo;
     private final MapRenderer mapRenderer;
-    private final int adminServerPort;
     private final RequestQueue requestQueue;
     private int sequence;
     private int howManyTreasuresLeft;
 
-    public PlayerService(int adminServerPort, MapRenderer mapRenderer, List<List<GameInstance>> gameGrid, Pair<Integer, Integer> dimensions, RequestQueue requestQueue, int howManyTreasuresLeft) {
+    public PlayerService(MapRenderer mapRenderer, List<List<GameInstance>> gameGrid, Pair<Integer, Integer> dimensions, RequestQueue requestQueue, int howManyTreasuresLeft, Label playerInfo) {
         this.dimensions = dimensions;
         this.playerList = new ArrayList<>();
         this.gameGrid = gameGrid;
         this.mapRenderer = mapRenderer;
         this.howManyTreasuresLeft = howManyTreasuresLeft;
+        this.playerInfo = playerInfo;
 
-        this.adminServerPort = adminServerPort;
         this.requestQueue = requestQueue;
         this.sequence = 1;
     }
@@ -41,6 +44,7 @@ public class PlayerService {
         playerList.add(newPlayer);
         mapRenderer.renderPlayerSpawned(newPlayer);
         sequence++;
+        this.updatePlayerInfoLabel();
         return newPlayer;
     }
 
@@ -158,7 +162,7 @@ public class PlayerService {
         return point2D;
     }
 
-    static boolean isValidPos(int i, int j, int n, int m) {
+    private boolean isValidPos(int i, int j, int n, int m) {
         return i >= 0 && j >= 0 && i <= n - 1 && j <= m - 1;
     }
 
@@ -237,6 +241,27 @@ public class PlayerService {
         } else {
             return found;
         }
+    }
+
+    public void kickPlayer(int playerId) {
+        PlayerInstance playerById = getPlayerById(playerId);
+        if (playerById.getId() == -1) {
+            return;
+        }
+
+        mapRenderer.renderPlayerLeft(playerById.getPosition().getPositionX(), playerById.getPosition().getPositionY());
+        playerById.getReceiverSocket().setExit(true);
+        playerById.getReceiverSocket().kilThread();
+        playerList.remove(playerById);
+        this.updatePlayerInfoLabel();
+    }
+
+    @FXML
+    private void updatePlayerInfoLabel() {
+        Platform.runLater(() -> {
+            playerInfo.setText("Players joined: " + playerList.size());
+            playerInfo.setVisible(true);
+        });
     }
 
     public List<PlayerInstance> getPlayerList() {

@@ -37,6 +37,9 @@ public class PlayerRequest {
         if (type.equals("finish_registration")) {
             return RequestType.FINISH_REGISTRATION;
         }
+        if (type.equals("leave")) {
+            return RequestType.LEAVE;
+        }
         return RequestType.UNKNOWN;
     }
 

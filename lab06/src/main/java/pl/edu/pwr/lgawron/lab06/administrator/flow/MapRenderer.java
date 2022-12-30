@@ -122,4 +122,16 @@ public class MapRenderer {
         });
     }
 
+    public void renderPlayerLeft(int playerX, int playerY) {
+        Platform.runLater(() -> {
+            playerPane.getChildren().remove(frontTiles[playerX][playerY]);
+
+            Rectangle rect = new Rectangle(50, 50);
+            rect.setFill(Color.TRANSPARENT);
+            playerPane.add(rect, playerX, playerY);
+
+            frontTiles[playerX][playerY] = rect;
+        });
+    }
+
 }

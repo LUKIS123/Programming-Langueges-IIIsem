@@ -8,5 +8,6 @@ public enum RequestType {
     GAME_OVER,
     UNKNOWN,
     EXIT,
-    FINISH_REGISTRATION;
+    FINISH_REGISTRATION,
+    LEAVE;
 }

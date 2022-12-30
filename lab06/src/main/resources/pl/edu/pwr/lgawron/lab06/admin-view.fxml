@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="pl.edu.pwr.lgawron.lab06.administrator.AppController"
@@ -21,6 +22,7 @@
         <Button fx:id="hostButton" text="Start Game Server" alignment="TOP_CENTER" onAction="#onHostButtonClick"/>
         <Button fx:id="startButton" text="End Registration Stage" alignment="TOP_CENTER"
                 onAction="#onStartButtonClick"/>
+        <Label fx:id="playerInfo" visible="false"/>
     </HBox>
 
     <Pane fx:id="mainPane">

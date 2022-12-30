@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,13 +20,13 @@ import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
 
 public class AppController {
     @FXML
-    public GridPane mapPane;
+    private GridPane mapPane;
     @FXML
-    public GridPane playerPane;
+    private GridPane playerPane;
     @FXML
-    public Pane mainPane;
+    private Button startButton;
     @FXML
-    public Button startButton;
+    private Label playerInfo;
     @FXML
     private Button hostButton;
     private final RegisterPopUp registerPopUp = new RegisterPopUp();
@@ -76,7 +75,7 @@ public class AppController {
                             inputEvent.consume();
 
                             // initialization & starting server
-                            game = new GameFlow(values, mapPane, playerPane);
+                            game = new GameFlow(values, mapPane, playerPane, playerInfo);
                             game.initServer();
                             //
                         } catch (InputDataException e) {
