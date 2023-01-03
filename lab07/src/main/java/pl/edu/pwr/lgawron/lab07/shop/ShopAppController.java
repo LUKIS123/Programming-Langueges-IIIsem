@@ -13,8 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import pl.edu.pwr.lgawron.lab07.common.InvalidInputException;
-import pl.edu.pwr.lgawron.lab07.common.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.input.InvalidInputException;
+import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 
 public class ShopAppController {
     @FXML

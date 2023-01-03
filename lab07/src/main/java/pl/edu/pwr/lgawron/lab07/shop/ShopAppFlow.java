@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab07.shop;
 
-import pl.edu.pwr.lgawron.lab07.common.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 
 public class ShopAppFlow {
     private final ValuesHolder values;

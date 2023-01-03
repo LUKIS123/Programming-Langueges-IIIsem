@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common;
+package pl.edu.pwr.lgawron.lab07.common.input;
 
 import java.io.Serial;
 

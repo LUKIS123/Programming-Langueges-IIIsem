@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common;
+package pl.edu.pwr.lgawron.lab07.common.input;
 
 public class ValuesHolder {
     private String server;

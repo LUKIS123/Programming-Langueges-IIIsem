@@ -1,12 +1,18 @@
 package pl.edu.pwr.lgawron.lab07.shop;
 
+import interfaces.IShop;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.Client;
+import model.ItemType;
+import pl.edu.pwr.lgawron.lab07.shop.flow.ShopImplementation;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * @author Lukasz Gawron, 264475
@@ -30,9 +36,27 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
 
-        //SubmittedOrder order = new SubmittedOrder();
-        Client client = new Client();
-        client.setName("test");
+
+        // test
+        // zmienic w kontrolerze, nie potrzebuje proxy! lab06 admin tez?
+        try {
+            Registry registry = LocateRegistry.createRegistry(8085);
+
+
+            ShopImplementation shop = new ShopImplementation();
+            ItemType itemType = new ItemType();
+            itemType.setName("test123");
+            itemType.setCategory(1);
+            itemType.setPrice(2.0F);
+            shop.addToList(itemType);
+
+            IShop s = (IShop) UnicastRemoteObject.exportObject(shop, 0);
+            registry.rebind("t123", s);
+            System.out.println("Success!");
+        } catch (RemoteException e) {
+            System.out.println("SHOP ERROR: " + e);
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
