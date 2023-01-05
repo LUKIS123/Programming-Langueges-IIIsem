@@ -39,24 +39,24 @@ public class Main extends Application {
 
         // test
         // zmienic w kontrolerze, nie potrzebuje proxy! lab06 admin tez?
-        try {
-            Registry registry = LocateRegistry.createRegistry(8085);
-
-
-            ShopImplementation shop = new ShopImplementation();
-            ItemType itemType = new ItemType();
-            itemType.setName("test123");
-            itemType.setCategory(1);
-            itemType.setPrice(2.0F);
-            shop.addToList(itemType);
-
-            IShop s = (IShop) UnicastRemoteObject.exportObject(shop, 0);
-            registry.rebind("t123", s);
-            System.out.println("Success!");
-        } catch (RemoteException e) {
-            System.out.println("SHOP ERROR: " + e);
-            e.printStackTrace();
-        }
+//        try {
+//            Registry registry = LocateRegistry.createRegistry(8085);
+//
+//
+//            ShopImplementation shop = new ShopImplementation();
+//            ItemType itemType = new ItemType();
+//            itemType.setName("test123");
+//            itemType.setCategory(1);
+//            itemType.setPrice(2.0F);
+//            shop.addToList(itemType);
+//
+//            IShop s = (IShop) UnicastRemoteObject.exportObject(shop, 0);
+//            registry.rebind("t123", s);
+//            System.out.println("Success!");
+//        } catch (RemoteException e) {
+//            System.out.println("SHOP ERROR: " + e);
+//            e.printStackTrace();
+//        }
     }
 
     public static void main(String[] args) {

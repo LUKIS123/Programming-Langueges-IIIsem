@@ -3,26 +3,43 @@ package pl.edu.pwr.lgawron.lab07.shop.flow;
 import interfaces.IShop;
 import interfaces.IStatusListener;
 import model.*;
+import pl.edu.pwr.lgawron.lab07.common.IOrderService;
+import pl.edu.pwr.lgawron.lab07.common.IRepository;
+import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
+import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShopImplementation implements IShop {
-    private final List<ItemType> items;
+    // private final List<ItemType> items;
+    private final IRepository<ClientExtended> clientRepository;
+    private final IRepository<ItemTypeExtended> itemTypeRepository;
+    private final IOrderService orderService;
+    private final int sequence;
 
-    public ShopImplementation() {
-        this.items = new ArrayList<>();
+//    public ShopImplementation() {
+//        //this.items = new ArrayList<>();
+//    }
+
+    public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderService orderService) {
+        this.sequence = 1;
+        this.clientRepository = clientRepository;
+        this.itemTypeRepository = itemTypeRepository;
+        this.orderService = orderService;
     }
 
     @Override
     public int register(Client client) throws RemoteException {
-        return 0;
+        ClientExtended clientExtended = new ClientExtended(sequence, client);
+        clientRepository.addInstance(clientExtended);
+        return clientExtended.getId();
     }
 
     @Override
     public List<ItemType> getItemList() throws RemoteException {
-        return items;
+        //return items;
+        return null;
     }
 
     @Override
@@ -57,7 +74,7 @@ public class ShopImplementation implements IShop {
 
     // added
     public void addToList(ItemType itemType) {
-        items.add(itemType);
+        // items.add(itemType);
     }
 
 }
