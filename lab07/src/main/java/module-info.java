@@ -3,6 +3,7 @@ module pl.edu.pwr.lgawron.lab07 {
     requires javafx.fxml;
     requires gadgets;
     requires java.rmi;
+    requires java.desktop;
 
     exports pl.edu.pwr.lgawron.lab07.common;
     exports pl.edu.pwr.lgawron.lab07.shop;
@@ -20,4 +21,5 @@ module pl.edu.pwr.lgawron.lab07 {
     exports pl.edu.pwr.lgawron.lab07.common.socketfactory;
     exports pl.edu.pwr.lgawron.lab07.shop.repositories;
     opens pl.edu.pwr.lgawron.lab07.shop.repositories to javafx.fxml;
+    opens pl.edu.pwr.lgawron.lab07.common to javafx.fxml;
 }

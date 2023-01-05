@@ -5,7 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.ItemType;
+import model.Client;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -36,9 +36,12 @@ public class Main extends Application {
         // test
         try {
             Registry localhost = LocateRegistry.getRegistry("localhost", 8085);
-            IShop shop = (IShop) localhost.lookup("t123");
-            ItemType itemType = shop.getItemList().get(0);
-            System.out.println(itemType.getName() + ";" + itemType.getPrice());
+            IShop shop = (IShop) localhost.lookup("shopRemote");
+
+            Client client = new Client();
+            client.setName("Lukasz");
+            shop.register(client);
+            System.out.println("Added client");
 
         } catch (Exception e) {
             System.out.println("CLIENT ERROR: " + e);

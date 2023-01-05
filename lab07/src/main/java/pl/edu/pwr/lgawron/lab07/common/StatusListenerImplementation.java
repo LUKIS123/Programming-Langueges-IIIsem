@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.shop.flow;
+package pl.edu.pwr.lgawron.lab07.common;
 
 import interfaces.IStatusListener;
 import model.Status;
@@ -10,4 +10,7 @@ public class StatusListenerImplementation implements IStatusListener {
     public void statusChanged(int i, Status status) throws RemoteException {
 
     }
+
+
+
 }

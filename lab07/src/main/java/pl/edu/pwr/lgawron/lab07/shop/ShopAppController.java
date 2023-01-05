@@ -43,7 +43,7 @@ public class ShopAppController {
                     server.setText("localhost");
                     TextField port = new TextField();
                     port.setPromptText("Port");
-                    port.setText("8080");
+                    port.setText("8085");
                     Button button = new Button("Login");
                     button.setAlignment(Pos.BOTTOM_CENTER);
                     Label communicate = new Label();
@@ -85,4 +85,5 @@ public class ShopAppController {
                 }
         );
     }
+
 }

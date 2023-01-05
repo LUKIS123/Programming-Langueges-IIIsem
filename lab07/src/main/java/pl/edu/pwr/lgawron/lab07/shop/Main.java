@@ -1,18 +1,11 @@
 package pl.edu.pwr.lgawron.lab07.shop;
 
-import interfaces.IShop;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.ItemType;
-import pl.edu.pwr.lgawron.lab07.shop.flow.ShopImplementation;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 
 /**
  * @author Lukasz Gawron, 264475
@@ -35,7 +28,6 @@ public class Main extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
-
 
         // test
         // zmienic w kontrolerze, nie potrzebuje proxy! lab06 admin tez?

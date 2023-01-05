@@ -9,6 +9,7 @@ import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShopImplementation implements IShop {
@@ -16,14 +17,15 @@ public class ShopImplementation implements IShop {
     private final IRepository<ClientExtended> clientRepository;
     private final IRepository<ItemTypeExtended> itemTypeRepository;
     private final IOrderService orderService;
-    private final int sequence;
+    private int clientSequence;
+    private int itemSequence;
 
-//    public ShopImplementation() {
-//        //this.items = new ArrayList<>();
-//    }
-
+    //    public ShopImplementation() {
+    //        //this.items = new ArrayList<>();
+    //    }
     public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderService orderService) {
-        this.sequence = 1;
+        this.clientSequence = 1;
+        this.itemSequence = 1;
         this.clientRepository = clientRepository;
         this.itemTypeRepository = itemTypeRepository;
         this.orderService = orderService;
@@ -31,39 +33,62 @@ public class ShopImplementation implements IShop {
 
     @Override
     public int register(Client client) throws RemoteException {
-        ClientExtended clientExtended = new ClientExtended(sequence, client);
+        ClientExtended clientExtended = new ClientExtended(clientSequence, client);
         clientRepository.addInstance(clientExtended);
+        clientSequence++;
         return clientExtended.getId();
     }
 
     @Override
     public List<ItemType> getItemList() throws RemoteException {
-        //return items;
-        return null;
+        List<ItemTypeExtended> repo = itemTypeRepository.getRepo();
+
+        List<ItemType> itemList = new ArrayList<>();
+        for (ItemTypeExtended itemTypeExtended : repo) {
+            ItemType type = new ItemType();
+
+            type.setPrice(itemTypeExtended.getPrice());
+            type.setCategory(itemTypeExtended.getCategory());
+            type.setName(itemTypeExtended.getName());
+            itemList.add(type);
+        }
+        return itemList;
     }
 
     @Override
     public int placeOrder(Order order) throws RemoteException {
-        return 0;
+        SubmittedOrder submittedOrder = orderService.creteNewSubmittedOrderAndAddToRepo(order);
+        return submittedOrder.getId();
     }
 
     @Override
     public List<SubmittedOrder> getSubmittedOrders() throws RemoteException {
-        return null;
+        return orderService.getOrderRepository().getRepo();
     }
 
     @Override
     public boolean setStatus(int i, Status status) throws RemoteException {
-        return false;
+        if (orderService.getSubmittedById(i) == null) {
+            return false;
+        } else {
+            SubmittedOrder submittedById = orderService.getSubmittedById(i);
+            submittedById.setStatus(status);
+            return true;
+        }
     }
 
     @Override
     public Status getStatus(int i) throws RemoteException {
-        return null;
+        if (orderService.getSubmittedById(i) == null) {
+            return null;
+        } else {
+            return orderService.getSubmittedById(i).getStatus();
+        }
     }
 
     @Override
     public boolean subscribe(IStatusListener iStatusListener, int i) throws RemoteException {
+
         return false;
     }
 
@@ -72,7 +97,14 @@ public class ShopImplementation implements IShop {
         return false;
     }
 
-    // added
+    // shop extended
+    public int addItemType(ItemType itemType) throws RemoteException {
+        ItemTypeExtended itemTypeExtended = new ItemTypeExtended(itemSequence, itemType.getName(), itemType.getPrice(), itemType.getCategory());
+        itemTypeRepository.addInstance(itemTypeExtended);
+        itemSequence++;
+        return itemTypeExtended.getId();
+    }
+
     public void addToList(ItemType itemType) {
         // items.add(itemType);
     }
