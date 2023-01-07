@@ -11,8 +11,9 @@ import java.util.Optional;
 public class ItemTypeRepository implements IRepository<ItemTypeExtended> {
     private final List<ItemTypeExtended> itemTypeList;
 
-    public ItemTypeRepository() {
+    public ItemTypeRepository(List<ItemTypeExtended> loadedItems) {
         this.itemTypeList = new ArrayList<>();
+        itemTypeList.addAll(loadedItems);
     }
 
     @Override
@@ -31,7 +32,7 @@ public class ItemTypeRepository implements IRepository<ItemTypeExtended> {
                 .stream()
                 .filter(itemTypeExtended -> itemTypeExtended.getId() == id)
                 .findFirst();
-        // id 0 -> an item does not exist
+        // id = -1 -> an item does not exist
         return first.orElseGet(() -> new ItemTypeExtended(-1));
     }
 

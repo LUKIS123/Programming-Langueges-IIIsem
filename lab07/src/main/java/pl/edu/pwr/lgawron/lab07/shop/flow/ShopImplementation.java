@@ -3,32 +3,32 @@ package pl.edu.pwr.lgawron.lab07.shop.flow;
 import interfaces.IShop;
 import interfaces.IStatusListener;
 import model.*;
+import pl.edu.pwr.lgawron.lab07.common.IClientListenerHolder;
 import pl.edu.pwr.lgawron.lab07.common.IOrderService;
 import pl.edu.pwr.lgawron.lab07.common.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopImplementation implements IShop {
-    // private final List<ItemType> items;
+public class ShopImplementation implements IShop, Serializable {
     private final IRepository<ClientExtended> clientRepository;
     private final IRepository<ItemTypeExtended> itemTypeRepository;
     private final IOrderService orderService;
+    private final IClientListenerHolder clientListenerHolder;
     private int clientSequence;
     private int itemSequence;
 
-    //    public ShopImplementation() {
-    //        //this.items = new ArrayList<>();
-    //    }
-    public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderService orderService) {
+    public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderService orderService, IClientListenerHolder clientListenerHolder) {
         this.clientSequence = 1;
         this.itemSequence = 1;
         this.clientRepository = clientRepository;
         this.itemTypeRepository = itemTypeRepository;
         this.orderService = orderService;
+        this.clientListenerHolder = clientListenerHolder;
     }
 
     @Override
@@ -67,46 +67,41 @@ public class ShopImplementation implements IShop {
     }
 
     @Override
-    public boolean setStatus(int i, Status status) throws RemoteException {
-        if (orderService.getSubmittedById(i) == null) {
+    public boolean setStatus(int orderId, Status status) throws RemoteException {
+        if (orderService.getSubmittedById(orderId) == null) {
             return false;
         } else {
-            SubmittedOrder submittedById = orderService.getSubmittedById(i);
+            SubmittedOrder submittedById = orderService.getSubmittedById(orderId);
             submittedById.setStatus(status);
             return true;
         }
     }
 
     @Override
-    public Status getStatus(int i) throws RemoteException {
-        if (orderService.getSubmittedById(i) == null) {
+    public Status getStatus(int orderId) throws RemoteException {
+        if (orderService.getSubmittedById(orderId) == null) {
             return null;
         } else {
-            return orderService.getSubmittedById(i).getStatus();
+            return orderService.getSubmittedById(orderId).getStatus();
         }
     }
 
     @Override
-    public boolean subscribe(IStatusListener iStatusListener, int i) throws RemoteException {
-
-        return false;
+    public boolean subscribe(IStatusListener iStatusListener, int clientId) throws RemoteException {
+        return clientListenerHolder.addListener(iStatusListener, clientId);
     }
 
     @Override
-    public boolean unsubscribe(int i) throws RemoteException {
-        return false;
+    public boolean unsubscribe(int clientId) throws RemoteException {
+        return clientListenerHolder.removeByClientId(clientId);
     }
 
-    // shop extended
+    // utils
     public int addItemType(ItemType itemType) throws RemoteException {
         ItemTypeExtended itemTypeExtended = new ItemTypeExtended(itemSequence, itemType.getName(), itemType.getPrice(), itemType.getCategory());
         itemTypeRepository.addInstance(itemTypeExtended);
         itemSequence++;
         return itemTypeExtended.getId();
-    }
-
-    public void addToList(ItemType itemType) {
-        // items.add(itemType);
     }
 
 }

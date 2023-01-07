@@ -31,7 +31,7 @@ public class ClientRepository implements IRepository<ClientExtended> {
                 .stream()
                 .filter(clientExtended -> clientExtended.getId() == id)
                 .findFirst();
-        // id 0 -> a client does not exist
+        // id -1 -> a client does not exist
         return first.orElseGet(() -> new ClientExtended(-1));
     }
 

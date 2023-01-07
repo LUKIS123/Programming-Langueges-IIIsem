@@ -22,4 +22,6 @@ module pl.edu.pwr.lgawron.lab07 {
     exports pl.edu.pwr.lgawron.lab07.shop.repositories;
     opens pl.edu.pwr.lgawron.lab07.shop.repositories to javafx.fxml;
     opens pl.edu.pwr.lgawron.lab07.common to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab07.common.listener;
+    opens pl.edu.pwr.lgawron.lab07.common.listener to javafx.fxml;
 }
