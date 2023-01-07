@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="pl.edu.pwr.lgawron.lab07.shop.ShopAppController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button fx:id="startButton" text="Hello!" onAction="#onHelloButtonClick"/>
+    <VBox alignment="TOP_CENTER">
+        <Button fx:id="startButton" text="Start Server" alignment="TOP_CENTER" onAction="#onHelloButtonClick"/>
+    </VBox>
+
+    <VBox alignment="TOP_CENTER">
+
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Info">
+                <VBox fx:id="infoBox" prefHeight="20" spacing="5"/>
+            </Tab>
+            <Tab text="Items">
+                <ScrollPane>
+                    <VBox fx:id="itemBox" spacing="5"/>
+                </ScrollPane>
+            </Tab>
+            <Tab text="Clients">
+                <ScrollPane>
+                    <VBox fx:id="clientBox" spacing="5"/>
+                </ScrollPane>
+            </Tab>
+            <Tab text="Orders">
+                <ScrollPane>
+                    <VBox fx:id="orderBox" spacing="5"/>
+                </ScrollPane>
+            </Tab>
+
+        </TabPane>
+
+    </VBox>
+
 </VBox>

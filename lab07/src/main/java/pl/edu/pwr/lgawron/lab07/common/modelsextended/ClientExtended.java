@@ -27,4 +27,12 @@ public class ClientExtended extends Client implements Serializable {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "Client" + id + " {" +
+                "id=" + id +
+                ", name=" + name +
+                '}';
+    }
+
 }

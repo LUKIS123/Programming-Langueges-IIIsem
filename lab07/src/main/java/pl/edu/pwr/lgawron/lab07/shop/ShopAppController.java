@@ -6,9 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -18,9 +16,15 @@ import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 
 public class ShopAppController {
     @FXML
-    public Button startButton;
+    private VBox infoBox;
     @FXML
-    private Label welcomeText;
+    private VBox itemBox;
+    @FXML
+    private VBox clientBox;
+    @FXML
+    private VBox orderBox;
+    @FXML
+    private Button startButton;
     private final ValuesHolder values = new ValuesHolder();
     private ShopAppFlow appFlow;
 
@@ -44,7 +48,7 @@ public class ShopAppController {
                     TextField port = new TextField();
                     port.setPromptText("Port");
                     port.setText("8085");
-                    Button button = new Button("Login");
+                    Button button = new Button("Create Registry");
                     button.setAlignment(Pos.BOTTOM_CENTER);
                     Label communicate = new Label();
                     communicate.setVisible(false);
@@ -68,8 +72,8 @@ public class ShopAppController {
                             inputEvent.consume();
 
                             // initialization & starting server
-                            appFlow = new ShopAppFlow(values);
-                            appFlow.init();
+                            appFlow = new ShopAppFlow(values, itemBox, clientBox, orderBox, infoBox);
+                            appFlow.initialize();
                             //
                         } catch (InvalidInputException e) {
                             communicate.setText(e.getMessage() + "!");

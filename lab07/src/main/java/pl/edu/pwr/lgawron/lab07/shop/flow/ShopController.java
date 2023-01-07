@@ -9,16 +9,12 @@ import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
 import pl.edu.pwr.lgawron.lab07.common.listener.ListenerHolder;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientOrdersRepository;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientRepository;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.ItemTypeRepository;
 import pl.edu.pwr.lgawron.lab07.shop.services.OrderService;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
 // import java.awt.EventQueue;
 public class ShopController {
@@ -28,27 +24,31 @@ public class ShopController {
     private final IOrderRepository clientOrdersRepository;
     private final IOrderService orderService;
     private final IClientListenerHolder clientListenerHolder;
+    private final ShopAppRenderer shopRenderer;
     private final IShop shop;
     private IShop shopRemote;
 
-    public ShopController(ValuesHolder valuesHolder, List<ItemTypeExtended> loadedItems) {
-        this.valuesHolder = valuesHolder;
-
-        this.clientRepository = new ClientRepository();
-        this.itemTypeRepository = new ItemTypeRepository(loadedItems);
-        this.clientOrdersRepository = new ClientOrdersRepository();
-        this.orderService = new OrderService(clientOrdersRepository);
+    public ShopController(ValuesHolder values, IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderRepository clientOrdersRepository, ShopAppRenderer renderer) {
+        this.valuesHolder = values;
+        this.clientRepository = clientRepository;
+        this.itemTypeRepository = itemTypeRepository;
+        this.clientOrdersRepository = clientOrdersRepository;
         this.clientListenerHolder = new ListenerHolder();
-        this.shop = new ShopImplementation(clientRepository, itemTypeRepository, orderService, clientListenerHolder);
+        this.orderService = new OrderService(clientOrdersRepository);
+        this.shopRenderer = renderer;
+        this.shop = new ShopImplementation(clientRepository, itemTypeRepository, orderService, clientListenerHolder, renderer);
+
+        shopRenderer.renderAllItems();
     }
 
-    public void start() {
+    public void createRegistryAndExportIShop() {
         try {
             Registry registry = LocateRegistry.createRegistry(valuesHolder.getPort());
             shopRemote = (IShop) UnicastRemoteObject.exportObject(shop, 0);
             registry.rebind("shopRemote", shopRemote);
 
-            this.test();
+            shopRenderer.renderBasicInfo(valuesHolder);
+            //this.test();
         } catch (RemoteException e) {
             System.out.println("SHOP_ERROR:" + e);
             e.printStackTrace();
