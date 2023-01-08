@@ -99,6 +99,7 @@ public class ShopAppRenderer {
         });
     }
 
+    // https://www.tutorialspoint.com/how-to-create-an-alert-in-javafx
     public Alert renderOrderDetails(SubmittedOrder order) {
         // todo: printowanie listy
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "lol", ButtonType.OK);
