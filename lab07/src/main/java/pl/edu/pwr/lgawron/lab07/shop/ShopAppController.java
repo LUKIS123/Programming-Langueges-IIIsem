@@ -26,13 +26,13 @@ public class ShopAppController {
     @FXML
     private Button startButton;
     private final ValuesHolder values = new ValuesHolder();
-    private ShopAppFlow appFlow;
+    private AppFlow appFlow;
 
     public ShopAppController() {
     }
 
     @FXML
-    protected void onHelloButtonClick(ActionEvent openPopUpEvent) {
+    protected void onStartButtonClick(ActionEvent openPopUpEvent) {
         Node node = (Node) openPopUpEvent.getSource();
         Stage thisStage = (Stage) node.getScene().getWindow();
 
@@ -72,7 +72,7 @@ public class ShopAppController {
                             inputEvent.consume();
 
                             // initialization & starting server
-                            appFlow = new ShopAppFlow(values, itemBox, clientBox, orderBox, infoBox);
+                            appFlow = new AppFlow(values, itemBox, clientBox, orderBox, infoBox);
                             appFlow.initialize();
                             //
                         } catch (InvalidInputException e) {
@@ -88,6 +88,13 @@ public class ShopAppController {
                     dialog.show();
                 }
         );
+    }
+
+    public void onExitApplication() {
+        if (appFlow == null) {
+            return;
+        }
+        appFlow.killApp();
     }
 
 }

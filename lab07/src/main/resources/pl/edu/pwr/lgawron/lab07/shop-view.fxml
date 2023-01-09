@@ -10,7 +10,7 @@
     </padding>
 
     <VBox alignment="TOP_CENTER">
-        <Button fx:id="startButton" text="Start Server" alignment="TOP_CENTER" onAction="#onHelloButtonClick"/>
+        <Button fx:id="startButton" text="Start Server" alignment="TOP_CENTER" onAction="#onStartButtonClick"/>
     </VBox>
 
     <VBox alignment="TOP_CENTER">

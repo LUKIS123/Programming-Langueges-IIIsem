@@ -28,12 +28,12 @@ public class ItemTypeExtended extends ItemType implements Serializable {
 
     @Override
     public String toString() {
-        return "Item" + id + " {" +
+        return " Item" + id + " {" +
                 "id=" + id +
                 ", name=" + name +
                 ", price=" + price +
                 ", category=" + category +
-                '}';
+                "} ";
     }
 
 }

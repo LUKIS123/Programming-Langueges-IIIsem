@@ -16,7 +16,7 @@ import pl.edu.pwr.lgawron.lab07.shop.repositories.ItemTypeRepository;
 
 import java.util.List;
 
-public class ShopAppFlow {
+public class AppFlow {
     private final ValuesHolder values;
     private final IRepository<ClientExtended> clientRepository;
     private final IRepository<ItemTypeExtended> itemTypeRepository;
@@ -24,7 +24,7 @@ public class ShopAppFlow {
     private final ShopAppRenderer renderer;
     private final ShopController shopController;
 
-    public ShopAppFlow(ValuesHolder values, VBox itemBox, VBox clientBox, VBox orderBox, VBox infoBox) {
+    public AppFlow(ValuesHolder values, VBox itemBox, VBox clientBox, VBox orderBox, VBox infoBox) {
         this.values = values;
         this.clientRepository = new ClientRepository();
         this.itemTypeRepository = new ItemTypeRepository(this.readItemDataFile());
@@ -43,7 +43,8 @@ public class ShopAppFlow {
     }
 
     public void killApp() {
-
+        shopController.removeShopFromRegistry();
+        System.exit(0);
     }
 
 }

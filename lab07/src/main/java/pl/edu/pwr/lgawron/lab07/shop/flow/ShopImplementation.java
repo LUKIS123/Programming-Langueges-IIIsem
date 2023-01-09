@@ -80,6 +80,7 @@ public class ShopImplementation implements IShop, Serializable {
         } else {
             SubmittedOrder submittedById = orderService.getSubmittedById(orderId);
             submittedById.setStatus(status);
+            shopRenderer.renderOrderStatusChanged(orderId);
             return true;
         }
     }

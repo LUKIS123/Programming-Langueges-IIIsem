@@ -6,11 +6,12 @@ import pl.edu.pwr.lgawron.lab07.common.IOrderRepository;
 import pl.edu.pwr.lgawron.lab07.common.IOrderService;
 import pl.edu.pwr.lgawron.lab07.common.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.listener.ListenerHolder;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
-import pl.edu.pwr.lgawron.lab07.common.listener.ListenerHolder;
 import pl.edu.pwr.lgawron.lab07.shop.services.OrderService;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -37,7 +38,6 @@ public class ShopController {
         this.orderService = new OrderService(clientOrdersRepository);
         this.shopRenderer = renderer;
         this.shop = new ShopImplementation(clientRepository, itemTypeRepository, orderService, clientListenerHolder, renderer);
-
         shopRenderer.renderAllItems();
     }
 
@@ -46,12 +46,25 @@ public class ShopController {
             Registry registry = LocateRegistry.createRegistry(valuesHolder.getPort());
             shopRemote = (IShop) UnicastRemoteObject.exportObject(shop, 0);
             registry.rebind("shopRemote", shopRemote);
-
             shopRenderer.renderBasicInfo(valuesHolder);
+
             //this.test();
+            // test
+            // Order test = new Order(1);
+            // test.addOrderLine(new OrderLine(itemTypeRepository.getById(1), 1, "lololo"));
+            // shop.placeOrder(test);
+
         } catch (RemoteException e) {
             System.out.println("SHOP_ERROR:" + e);
             e.printStackTrace();
+        }
+    }
+
+    public void removeShopFromRegistry() {
+        try {
+            UnicastRemoteObject.unexportObject(shop, false);
+        } catch (NoSuchObjectException e) {
+            System.out.println("ERROR: No such Object!");
         }
     }
 
@@ -76,24 +89,3 @@ public class ShopController {
     }
 
 }
-
-// test
-// zmienic w kontrolerze, nie potrzebuje proxy! lab06 admin tez?
-//        try {
-//            Registry registry = LocateRegistry.createRegistry(8085);
-//
-//
-//            ShopImplementation shop = new ShopImplementation();
-//            ItemType itemType = new ItemType();
-//            itemType.setName("test123");
-//            itemType.setCategory(1);
-//            itemType.setPrice(2.0F);
-//            shop.addToList(itemType);
-//
-//            IShop s = (IShop) UnicastRemoteObject.exportObject(shop, 0);
-//            registry.rebind("t123", s);
-//            System.out.println("Success!");
-//        } catch (RemoteException e) {
-//            System.out.println("SHOP ERROR: " + e);
-//            e.printStackTrace();
-//        }

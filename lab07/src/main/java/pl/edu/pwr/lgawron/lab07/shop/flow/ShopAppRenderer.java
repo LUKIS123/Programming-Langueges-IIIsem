@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -59,6 +60,7 @@ public class ShopAppRenderer {
                 itemTypeRepository.getRepo().forEach(itemTypeExtended -> {
                     Label itemLabel = new Label(itemTypeExtended.toString());
                     itemLabel.setAlignment(Pos.BASELINE_LEFT);
+                    itemLabel.setStyle("-fx-border-style: solid");
                     items.put(itemTypeExtended.getId(), itemLabel);
                     itemBox.getChildren().add(itemLabel);
                 });
@@ -74,7 +76,6 @@ public class ShopAppRenderer {
                 Label clientLabel = new Label(byId.toString());
                 clientLabel.setAlignment(Pos.BASELINE_LEFT);
                 clients.put(clientId, clientLabel);
-
                 clientBox.getChildren().add(clientLabel);
             } catch (RemoteException ignored) {
             }
@@ -84,27 +85,56 @@ public class ShopAppRenderer {
     public void renderOrderAdded(int orderId) {
         Platform.runLater(() -> {
             try {
-                // todo: dodac popup -> wyswietl szczegoly zamowienia -> to samo u sellera bedzie!
                 SubmittedOrder byId = clientOrdersRepository.getById(orderId);
 
                 Label orderLabel = new Label("Order" + byId.getId() + " {id=" + byId.getId() + ", clientId=" + byId.getOrder().getClientID() + ", status=" + byId.getStatus().toString() + "}");
-                orderLabel.setAlignment(Pos.BASELINE_LEFT);
+                orderLabel.setAlignment(Pos.BOTTOM_LEFT);
+
                 HBox hBox = new HBox();
+                hBox.setStyle("-fx-border-style: solid");
+                hBox.setAlignment(Pos.CENTER);
+                hBox.setSpacing(10);
                 hBox.getChildren().add(orderLabel);
-                // dodac alert do buttoda!!!
-                // hBox.getChildren().add();
+                hBox.getChildren().add(this.renderOrderDetailsButton(this.parseOrderDetails(byId)));
+
+                orders.put(orderId, hBox);
+                orderBox.getChildren().add(hBox);
 
             } catch (RemoteException ignored) {
             }
         });
     }
 
+    public void renderOrderStatusChanged(int orderId) {
+        orderBox.getChildren().remove(orders.get(orderId));
+        this.renderOrderAdded(orderId);
+    }
+
     // https://www.tutorialspoint.com/how-to-create-an-alert-in-javafx
-    public Alert renderOrderDetails(SubmittedOrder order) {
-        // todo: printowanie listy
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "lol", ButtonType.OK);
-        alert.showAndWait();
-        return alert;
+    private Button renderOrderDetailsButton(String orderString) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, orderString, ButtonType.OK);
+        Button button = new Button("Details");
+        button.setOnAction(e -> alert.showAndWait());
+        return button;
+    }
+
+    private String parseOrderDetails(SubmittedOrder order) {
+        StringBuilder stringBuilder = new StringBuilder("Order ID:" + order.getId() + "\n");
+        stringBuilder
+                .append("Client ID: ")
+                .append(order.getOrder().getClientID())
+                .append(", Status: ")
+                .append(order.getStatus())
+                .append("\n")
+                .append("\nOrderLines:\n");
+        order.getOrder().getOll().forEach(orderLine -> {
+            stringBuilder
+                    .append(orderLine.getIt().toString())
+                    .append(", quantity: ")
+                    .append(orderLine.getQuantity())
+                    .append("\n");
+        });
+        return stringBuilder.toString();
     }
 
 }
