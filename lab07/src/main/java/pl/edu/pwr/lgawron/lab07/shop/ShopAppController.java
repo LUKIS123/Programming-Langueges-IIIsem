@@ -69,12 +69,11 @@ public class ShopAppController {
                     EventHandler<ActionEvent> buttonHandler = inputEvent -> {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
-                            inputEvent.consume();
-
                             // initialization & starting server
                             appFlow = new AppFlow(values, itemBox, clientBox, orderBox, infoBox);
                             appFlow.initialize();
                             //
+                            inputEvent.consume();
                         } catch (InvalidInputException e) {
                             communicate.setText(e.getMessage() + "!");
                             communicate.setVisible(true);

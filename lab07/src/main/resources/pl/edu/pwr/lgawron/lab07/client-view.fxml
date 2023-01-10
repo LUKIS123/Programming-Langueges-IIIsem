@@ -30,7 +30,7 @@
 
         <TabPane tabClosingPolicy="UNAVAILABLE">
             <Tab text="Info">
-                <VBox fx:id="infoBox" prefHeight="50" spacing="5"/>
+                <VBox fx:id="infoBox" minHeight="100.0" spacing="5"/>
             </Tab>
             <Tab text="Items">
                 <ScrollPane>

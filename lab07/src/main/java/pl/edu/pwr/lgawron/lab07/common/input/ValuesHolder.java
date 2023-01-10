@@ -8,7 +8,7 @@ public class ValuesHolder {
     }
 
     public void setApplicationArguments(String server, String port) throws InvalidInputException {
-        if (port.length() != 4) {
+        if (port.length() > 4) {
             throw new InvalidInputException("Wrong port");
         }
         this.server = server;
