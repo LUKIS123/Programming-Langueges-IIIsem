@@ -1,7 +1,7 @@
 package pl.edu.pwr.lgawron.lab07.common.listener;
 
 import interfaces.IStatusListener;
-import pl.edu.pwr.lgawron.lab07.common.IClientListenerHolder;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
 
 import java.rmi.RemoteException;
 import java.util.*;

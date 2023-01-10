@@ -1,6 +1,6 @@
 package pl.edu.pwr.lgawron.lab07.common.utils;
 
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 
 import java.util.ArrayList;
 import java.util.List;

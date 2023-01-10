@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common.modelsextended;
+package pl.edu.pwr.lgawron.lab07.shop.modelsextended;
 
 import model.Client;
 
@@ -25,6 +25,11 @@ public class ClientExtended extends Client implements Serializable {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

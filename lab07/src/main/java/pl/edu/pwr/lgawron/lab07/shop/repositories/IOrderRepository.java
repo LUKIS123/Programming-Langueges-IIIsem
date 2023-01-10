@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common;
+package pl.edu.pwr.lgawron.lab07.shop.repositories;
 
 import model.Status;
 import model.SubmittedOrder;

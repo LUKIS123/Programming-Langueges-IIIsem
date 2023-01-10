@@ -1,7 +1,6 @@
 package pl.edu.pwr.lgawron.lab07.shop.repositories;
 
-import pl.edu.pwr.lgawron.lab07.common.IRepository;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

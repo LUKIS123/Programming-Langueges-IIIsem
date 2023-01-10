@@ -1,8 +1,7 @@
 package pl.edu.pwr.lgawron.lab07.shop.services;
 
 import model.*;
-import pl.edu.pwr.lgawron.lab07.common.IOrderRepository;
-import pl.edu.pwr.lgawron.lab07.common.IOrderService;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientOrdersRepository;
 
 import java.rmi.RemoteException;

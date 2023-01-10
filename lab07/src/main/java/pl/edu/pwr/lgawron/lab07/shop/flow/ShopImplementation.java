@@ -3,16 +3,18 @@ package pl.edu.pwr.lgawron.lab07.shop.flow;
 import interfaces.IShop;
 import interfaces.IStatusListener;
 import model.*;
-import pl.edu.pwr.lgawron.lab07.common.IClientListenerHolder;
-import pl.edu.pwr.lgawron.lab07.common.IOrderService;
-import pl.edu.pwr.lgawron.lab07.common.IRepository;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
+import pl.edu.pwr.lgawron.lab07.shop.services.IOrderService;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class ShopImplementation implements IShop, Serializable {
     private final IRepository<ClientExtended> clientRepository;
@@ -35,13 +37,17 @@ public class ShopImplementation implements IShop, Serializable {
 
     @Override
     public int register(Client client) throws RemoteException {
-        ClientExtended clientExtended = new ClientExtended(clientSequence, client);
-        clientRepository.addInstance(clientExtended);
-        clientSequence++;
-
-        // todo: moze uzyc do tego eventqueue -> inny watek bedzie renderowal?
-        shopRenderer.renderClientRegistered(clientExtended.getId());
-        return clientExtended.getId();
+        Optional<ClientExtended> first = clientRepository.getRepo().stream().filter(clientExtended -> Objects.equals(clientExtended.getName(), client.getName())).findFirst();
+        if (first.isEmpty()) {
+            ClientExtended clientExtended = new ClientExtended(clientSequence, client);
+            clientRepository.addInstance(clientExtended);
+            clientSequence++;
+            shopRenderer.renderClientRegistered(clientExtended.getId());
+            return clientExtended.getId();
+            // todo: moze uzyc do tego eventqueue -> inny watek bedzie renderowal?
+        } else {
+            return first.get().getId();
+        }
     }
 
     @Override
@@ -50,8 +56,8 @@ public class ShopImplementation implements IShop, Serializable {
 
         List<ItemType> itemList = new ArrayList<>();
         for (ItemTypeExtended itemTypeExtended : repo) {
-            ItemType type = new ItemType();
 
+            ItemType type = new ItemType();
             type.setPrice(itemTypeExtended.getPrice());
             type.setCategory(itemTypeExtended.getCategory());
             type.setName(itemTypeExtended.getName());

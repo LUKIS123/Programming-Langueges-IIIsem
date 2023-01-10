@@ -1,14 +1,14 @@
 package pl.edu.pwr.lgawron.lab07.shop.flow;
 
 import interfaces.IShop;
-import pl.edu.pwr.lgawron.lab07.common.IClientListenerHolder;
-import pl.edu.pwr.lgawron.lab07.common.IOrderRepository;
-import pl.edu.pwr.lgawron.lab07.common.IOrderService;
-import pl.edu.pwr.lgawron.lab07.common.IRepository;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
+import pl.edu.pwr.lgawron.lab07.shop.services.IOrderService;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 import pl.edu.pwr.lgawron.lab07.common.listener.ListenerHolder;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 import pl.edu.pwr.lgawron.lab07.shop.services.OrderService;
 
 import java.rmi.NoSuchObjectException;

@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common.modelsextended;
+package pl.edu.pwr.lgawron.lab07.shop.modelsextended;
 
 import model.ItemType;
 
@@ -24,6 +24,36 @@ public class ItemTypeExtended extends ItemType implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public float getPrice() {
+        return price;
+    }
+
+    @Override
+    public int getCategory() {
+        return category;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    @Override
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     @Override

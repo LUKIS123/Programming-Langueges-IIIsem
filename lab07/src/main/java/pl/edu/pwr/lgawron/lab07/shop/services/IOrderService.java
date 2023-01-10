@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common;
+package pl.edu.pwr.lgawron.lab07.shop.services;
 
 import model.*;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientOrdersRepository;

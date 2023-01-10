@@ -1,11 +1,11 @@
 package pl.edu.pwr.lgawron.lab07.shop;
 
 import javafx.scene.layout.VBox;
-import pl.edu.pwr.lgawron.lab07.common.IOrderRepository;
-import pl.edu.pwr.lgawron.lab07.common.IRepository;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ClientExtended;
-import pl.edu.pwr.lgawron.lab07.common.modelsextended.ItemTypeExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
+import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 import pl.edu.pwr.lgawron.lab07.common.utils.DataFileUtility;
 import pl.edu.pwr.lgawron.lab07.common.utils.SerializeUtility;
 import pl.edu.pwr.lgawron.lab07.shop.flow.ShopController;

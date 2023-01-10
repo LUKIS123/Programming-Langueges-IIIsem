@@ -29,8 +29,8 @@
     <VBox alignment="TOP_CENTER">
 
         <TabPane tabClosingPolicy="UNAVAILABLE">
-            <Tab text="Info">
-                <VBox fx:id="infoBox" minHeight="100.0" spacing="5"/>
+            <Tab text="Welcome">
+                <VBox fx:id="infoBox" minHeight="150.0" spacing="5"/>
             </Tab>
             <Tab text="Items">
                 <ScrollPane>

@@ -2,7 +2,6 @@ package pl.edu.pwr.lgawron.lab07.shop.repositories;
 
 import model.Status;
 import model.SubmittedOrder;
-import pl.edu.pwr.lgawron.lab07.common.IOrderRepository;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
