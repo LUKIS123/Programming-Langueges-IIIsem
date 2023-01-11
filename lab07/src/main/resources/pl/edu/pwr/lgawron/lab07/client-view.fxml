@@ -17,12 +17,16 @@
             <Button fx:id="startButton" text="Connect to Server" onAction="#onStartButtonCLick"/>
         </VBox>
         <VBox alignment="TOP_RIGHT">
-            <Label fx:id="notificationLabel" alignment="CENTER" text="Cart: "/>
-            <Button fx:id="notificationButton" alignment="TOP_RIGHT" text="Go to Shopping Cart"/>
+            <Label fx:id="notificationLabel" alignment="CENTER" text="Notifications: "/>
+            <Button fx:id="notificationButton" alignment="TOP_RIGHT" text="Check notifications"/>
         </VBox>
         <VBox alignment="TOP_RIGHT">
-            <Label fx:id="cartLabel" alignment="CENTER" text="Notifications: "/>
+            <Label fx:id="cartLabel" alignment="CENTER" text="Cart: "/>
             <Button fx:id="cartButton" alignment="TOP_RIGHT" text="Go to Shopping Cart"/>
+        </VBox>
+        <VBox alignment="TOP_RIGHT">
+            <Label fx:id="orderInfo" alignment="CENTER"/>
+            <Button fx:id="refreshOrderButton" text="Refresh Orders" onAction="#onRefreshOrdersButtonCLick"/>
         </VBox>
     </HBox>
 
@@ -32,7 +36,7 @@
             <Tab text="Welcome">
                 <VBox fx:id="infoBox" minHeight="150.0" spacing="5"/>
             </Tab>
-            <Tab text="Items">
+            <Tab text="Shop Offer">
                 <ScrollPane>
                     <VBox fx:id="itemBox" spacing="5"/>
                 </ScrollPane>

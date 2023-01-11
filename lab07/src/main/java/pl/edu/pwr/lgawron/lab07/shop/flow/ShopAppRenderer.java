@@ -113,6 +113,7 @@ public class ShopAppRenderer {
     // https://www.tutorialspoint.com/how-to-create-an-alert-in-javafx
     private Button renderOrderDetailsButton(String orderString) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, orderString, ButtonType.OK);
+        alert.setHeaderText("Order details...");
         Button button = new Button("Details");
         button.setOnAction(e -> alert.showAndWait());
         return button;
@@ -128,11 +129,19 @@ public class ShopAppRenderer {
                 .append("\n")
                 .append("\nOrderLines:\n");
         order.getOrder().getOll().forEach(orderLine -> {
+            String adv = orderLine.getAdvert();
+            if (orderLine.getAdvert().length() >= 10) {
+                adv = orderLine.getAdvert().substring(0, 10);
+            }
             stringBuilder
-                    .append(orderLine.getIt().toString())
+                    .append(orderLine.getIt().getName())
                     .append(", quantity: ")
                     .append(orderLine.getQuantity())
-                    .append("\n");
+                    .append(", advert: ")
+                    .append(adv)
+                    .append(", price: ")
+                    .append(orderLine.getCost())
+                    .append(" PLN\n");
         });
         return stringBuilder.toString();
     }

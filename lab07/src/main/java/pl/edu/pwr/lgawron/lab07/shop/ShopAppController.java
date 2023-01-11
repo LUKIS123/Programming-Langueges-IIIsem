@@ -67,6 +67,10 @@ public class ShopAppController {
                     openPopUpEvent.consume();
 
                     EventHandler<ActionEvent> buttonHandler = inputEvent -> {
+                        if (appFlow != null) {
+                            // if the app is already working -> return
+                            return;
+                        }
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
                             // initialization & starting server

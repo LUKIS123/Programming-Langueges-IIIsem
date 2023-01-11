@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -20,6 +21,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class ClientAppController {
+    @FXML
+    private Label orderInfo;
+    @FXML
+    private Button refreshOrderButton;
     @FXML
     private Button startButton;
     @FXML
@@ -84,6 +89,7 @@ public class ClientAppController {
                             appFlow = new AppFlow(values, notificationLabel, notificationButton, cartLabel, cartButton, infoBox, itemBox, orderBox);
                             appFlow.initialize();
                             //
+                            orderInfo.setVisible(false);
                             inputEvent.consume();
                         } catch (InvalidInputException | RemoteException | NotBoundException e) {
                             communicate.setText(e.getMessage() + "!");
@@ -100,8 +106,35 @@ public class ClientAppController {
         );
     }
 
-    public void onExitApplication() {
+    public void onRefreshOrdersButtonCLick() {
+        if (appFlow == null) {
+            return;
+        }
+        if (appFlow.getClientId() == -1) {
+            orderInfo.setText("Login first");
+            orderInfo.setVisible(true);
+            return;
+        }
+        if (appFlow.getSubmittedOrders().isEmpty()) {
+            orderInfo.setText("There is no orders");
+            orderInfo.setVisible(true);
+            return;
+        }
+        try {
+            appFlow.downloadSubmittedOrders();
+            orderInfo.setVisible(false);
+        } catch (RemoteException e) {
+            orderInfo.setText("ERROR: Could not download OrderList!");
+            orderInfo.setVisible(true);
+        }
+    }
 
+    public void onExitApplication() {
+        if (appFlow == null) {
+            return;
+        }
+        appFlow.killApp();
+        // todo: unsubscribe zeby nie bylo wyjatkow!
     }
 
 }

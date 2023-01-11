@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common;
+package pl.edu.pwr.lgawron.lab07.client.utils;
 
 import model.ItemType;
 import model.Order;
@@ -26,8 +26,13 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder addOrderLine(List<OrderLine> lines) {
+    public OrderBuilder addOrderLines(List<OrderLine> lines) {
         orderLineList.addAll(lines);
+        return this;
+    }
+
+    public OrderBuilder removeOrderLine(OrderLine orderLine) {
+        orderLineList.remove(orderLine);
         return this;
     }
 
@@ -35,6 +40,18 @@ public class OrderBuilder {
         Order order = new Order(clientId);
         orderLineList.forEach(order::addOrderLine);
         return order;
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public List<OrderLine> getOrderLineList() {
+        return orderLineList;
+    }
+
+    public float getCost() {
+        return orderLineList.stream().map(OrderLine::getCost).reduce(0f, Float::sum);
     }
 
 }

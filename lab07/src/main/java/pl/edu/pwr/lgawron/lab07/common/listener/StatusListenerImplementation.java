@@ -15,6 +15,8 @@ public class StatusListenerImplementation implements IStatusListener, Serializab
 
     @Override
     public void statusChanged(int orderId, Status status) throws RemoteException {
+        // todo: wymyslic cos aby odswiezalo po jednym orderId
+        // moze zrobic Runnable ale przekazywac tam myRunnable i wtecy uzyc if(instanceof myRunnable) jesli nie to zwykly
         runnable.run();
     }
 
