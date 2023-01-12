@@ -27,6 +27,7 @@
         <VBox alignment="TOP_RIGHT">
             <Label fx:id="orderInfo" alignment="CENTER"/>
             <Button fx:id="refreshOrderButton" text="Refresh Orders" onAction="#onRefreshOrdersButtonCLick"/>
+            <Button fx:id="subscribeButton" text="Subscribe" onAction="#onSubscribeButtonClick"/>
         </VBox>
     </HBox>
 

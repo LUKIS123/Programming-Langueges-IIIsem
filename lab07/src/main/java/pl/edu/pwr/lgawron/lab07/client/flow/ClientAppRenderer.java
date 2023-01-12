@@ -14,10 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.ItemType;
-import model.Order;
-import model.OrderLine;
-import model.SubmittedOrder;
+import model.*;
 import pl.edu.pwr.lgawron.lab07.client.AppFlow;
 import pl.edu.pwr.lgawron.lab07.client.utils.OrderBuilder;
 import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
@@ -205,7 +202,7 @@ public class ClientAppRenderer {
                 itemBoxCartMap.put(orderLine, hBox);
                 hBox.setAlignment(Pos.CENTER_LEFT);
                 hBox.getChildren().add(new Label("ITEM: " + orderLine.getIt().getName() + ", QUANTITY: "
-                        + orderLine.getQuantity() + ", TEXT: "
+                        + orderLine.getQuantity() + "\n, TEXT: "
                         + adv + ", COST: "
                         + orderLine.getCost()));
 
@@ -252,21 +249,30 @@ public class ClientAppRenderer {
 
     public void renderOrders(List<SubmittedOrder> submittedOrders) {
         // List<SubmittedOrder> clientSubmitted = submittedOrders.stream().filter(submittedOrder -> clientOrderHistoryMap.containsKey(submittedOrder.getId())).toList();
-        orderNodeMap.forEach((submittedOrderId, node) ->
-                orderBox.getChildren().remove(node));
+        Platform.runLater(() -> {
+            orderNodeMap.forEach((submittedOrderId, node) ->
+                    orderBox.getChildren().remove(node));
 
-        submittedOrders.forEach(order -> {
-            HBox hBox = new HBox();
-            hBox.setStyle("-fx-border-style: solid");
-            hBox.setAlignment(Pos.CENTER);
-            hBox.setSpacing(10);
-            Label orderLabel = new Label(" Order : id=" + order.getId() + ", clientId=" + order.getOrder().getClientID() + ", status=" + order.getStatus().toString());
-            hBox.getChildren().add(orderLabel);
-            hBox.getChildren().add(RenderUtils.renderOrderDetailsButton(RenderUtils.parseOrderDetails(order)));
+            submittedOrders.forEach(order -> {
+                HBox hBox = new HBox();
+                hBox.setStyle("-fx-border-style: solid");
+                hBox.setAlignment(Pos.CENTER);
+                hBox.setSpacing(10);
+                Label orderLabel = new Label(" Order : id=" + order.getId() + ", clientId=" + order.getOrder().getClientID() + ", status=" + order.getStatus().toString());
+                hBox.getChildren().add(orderLabel);
+                hBox.getChildren().add(RenderUtils.renderOrderDetailsButton(RenderUtils.parseOrderDetails(order)));
+                if (order.getStatus() == Status.READY) {
+                    hBox.getChildren().add(RenderUtils.renderReceivePackageButton(order, appFlow));
+                }
 
-            orderNodeMap.put(order.getId(), hBox);
-            orderBox.getChildren().add(hBox);
+                orderNodeMap.put(order.getId(), hBox);
+                orderBox.getChildren().add(hBox);
+            });
         });
+    }
+
+    public void renderAfterNotification(Integer orderId, Status status) {
+
     }
 
     public void renderAfterRegistration(int clientId) {

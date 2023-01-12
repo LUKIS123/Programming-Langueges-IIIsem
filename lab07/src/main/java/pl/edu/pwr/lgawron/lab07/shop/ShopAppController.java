@@ -40,11 +40,8 @@ public class ShopAppController {
                 event -> {
                     VBox dialogVbox = new VBox(20);
                     dialogVbox.setAlignment(Pos.CENTER);
-                    dialogVbox.getChildren().add(new Text("Please enter your server and port:"));
+                    dialogVbox.getChildren().add(new Text("Please enter port to start Server on:"));
 
-                    TextField server = new TextField();
-                    server.setPromptText("Server");
-                    server.setText("localhost");
                     TextField port = new TextField();
                     port.setPromptText("Port");
                     port.setText("8085");
@@ -53,7 +50,6 @@ public class ShopAppController {
                     Label communicate = new Label();
                     communicate.setVisible(false);
 
-                    dialogVbox.getChildren().add(server);
                     dialogVbox.getChildren().add(port);
                     dialogVbox.getChildren().add(button);
                     dialogVbox.getChildren().add(communicate);
@@ -72,7 +68,7 @@ public class ShopAppController {
                             return;
                         }
                         try {
-                            values.setApplicationArguments(server.getText(), port.getText());
+                            values.setApplicationArguments("", port.getText());
                             // initialization & starting server
                             appFlow = new AppFlow(values, itemBox, clientBox, orderBox, infoBox);
                             appFlow.initialize();

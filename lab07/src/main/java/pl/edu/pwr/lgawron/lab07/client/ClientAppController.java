@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -21,6 +20,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class ClientAppController {
+    @FXML
+    private Button subscribeButton;
     @FXML
     private Label orderInfo;
     @FXML
@@ -106,6 +107,7 @@ public class ClientAppController {
         );
     }
 
+    @FXML
     public void onRefreshOrdersButtonCLick() {
         if (appFlow == null) {
             return;
@@ -121,11 +123,22 @@ public class ClientAppController {
             return;
         }
         try {
-            appFlow.downloadSubmittedOrders();
+            appFlow.downloadSubmittedOrdersAndRefresh();
             orderInfo.setVisible(false);
         } catch (RemoteException e) {
             orderInfo.setText("ERROR: Could not download OrderList!");
             orderInfo.setVisible(true);
+        }
+    }
+
+    public void onSubscribeButtonClick() {
+        if (appFlow == null) {
+            return;
+        }
+        try {
+            appFlow.subscribe();
+        } catch (RemoteException e) {
+            orderInfo.setText("ERROR: Could not subscribe for notifications!");
         }
     }
 

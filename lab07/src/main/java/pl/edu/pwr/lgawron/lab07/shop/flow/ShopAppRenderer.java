@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.SubmittedOrder;
+import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
@@ -95,7 +96,7 @@ public class ShopAppRenderer {
                 hBox.setAlignment(Pos.CENTER);
                 hBox.setSpacing(10);
                 hBox.getChildren().add(orderLabel);
-                hBox.getChildren().add(this.renderOrderDetailsButton(this.parseOrderDetails(byId)));
+                hBox.getChildren().add(this.renderOrderDetailsButton(RenderUtils.parseOrderDetails(byId)));
 
                 orders.put(orderId, hBox);
                 orderBox.getChildren().add(hBox);
@@ -106,8 +107,10 @@ public class ShopAppRenderer {
     }
 
     public void renderOrderStatusChanged(int orderId) {
-        orderBox.getChildren().remove(orders.get(orderId));
-        this.renderOrderAdded(orderId);
+        Platform.runLater(() -> {
+            orderBox.getChildren().remove(orders.get(orderId));
+            this.renderOrderAdded(orderId);
+        });
     }
 
     // https://www.tutorialspoint.com/how-to-create-an-alert-in-javafx
@@ -119,6 +122,7 @@ public class ShopAppRenderer {
         return button;
     }
 
+    // todo: do wywalenia
     private String parseOrderDetails(SubmittedOrder order) {
         StringBuilder stringBuilder = new StringBuilder("Order ID:" + order.getId() + "\n");
         stringBuilder

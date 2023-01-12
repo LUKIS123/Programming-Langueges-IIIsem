@@ -36,21 +36,6 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.show();
-
-        // test
-//        try {
-//            Registry localhost = LocateRegistry.getRegistry("localhost", 8085);
-//            IShop shop = (IShop) localhost.lookup("shopRemote");
-//
-//            Client client = new Client();
-//            client.setName("Lukasz");
-//            shop.register(client);
-//            System.out.println("Added client");
-//
-//        } catch (Exception e) {
-//            System.out.println("CLIENT ERROR: " + e);
-//            e.printStackTrace();
-//        }
     }
 
     public static void main(String[] args) {

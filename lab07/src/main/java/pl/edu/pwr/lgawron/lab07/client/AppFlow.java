@@ -1,6 +1,7 @@
 package pl.edu.pwr.lgawron.lab07.client;
 
 import interfaces.IShop;
+import interfaces.IStatusListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -8,6 +9,7 @@ import model.*;
 import pl.edu.pwr.lgawron.lab07.client.flow.ClientAppRenderer;
 import pl.edu.pwr.lgawron.lab07.client.flow.ShoppingCartService;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.listener.StatusListenerImplementation;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -15,6 +17,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 public class AppFlow {
     private final Label notificationLabel;
@@ -69,7 +73,7 @@ public class AppFlow {
         me.setName(name);
         clientId = shop.register(me);
         clientAppRenderer.renderAfterRegistration(clientId);
-        this.downloadSubmittedOrders();
+        this.downloadSubmittedOrdersAndRefresh();
     }
 
     public void addToCart(ItemType itemType, int quantity, String text) {
@@ -84,10 +88,10 @@ public class AppFlow {
         shoppingCartService.getOrderBuilder().getOrderLineList().clear();
         clientAppRenderer.renderShoppingCartPopUp(shoppingCartService.getOrderBuilder());
         clientAppRenderer.renderCartTotalCost(0f);
-        this.downloadSubmittedOrders();
+        this.downloadSubmittedOrdersAndRefresh();
     }
 
-    public void downloadSubmittedOrders() throws RemoteException {
+    public void downloadSubmittedOrdersAndRefresh() throws RemoteException {
         List<SubmittedOrder> submitted = shop
                 .getSubmittedOrders()
                 .stream()
@@ -103,6 +107,31 @@ public class AppFlow {
 
     public boolean enrollDelivery(int orderId) throws RemoteException {
         return shop.setStatus(orderId, Status.DELIVERED);
+    }
+
+    public void subscribe() throws RemoteException {
+        IStatusListener iStatusListener = new StatusListenerImplementation(new BiConsumer<Integer, Status>() {
+            @Override
+            public void accept(Integer orderId, Status status) {
+                try {
+                    Optional<SubmittedOrder> first = shop.getSubmittedOrders().stream().filter(submittedOrder -> submittedOrder.getId() == orderId).findFirst();
+                    if (first.isPresent()) {
+                        for (SubmittedOrder submittedOrder : submittedOrders) {
+                            if (submittedOrder.getId() == first.get().getId()) {
+                                submittedOrders.remove(submittedOrder);
+                                submittedOrders.add(first.get());
+                            }
+                        }
+                        clientAppRenderer.renderOrders(submittedOrders);
+                    }
+                } catch (RemoteException e) {
+                    notificationLabel.setText("ERROR: Could not refresh order!");
+                }
+                // todo: zrobic ladne notyfikacje -> popup
+                clientAppRenderer.renderAfterNotification(orderId, status);
+            }
+        });
+        shop.subscribe(iStatusListener, clientId);
     }
 
     public ShoppingCartService getShoppingCartService() {

@@ -44,7 +44,6 @@ public class ShopImplementation implements IShop, Serializable {
             clientSequence++;
             shopRenderer.renderClientRegistered(clientExtended.getId());
             return clientExtended.getId();
-            // todo: moze uzyc do tego eventqueue -> inny watek bedzie renderowal?
         } else {
             return first.get().getId();
         }

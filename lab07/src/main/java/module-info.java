@@ -18,7 +18,6 @@ module pl.edu.pwr.lgawron.lab07 {
     opens pl.edu.pwr.lgawron.lab07.shop.services to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab07.shop.modelsextended;
     exports pl.edu.pwr.lgawron.lab07.common.input;
-    exports pl.edu.pwr.lgawron.lab07.common.socketfactory;
     exports pl.edu.pwr.lgawron.lab07.shop.repositories;
     opens pl.edu.pwr.lgawron.lab07.shop.repositories to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab07.common.listener;

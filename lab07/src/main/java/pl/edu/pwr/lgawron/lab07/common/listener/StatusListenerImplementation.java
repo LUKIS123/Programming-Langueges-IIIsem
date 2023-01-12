@@ -5,19 +5,18 @@ import model.Status;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.function.BiConsumer;
 
 public class StatusListenerImplementation implements IStatusListener, Serializable {
-    private final Runnable runnable;
+    private final BiConsumer<Integer, Status> consumer;
 
-    public StatusListenerImplementation(Runnable runnable) {
-        this.runnable = runnable;
+    public StatusListenerImplementation(BiConsumer<Integer, Status> consumer) {
+        this.consumer = consumer;
     }
 
     @Override
     public void statusChanged(int orderId, Status status) throws RemoteException {
-        // todo: wymyslic cos aby odswiezalo po jednym orderId
-        // moze zrobic Runnable ale przekazywac tam myRunnable i wtecy uzyc if(instanceof myRunnable) jesli nie to zwykly
-        runnable.run();
+        consumer.accept(orderId, status);
     }
 
 }
