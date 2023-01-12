@@ -185,6 +185,10 @@ public class ClientAppRenderer {
 
     private EventHandler<ActionEvent> setEnterShoppingCartPopUp(List<OrderLine> orderLineList, OrderBuilder orderBuilder) {
         return openPopUpEvent -> {
+            if (orderBuilder.getOrderLineList().isEmpty()) {
+                return;
+            }
+
             Node node = (Node) openPopUpEvent.getSource();
             Stage thisStage = (Stage) node.getScene().getWindow();
 
@@ -273,10 +277,11 @@ public class ClientAppRenderer {
         });
     }
 
-    public void renderAfterNotification(Integer orderId, Status status) {
+    public void renderAfterNotification() {
         Platform.runLater(() -> {
             notificationCounter++;
             notificationLabel.setText("Notifications:" + notificationCounter);
+            notificationButton.setOnAction(RenderUtils.renderSetNotificationButton(this, appFlow));
         });
     }
 
@@ -288,6 +293,10 @@ public class ClientAppRenderer {
     public void renderCartTotalCost(float cost) {
         Platform.runLater(() ->
                 cartLabel.setText("Cart: " + cost + " PLN"));
+    }
+
+    public void setNotificationCounter(int notificationCounter) {
+        this.notificationCounter = notificationCounter;
     }
 
 }

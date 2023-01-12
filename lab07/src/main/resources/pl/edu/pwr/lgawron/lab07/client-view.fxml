@@ -34,17 +34,17 @@
     <VBox alignment="TOP_CENTER">
 
         <TabPane tabClosingPolicy="UNAVAILABLE">
-            <Tab text="Welcome">
-                <VBox fx:id="infoBox" minHeight="150.0" spacing="5"/>
+            <Tab text="Welcome!">
+                <VBox fx:id="infoBox" minHeight="300" spacing="5"/>
             </Tab>
             <Tab text="Shop Offer">
                 <ScrollPane>
-                    <VBox fx:id="itemBox" spacing="5"/>
+                    <VBox fx:id="itemBox" minHeight="300" spacing="5"/>
                 </ScrollPane>
             </Tab>
             <Tab text="Your Orders">
                 <ScrollPane>
-                    <VBox fx:id="orderBox" spacing="5"/>
+                    <VBox fx:id="orderBox" minHeight="300" spacing="5"/>
                 </ScrollPane>
             </Tab>
         </TabPane>

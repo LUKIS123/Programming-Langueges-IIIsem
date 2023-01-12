@@ -29,25 +29,32 @@ public class SellerAppRenderer {
 
     public void renderOrders(List<SubmittedOrder> submittedOrders) {
         Platform.runLater(() -> {
-            presentOrderNodeMap.forEach((submittedOrderId, node) ->
-                    presentOrderBox.getChildren().remove(node));
+            presentOrderNodeMap.forEach((submittedOrderId, node) -> {
+                node.setVisible(false);
+                presentOrderBox.getChildren().remove(node);
+            });
 
             submittedOrders.forEach(order -> {
                 HBox hBox = new HBox();
                 hBox.setStyle("-fx-border-style: solid");
                 hBox.setAlignment(Pos.CENTER);
                 hBox.setSpacing(10);
-                Label orderLabel = new Label(" Order : id=" + order.getId() + ", clientId=" + order.getOrder().getClientID() + ", status=" + order.getStatus().toString());
+                Label orderLabel = new Label(" Order : id=" + order.getId() +
+                        ", clientId=" + order.getOrder().getClientID() + ", status=" + order.getStatus().toString());
+
                 hBox.getChildren().add(orderLabel);
                 hBox.getChildren().add(RenderUtils.renderOrderDetailsButton(RenderUtils.parseOrderDetails(order)));
                 if (order.getStatus() == Status.DELIVERED) {
                     orderHistoryBox.getChildren().add(hBox);
+                    presentOrderNodeMap.remove(order.getId());
                 } else {
                     hBox.getChildren().add(RenderUtils.renderSetProcessingButton(order, appFlow));
                     hBox.getChildren().add(RenderUtils.renderSetReadyButton(order, appFlow));
+                    presentOrderNodeMap.put(order.getId(), hBox);
+                    presentOrderBox.getChildren().add(hBox);
                 }
-                presentOrderNodeMap.put(order.getId(), hBox);
-                presentOrderBox.getChildren().add(hBox);
+//                presentOrderNodeMap.put(order.getId(), hBox);
+//                presentOrderBox.getChildren().add(hBox);
             });
         });
     }

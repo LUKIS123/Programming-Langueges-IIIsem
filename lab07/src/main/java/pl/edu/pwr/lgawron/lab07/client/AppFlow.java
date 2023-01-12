@@ -17,9 +17,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class AppFlow {
     private final Label notificationLabel;
@@ -34,6 +32,7 @@ public class AppFlow {
     private final ClientAppRenderer clientAppRenderer;
     private int clientId;
     private List<ItemType> itemList;
+    private Map<Integer, Status> integerStatusMap;
     private final List<SubmittedOrder> submittedOrders;
     private final ShoppingCartService shoppingCartService;
     private StatusListenerImplementation statusListenerImplementation;
@@ -51,6 +50,7 @@ public class AppFlow {
 
         this.clientId = -1;
         this.submittedOrders = new ArrayList<>();
+        this.integerStatusMap = new HashMap<>();
         this.clientAppRenderer = new ClientAppRenderer(this, notificationLabel, notificationButton, cartLabel, cartButton, infoBox, itemBox, orderBox);
         this.shoppingCartService = new ShoppingCartService(this, clientAppRenderer);
     }
@@ -128,26 +128,30 @@ public class AppFlow {
                         }
                     }
                     clientAppRenderer.renderOrders(submittedOrders);
-                    clientAppRenderer.renderAfterNotification(orderId, status);
+                    integerStatusMap.put(orderId, status);
+                    clientAppRenderer.renderAfterNotification();
                 }
             } catch (RemoteException e) {
                 notificationLabel.setText("ERROR: Could not refresh order!");
             }
-            // todo: zrobic ladne notyfikacje -> popup
         });
         listenerRemote = (IStatusListener) UnicastRemoteObject.exportObject(statusListenerImplementation, 0);
         return shop.subscribe(listenerRemote, clientId);
     }
 
-    public void unsubscribe() {
+    public boolean unsubscribe() {
+        if (shop == null) {
+            return false;
+        }
         try {
-            shop.unsubscribe(clientId);
+            return shop.unsubscribe(clientId);
         } catch (RemoteException ignored) {
+            return false;
         }
     }
 
-    public ShoppingCartService getShoppingCartService() {
-        return shoppingCartService;
+    public Map<Integer, Status> getIntegerStatusMap() {
+        return integerStatusMap;
     }
 
     public int getClientId() {
@@ -158,8 +162,11 @@ public class AppFlow {
         return submittedOrders;
     }
 
-    public void killApp() throws NoSuchObjectException {
-        UnicastRemoteObject.unexportObject(listenerRemote, true);
+    public void unExportListener() throws NoSuchObjectException {
+        UnicastRemoteObject.unexportObject(listenerRemote, false);
+    }
+
+    public void killApp() {
         System.exit(0);
     }
 

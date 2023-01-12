@@ -1,13 +1,22 @@
 package pl.edu.pwr.lgawron.lab07.common.utils;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import model.Status;
 import model.SubmittedOrder;
+import pl.edu.pwr.lgawron.lab07.client.AppFlow;
+import pl.edu.pwr.lgawron.lab07.client.flow.ClientAppRenderer;
 
 import java.rmi.RemoteException;
+import java.util.Map;
 
 public class RenderUtils {
     // https://www.tutorialspoint.com/how-to-create-an-alert-in-javafx
@@ -120,6 +129,43 @@ public class RenderUtils {
             }
         });
         return button;
+    }
+
+    public static EventHandler<ActionEvent> renderSetNotificationButton(ClientAppRenderer clientAppRenderer, AppFlow appFlow) {
+        Map<Integer, Status> integerStatusMap = appFlow.getIntegerStatusMap();
+        return event -> {
+            if (integerStatusMap.isEmpty()) {
+                return;
+            }
+            Node node = (Node) event.getSource();
+            Stage thisStage = (Stage) node.getScene().getWindow();
+
+            VBox dialogVbox = new VBox(20);
+            dialogVbox.setMinHeight(100);
+            dialogVbox.setAlignment(Pos.CENTER);
+            dialogVbox.getChildren().add(new Text("Status change of orders:"));
+            for (Map.Entry<Integer, Status> integerStatusEntry : integerStatusMap.entrySet()) {
+                Label label = new Label(" Order: ID=" + integerStatusEntry.getKey()
+                        + "\n Changed to status=" + integerStatusEntry.getValue());
+                label.setMinSize(50, 14);
+                label.setStyle("-fx-border-style: solid");
+                dialogVbox.getChildren().add(label);
+            }
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setContent(dialogVbox);
+            Scene dialogScene = new Scene(scrollPane, 350, 250);
+
+            Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(thisStage);
+            dialog.setScene(dialogScene);
+            event.consume();
+
+            dialog.setScene(dialogScene);
+            dialog.show();
+            clientAppRenderer.setNotificationCounter(-1);
+            clientAppRenderer.renderAfterNotification();
+        };
     }
 
 }

@@ -19,8 +19,7 @@ public class AppFlow {
     private final ValuesHolder values;
     private IShop shop;
     private final SellerAppRenderer sellerAppRenderer;
-    private List<SubmittedOrder> submittedOrderList;
-    private final OrderProcessingService processingService;
+    private final List<SubmittedOrder> submittedOrderList;
 
     public AppFlow(ValuesHolder values, VBox presentOrderBox, VBox orderHistoryBox) {
         this.values = values;
@@ -29,7 +28,6 @@ public class AppFlow {
 
         this.submittedOrderList = new ArrayList<>();
         this.sellerAppRenderer = new SellerAppRenderer(this, presentOrderBox, orderHistoryBox);
-        this.processingService = new OrderProcessingService(this, sellerAppRenderer);
     }
 
     public void initialize() throws RemoteException, NotBoundException {

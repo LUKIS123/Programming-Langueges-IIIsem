@@ -19,13 +19,13 @@
 
         <TabPane tabClosingPolicy="UNAVAILABLE">
             <Tab text="Present Orders">
-                <ScrollPane>
-                    <VBox fx:id="presentOrderBox" spacing="5" minHeight="Infinity"/>
+                <ScrollPane minHeight="300">
+                    <VBox fx:id="presentOrderBox" minHeight="330" spacing="5"/>
                 </ScrollPane>
             </Tab>
-            <Tab text="Order History">
-                <ScrollPane>
-                    <VBox fx:id="orderHistoryBox" spacing="5"/>
+            <Tab text="Order History [DELIVERED]">
+                <ScrollPane minHeight="300">
+                    <VBox fx:id="orderHistoryBox" minHeight="330" spacing="5"/>
                 </ScrollPane>
             </Tab>
         </TabPane>

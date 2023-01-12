@@ -140,6 +140,9 @@ public class ClientAppController {
             if (!appFlow.subscribe()) {
                 orderInfo.setText("ERROR: Could not subscribe!");
                 orderInfo.setVisible(true);
+            } else {
+                orderInfo.setText("SUBSCRIBED!");
+                orderInfo.setVisible(true);
             }
         } catch (RemoteException e) {
             orderInfo.setText("ERROR: Could not subscribe!");
@@ -152,11 +155,14 @@ public class ClientAppController {
         if (appFlow == null) {
             return;
         }
-        appFlow.unsubscribe();
+        if (!appFlow.unsubscribe()) {
+            orderInfo.setText("Could not unsubscribe!");
+        }
         try {
-            appFlow.killApp();
+            appFlow.unExportListener();
         } catch (NoSuchObjectException ignored) {
         }
+        appFlow.killApp();
     }
 
 }
