@@ -9,7 +9,7 @@
 
     <VBox alignment="TOP_CENTER" spacing="10">
         <Label fx:id="infoLabel" alignment="CENTER" text="Connect to Server"/>
-        <HBox>
+        <HBox alignment="TOP_CENTER">
             <Button fx:id="startButton" text="CONNECT" onAction="#onStartButtonClick"/>
             <Button fx:id="refreshButton" text="Refresh Orders" onAction="#onRefreshButtonClick"/>
         </HBox>
@@ -20,7 +20,7 @@
         <TabPane tabClosingPolicy="UNAVAILABLE">
             <Tab text="Present Orders">
                 <ScrollPane>
-                    <VBox fx:id="presentOrderBox" spacing="5"/>
+                    <VBox fx:id="presentOrderBox" spacing="5" minHeight="Infinity"/>
                 </ScrollPane>
             </Tab>
             <Tab text="Order History">

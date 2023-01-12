@@ -27,6 +27,7 @@ import java.util.Map;
 public class ClientAppRenderer {
     private final AppFlow appFlow;
     private final Label notificationLabel;
+    private int notificationCounter;
     private final Button notificationButton;
     private final Label cartLabel;
     private final Button cartButton;
@@ -42,6 +43,7 @@ public class ClientAppRenderer {
     public ClientAppRenderer(AppFlow appFlow, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
         this.appFlow = appFlow;
         this.notificationLabel = notificationLabel;
+        this.notificationCounter = 0;
         this.notificationButton = notificationButton;
         this.cartLabel = cartLabel;
         this.cartButton = cartButton;
@@ -272,7 +274,10 @@ public class ClientAppRenderer {
     }
 
     public void renderAfterNotification(Integer orderId, Status status) {
-
+        Platform.runLater(() -> {
+            notificationCounter++;
+            notificationLabel.setText("Notifications:" + notificationCounter);
+        });
     }
 
     public void renderAfterRegistration(int clientId) {

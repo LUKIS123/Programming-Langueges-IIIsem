@@ -11,14 +11,15 @@ import pl.edu.pwr.lgawron.lab07.client.flow.ShoppingCartService;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 import pl.edu.pwr.lgawron.lab07.common.listener.StatusListenerImplementation;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
 public class AppFlow {
     private final Label notificationLabel;
@@ -35,6 +36,8 @@ public class AppFlow {
     private List<ItemType> itemList;
     private final List<SubmittedOrder> submittedOrders;
     private final ShoppingCartService shoppingCartService;
+    private StatusListenerImplementation statusListenerImplementation;
+    private IStatusListener listenerRemote;
 
     public AppFlow(ValuesHolder values, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
         this.values = values;
@@ -109,29 +112,38 @@ public class AppFlow {
         return shop.setStatus(orderId, Status.DELIVERED);
     }
 
-    public void subscribe() throws RemoteException {
-        IStatusListener iStatusListener = new StatusListenerImplementation(new BiConsumer<Integer, Status>() {
-            @Override
-            public void accept(Integer orderId, Status status) {
-                try {
-                    Optional<SubmittedOrder> first = shop.getSubmittedOrders().stream().filter(submittedOrder -> submittedOrder.getId() == orderId).findFirst();
-                    if (first.isPresent()) {
-                        for (SubmittedOrder submittedOrder : submittedOrders) {
-                            if (submittedOrder.getId() == first.get().getId()) {
-                                submittedOrders.remove(submittedOrder);
-                                submittedOrders.add(first.get());
-                            }
+    public boolean subscribe() throws RemoteException {
+        statusListenerImplementation = new StatusListenerImplementation((orderId, status) -> {
+            try {
+                Optional<SubmittedOrder> first = shop
+                        .getSubmittedOrders()
+                        .stream()
+                        .filter(submittedOrder -> submittedOrder.getId() == orderId)
+                        .findFirst();
+                if (first.isPresent()) {
+                    for (SubmittedOrder submittedOrder : submittedOrders) {
+                        if (submittedOrder.getId() == first.get().getId()) {
+                            submittedOrders.remove(submittedOrder);
+                            submittedOrders.add(first.get());
                         }
-                        clientAppRenderer.renderOrders(submittedOrders);
                     }
-                } catch (RemoteException e) {
-                    notificationLabel.setText("ERROR: Could not refresh order!");
+                    clientAppRenderer.renderOrders(submittedOrders);
+                    clientAppRenderer.renderAfterNotification(orderId, status);
                 }
-                // todo: zrobic ladne notyfikacje -> popup
-                clientAppRenderer.renderAfterNotification(orderId, status);
+            } catch (RemoteException e) {
+                notificationLabel.setText("ERROR: Could not refresh order!");
             }
+            // todo: zrobic ladne notyfikacje -> popup
         });
-        shop.subscribe(iStatusListener, clientId);
+        listenerRemote = (IStatusListener) UnicastRemoteObject.exportObject(statusListenerImplementation, 0);
+        return shop.subscribe(listenerRemote, clientId);
+    }
+
+    public void unsubscribe() {
+        try {
+            shop.unsubscribe(clientId);
+        } catch (RemoteException ignored) {
+        }
     }
 
     public ShoppingCartService getShoppingCartService() {
@@ -146,7 +158,8 @@ public class AppFlow {
         return submittedOrders;
     }
 
-    public void killApp() {
+    public void killApp() throws NoSuchObjectException {
+        UnicastRemoteObject.unexportObject(listenerRemote, true);
         System.exit(0);
     }
 

@@ -82,12 +82,17 @@ public class ShopImplementation implements IShop, Serializable {
     public boolean setStatus(int orderId, Status status) throws RemoteException {
         if (orderService.getSubmittedById(orderId) == null) {
             return false;
-        } else {
-            SubmittedOrder submittedById = orderService.getSubmittedById(orderId);
-            submittedById.setStatus(status);
-            shopRenderer.renderOrderStatusChanged(orderId);
-            return true;
         }
+        SubmittedOrder submittedById = orderService.getSubmittedById(orderId);
+        submittedById.setStatus(status);
+        shopRenderer.renderOrderStatusChanged(orderId);
+
+        IStatusListener listenerByClientId = clientListenerHolder.getListenerByClientId(submittedById.getOrder().getClientID());
+        if (listenerByClientId != null) {
+            listenerByClientId.statusChanged(orderId, status);
+        }
+
+        return true;
     }
 
     @Override

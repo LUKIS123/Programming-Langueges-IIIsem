@@ -24,7 +24,7 @@
             <Label fx:id="cartLabel" alignment="CENTER" text="Cart: "/>
             <Button fx:id="cartButton" alignment="TOP_RIGHT" text="Go to Shopping Cart"/>
         </VBox>
-        <VBox alignment="TOP_RIGHT">
+        <VBox alignment="CENTER">
             <Label fx:id="orderInfo" alignment="CENTER"/>
             <Button fx:id="refreshOrderButton" text="Refresh Orders" onAction="#onRefreshOrdersButtonCLick"/>
             <Button fx:id="subscribeButton" text="Subscribe" onAction="#onSubscribeButtonClick"/>

@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import pl.edu.pwr.lgawron.lab07.common.input.InvalidInputException;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
@@ -136,9 +137,14 @@ public class ClientAppController {
             return;
         }
         try {
-            appFlow.subscribe();
+            if (!appFlow.subscribe()) {
+                orderInfo.setText("ERROR: Could not subscribe!");
+                orderInfo.setVisible(true);
+            }
         } catch (RemoteException e) {
-            orderInfo.setText("ERROR: Could not subscribe for notifications!");
+            orderInfo.setText("ERROR: Could not subscribe!");
+            orderInfo.setVisible(true);
+            e.printStackTrace();
         }
     }
 
@@ -146,8 +152,11 @@ public class ClientAppController {
         if (appFlow == null) {
             return;
         }
-        appFlow.killApp();
-        // todo: unsubscribe zeby nie bylo wyjatkow!
+        appFlow.unsubscribe();
+        try {
+            appFlow.killApp();
+        } catch (NoSuchObjectException ignored) {
+        }
     }
 
 }

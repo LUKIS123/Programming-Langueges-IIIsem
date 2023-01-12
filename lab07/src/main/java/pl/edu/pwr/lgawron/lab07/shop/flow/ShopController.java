@@ -47,13 +47,6 @@ public class ShopController {
             shopRemote = (IShop) UnicastRemoteObject.exportObject(shop, 0);
             registry.rebind("shopRemote", shopRemote);
             shopRenderer.renderBasicInfo(valuesHolder);
-
-            //this.test();
-            // test
-            // Order test = new Order(1);
-            // test.addOrderLine(new OrderLine(itemTypeRepository.getById(1), 1, "lololo"));
-            // shop.placeOrder(test);
-
         } catch (RemoteException e) {
             System.out.println("SHOP_ERROR:" + e);
             e.printStackTrace();
