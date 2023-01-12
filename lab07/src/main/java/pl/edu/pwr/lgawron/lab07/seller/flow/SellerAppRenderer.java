@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.seller;
+package pl.edu.pwr.lgawron.lab07.seller.flow;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import model.Status;
 import model.SubmittedOrder;
 import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
+import pl.edu.pwr.lgawron.lab07.seller.AppFlow;
 
 import java.util.HashMap;
 import java.util.List;

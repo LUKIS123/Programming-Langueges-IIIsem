@@ -24,4 +24,6 @@ module pl.edu.pwr.lgawron.lab07 {
     opens pl.edu.pwr.lgawron.lab07.common.listener to javafx.fxml;
     exports pl.edu.pwr.lgawron.lab07.client.utils;
     opens pl.edu.pwr.lgawron.lab07.client.utils to javafx.fxml;
+    exports pl.edu.pwr.lgawron.lab07.seller.flow;
+    opens pl.edu.pwr.lgawron.lab07.seller.flow to javafx.fxml;
 }

@@ -5,6 +5,7 @@ import javafx.scene.layout.VBox;
 import model.Status;
 import model.SubmittedOrder;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.seller.flow.SellerAppRenderer;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
