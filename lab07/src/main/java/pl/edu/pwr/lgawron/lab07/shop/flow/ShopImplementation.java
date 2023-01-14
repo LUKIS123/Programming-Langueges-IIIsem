@@ -106,6 +106,9 @@ public class ShopImplementation implements IShop, Serializable {
 
     @Override
     public boolean subscribe(IStatusListener iStatusListener, int clientId) throws RemoteException {
+        if (clientRepository.getById(clientId).getId() == -1) {
+            return false;
+        }
         return clientListenerHolder.addListener(iStatusListener, clientId);
     }
 

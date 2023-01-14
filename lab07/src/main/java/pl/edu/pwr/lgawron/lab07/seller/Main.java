@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.rmi.RMISecurityManager;
+
 /**
  * @author Lukasz Gawron, 264475
  * sposob budowy: gradle build
@@ -16,6 +18,8 @@ import javafx.stage.Stage;
  * - javafx-controls.jar
  * - javafx-fxml.jar
  * - javafx-graphics.jar
+ * - gadgets.jar
+ * - plik java.policy
  * komenda: java -p . -m pl.edu.pwr.lgawron.lab07/pl.edu.pwr.lgawron.lab07.seller.Main
  */
 public class Main extends Application {
@@ -38,6 +42,13 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        System.setProperty("java.security.policy", "java.policy");
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new RMISecurityManager());
+        }
+
+
         launch();
     }
+
 }

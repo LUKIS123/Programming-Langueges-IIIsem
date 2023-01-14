@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ClientOrdersRepository implements IOrderRepository {
     private final List<SubmittedOrder> submittedOrderList;
@@ -21,24 +22,24 @@ public class ClientOrdersRepository implements IOrderRepository {
     }
 
     @Override
-    public void addInstance(SubmittedOrder submitted) throws RemoteException{
+    public void addInstance(SubmittedOrder submitted) throws RemoteException {
         submittedOrderList.add(submitted);
     }
 
     @Override
-    public SubmittedOrder getById(int id)throws RemoteException{
+    public SubmittedOrder getById(int id) throws RemoteException {
         Optional<SubmittedOrder> first = submittedOrderList.stream().filter(submittedOrder -> submittedOrder.getId() == id).findFirst();
         return first.orElse(null);
     }
 
     @Override
-    public List<SubmittedOrder> getByClientId(int clientId)throws RemoteException {
-        return submittedOrderList.stream().filter(submittedOrder -> submittedOrder.getOrder().getClientID() == clientId).toList();
+    public List<SubmittedOrder> getByClientId(int clientId) throws RemoteException {
+        return submittedOrderList.stream().filter(submittedOrder -> submittedOrder.getOrder().getClientID() == clientId).collect(Collectors.toList());
     }
 
     @Override
-    public List<SubmittedOrder> getByStatus(Status status) throws RemoteException{
-        return submittedOrderList.stream().filter(submittedOrder -> submittedOrder.getStatus() == status).toList();
+    public List<SubmittedOrder> getByStatus(Status status) throws RemoteException {
+        return submittedOrderList.stream().filter(submittedOrder -> submittedOrder.getStatus() == status).collect(Collectors.toList());
     }
 
 }

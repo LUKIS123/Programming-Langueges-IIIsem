@@ -18,6 +18,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AppFlow {
     private final Label notificationLabel;
@@ -91,8 +92,8 @@ public class AppFlow {
         List<SubmittedOrder> submitted = shop
                 .getSubmittedOrders()
                 .stream()
-                .filter(submittedOrder -> submittedOrder.getOrder().getClientID() == clientId).
-                toList();
+                .filter(submittedOrder -> submittedOrder.getOrder().getClientID() == clientId)
+                .collect(Collectors.toList());
         if (submitted.isEmpty()) {
             return;
         }

@@ -5,6 +5,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import pl.edu.pwr.lgawron.lab07.common.utils.DataFileUtility;
+
+import java.rmi.RMISecurityManager;
 
 /**
  * @author Lukasz Gawron, 264475
@@ -16,7 +19,10 @@ import javafx.stage.Stage;
  * - javafx-controls.jar
  * - javafx-fxml.jar
  * - javafx-graphics.jar
- * komenda: java -p . -m pl.edu.pwr.lgawron.lab06/pl.edu.pwr.lgawron.lab07.client.Main
+ * - gadgets.jar
+ * - plik java.policy
+ * - settings_client.txt
+ * komenda: java -p . -m pl.edu.pwr.lgawron.lab07/pl.edu.pwr.lgawron.lab07.client.Main
  */
 
 public class Main extends Application {
@@ -39,6 +45,15 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        // wczytywanie z pliku adresu hosta na ktorym wystawiana jest namiastka listenera
+        System.setProperty("java.rmi.server.hostname", DataFileUtility.readFile("settings_client.txt").split("=")[1]);
+        System.setProperty("java.security.policy", "java.policy");
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new RMISecurityManager());
+        }
+
+
         launch();
     }
+
 }

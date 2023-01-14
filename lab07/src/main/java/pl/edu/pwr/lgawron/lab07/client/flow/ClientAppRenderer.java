@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -112,13 +114,13 @@ public class ClientAppRenderer {
     }
 
     public void renderItems(List<ItemType> itemList) {
-        // todo: zrobic ladnie w boxach z przyciskami do zamowien, moze podzielone na kategorie -> np kubki w 1 kategorii, rozne kolory
         Platform.runLater(() -> itemList.forEach(itemType -> {
             HBox hBox = new HBox();
             hBox.setMinSize(735, 80);
             hBox.setAlignment(Pos.CENTER);
 
             Label itemLabel = new Label(" " + itemType.getName() + ", " + itemType.getPrice() + "PLN ");
+            itemLabel.setFont(Font.font("Book Antiqua", FontWeight.BOLD, 16));
             itemLabel.setAlignment(Pos.BASELINE_LEFT);
 
             Button button = new Button("Add to Cart");
