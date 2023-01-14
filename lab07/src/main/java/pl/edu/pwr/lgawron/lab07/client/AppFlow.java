@@ -121,12 +121,19 @@ public class AppFlow {
                         .filter(submittedOrder -> submittedOrder.getId() == orderId)
                         .findFirst();
                 if (first.isPresent()) {
-                    for (SubmittedOrder submittedOrder : submittedOrders) {
-                        if (submittedOrder.getId() == first.get().getId()) {
-                            submittedOrders.remove(submittedOrder);
-                            submittedOrders.add(first.get());
+                    // for (SubmittedOrder submittedOrder : submittedOrders) {
+                    ListIterator<SubmittedOrder> listIterator = submittedOrders.listIterator();
+                    while (listIterator.hasNext()) {
+                        SubmittedOrder next = listIterator.next();
+                        if (next.getId() == first.get().getId()) {
+                            listIterator.set(first.get());
                         }
                     }
+                    // if (submittedOrder.getId() == first.get().getId()) {
+                    // submittedOrders.remove(submittedOrder);
+                    //submittedOrders.add(first.get());
+                    //}
+                    // }
                     clientAppRenderer.renderOrders(submittedOrders);
                     integerStatusMap.put(orderId, status);
                     clientAppRenderer.renderAfterNotification();
