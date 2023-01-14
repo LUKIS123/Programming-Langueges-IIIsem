@@ -6,7 +6,6 @@ import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
 import pl.edu.pwr.lgawron.lab07.shop.services.IOrderService;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
-import pl.edu.pwr.lgawron.lab07.common.listener.ListenerHolder;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 import pl.edu.pwr.lgawron.lab07.shop.services.OrderService;
@@ -17,25 +16,16 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-// import java.awt.EventQueue;
 public class ShopController {
     private final ValuesHolder valuesHolder;
-    private final IRepository<ClientExtended> clientRepository;
-    private final IRepository<ItemTypeExtended> itemTypeRepository;
-    private final IOrderRepository clientOrdersRepository;
-    private final IOrderService orderService;
-    private final IClientListenerHolder clientListenerHolder;
     private final ShopAppRenderer shopRenderer;
     private final IShop shop;
     private IShop shopRemote;
 
     public ShopController(ValuesHolder values, IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderRepository clientOrdersRepository, ShopAppRenderer renderer) {
         this.valuesHolder = values;
-        this.clientRepository = clientRepository;
-        this.itemTypeRepository = itemTypeRepository;
-        this.clientOrdersRepository = clientOrdersRepository;
-        this.clientListenerHolder = new ListenerHolder();
-        this.orderService = new OrderService(clientOrdersRepository);
+        IClientListenerHolder clientListenerHolder = new ListenerHolder();
+        IOrderService orderService = new OrderService(clientOrdersRepository);
         this.shopRenderer = renderer;
         this.shop = new ShopImplementation(clientRepository, itemTypeRepository, orderService, clientListenerHolder, renderer);
         shopRenderer.renderAllItems();
@@ -55,30 +45,9 @@ public class ShopController {
 
     public void removeShopFromRegistry() {
         try {
-            UnicastRemoteObject.unexportObject(shop, false);
-        } catch (NoSuchObjectException e) {
-            System.out.println("ERROR: No such Object!");
+            UnicastRemoteObject.unexportObject(shopRemote, false);
+        } catch (NoSuchObjectException ignored) {
         }
-    }
-
-    public void test() {
-        Thread t = new Thread(() -> {
-            try {
-                while (true) {
-                    if (clientRepository.getRepo().isEmpty()) {
-                        System.out.println("Empty");
-                    }
-                    clientRepository.getRepo().forEach(cl -> System.out.println(cl.getName()));
-
-                    System.out.println(itemTypeRepository.getRepo().size());
-
-                    Thread.sleep(4000);
-                }
-            } catch (InterruptedException | RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        t.start();
     }
 
 }

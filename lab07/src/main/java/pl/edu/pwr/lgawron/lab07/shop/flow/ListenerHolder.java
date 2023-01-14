@@ -1,4 +1,4 @@
-package pl.edu.pwr.lgawron.lab07.common.listener;
+package pl.edu.pwr.lgawron.lab07.shop.flow;
 
 import interfaces.IStatusListener;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;

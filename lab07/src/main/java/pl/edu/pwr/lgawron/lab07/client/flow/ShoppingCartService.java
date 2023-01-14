@@ -3,7 +3,6 @@ package pl.edu.pwr.lgawron.lab07.client.flow;
 import model.ItemType;
 import model.Order;
 import model.OrderLine;
-import pl.edu.pwr.lgawron.lab07.client.AppFlow;
 import pl.edu.pwr.lgawron.lab07.client.utils.OrderBuilder;
 
 import java.util.HashMap;
@@ -13,13 +12,11 @@ public class ShoppingCartService {
     private boolean isEmpty;
     private final Map<Integer, Order> clientOrderHistoryMap;
     private OrderBuilder orderBuilder;
-    private final AppFlow appFlow;
     private final ClientAppRenderer renderer;
 
-    public ShoppingCartService(AppFlow appFlow, ClientAppRenderer clientAppRenderer) {
+    public ShoppingCartService(ClientAppRenderer clientAppRenderer) {
         this.clientOrderHistoryMap = new HashMap<>();
         this.isEmpty = true;
-        this.appFlow = appFlow;
         this.renderer = clientAppRenderer;
     }
 

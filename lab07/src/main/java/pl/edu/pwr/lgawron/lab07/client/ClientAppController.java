@@ -136,6 +136,11 @@ public class ClientAppController {
         if (appFlow == null) {
             return;
         }
+        if (appFlow.getStatusListenerImplementation() != null) {
+            orderInfo.setText("Already subscribed!");
+            orderInfo.setVisible(true);
+            return;
+        }
         try {
             if (!appFlow.subscribe()) {
                 orderInfo.setText("ERROR: Could not subscribe!");

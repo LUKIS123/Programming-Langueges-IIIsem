@@ -8,18 +8,10 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public class OrderService implements IOrderService {
-    // todo:
-    //  zrobic jeden jedyny serwis do orderow
-    // dodac metody typu builder (nie do konca takie sa)
-    // zwracajace orderline/order w OrderService
     private final IOrderRepository ordersRepository;
 
     public OrderService(IOrderRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
-    }
-
-    public void addSubmittedOrder(SubmittedOrder submittedOrder) throws RemoteException {
-        ordersRepository.addInstance(submittedOrder);
     }
 
     @Override

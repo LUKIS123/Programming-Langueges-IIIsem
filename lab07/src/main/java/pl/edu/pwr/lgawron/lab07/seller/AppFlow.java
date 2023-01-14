@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppFlow {
-    private final VBox presentOrderBox;
-    private final VBox orderHistoryBox;
     private final ValuesHolder values;
     private IShop shop;
     private final SellerAppRenderer sellerAppRenderer;
@@ -24,8 +22,6 @@ public class AppFlow {
 
     public AppFlow(ValuesHolder values, VBox presentOrderBox, VBox orderHistoryBox) {
         this.values = values;
-        this.presentOrderBox = presentOrderBox;
-        this.orderHistoryBox = orderHistoryBox;
 
         this.submittedOrderList = new ArrayList<>();
         this.sellerAppRenderer = new SellerAppRenderer(this, presentOrderBox, orderHistoryBox);

@@ -28,7 +28,7 @@ public class ShopAppRenderer {
     private final VBox itemBox;
     private final Map<Integer, Node> items;
     private final VBox clientBox;
-    private final Map<Integer, Node> clients;
+    private final Map<Integer, Node> clientNodeMap;
     private final VBox orderBox;
     private final Map<Integer, Node> orders;
     private final VBox infoBox;
@@ -42,7 +42,7 @@ public class ShopAppRenderer {
         this.orderBox = orderBox;
         this.infoBox = infoBox;
         this.items = new HashMap<>();
-        this.clients = new HashMap<>();
+        this.clientNodeMap = new HashMap<>();
         this.orders = new HashMap<>();
     }
 
@@ -60,6 +60,7 @@ public class ShopAppRenderer {
 
                 itemTypeRepository.getRepo().forEach(itemTypeExtended -> {
                     Label itemLabel = new Label(itemTypeExtended.toString());
+                    itemLabel.setMinSize(610, 40);
                     itemLabel.setAlignment(Pos.BASELINE_LEFT);
                     itemLabel.setStyle("-fx-border-style: solid");
                     items.put(itemTypeExtended.getId(), itemLabel);
@@ -76,7 +77,7 @@ public class ShopAppRenderer {
                 ClientExtended byId = clientRepository.getById(clientId);
                 Label clientLabel = new Label(byId.toString());
                 clientLabel.setAlignment(Pos.BASELINE_LEFT);
-                clients.put(clientId, clientLabel);
+                clientNodeMap.put(clientId, clientLabel);
                 clientBox.getChildren().add(clientLabel);
             } catch (RemoteException ignored) {
             }
@@ -120,34 +121,6 @@ public class ShopAppRenderer {
         Button button = new Button("Details");
         button.setOnAction(e -> alert.showAndWait());
         return button;
-    }
-
-    // todo: do wywalenia
-    private String parseOrderDetails(SubmittedOrder order) {
-        StringBuilder stringBuilder = new StringBuilder("Order ID:" + order.getId() + "\n");
-        stringBuilder
-                .append("Client ID: ")
-                .append(order.getOrder().getClientID())
-                .append(", Status: ")
-                .append(order.getStatus())
-                .append("\n")
-                .append("\nOrderLines:\n");
-        order.getOrder().getOll().forEach(orderLine -> {
-            String adv = orderLine.getAdvert();
-            if (orderLine.getAdvert().length() >= 10) {
-                adv = orderLine.getAdvert().substring(0, 10);
-            }
-            stringBuilder
-                    .append(orderLine.getIt().getName())
-                    .append(", quantity: ")
-                    .append(orderLine.getQuantity())
-                    .append(", advert: ")
-                    .append(adv)
-                    .append(", price: ")
-                    .append(orderLine.getCost())
-                    .append(" PLN\n");
-        });
-        return stringBuilder.toString();
     }
 
 }

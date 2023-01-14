@@ -115,14 +115,14 @@ public class ClientAppRenderer {
         // todo: zrobic ladnie w boxach z przyciskami do zamowien, moze podzielone na kategorie -> np kubki w 1 kategorii, rozne kolory
         Platform.runLater(() -> itemList.forEach(itemType -> {
             HBox hBox = new HBox();
-            hBox.setMinHeight(30);
-            hBox.setMinWidth(300);
+            hBox.setMinSize(735, 80);
+            hBox.setAlignment(Pos.CENTER);
 
             Label itemLabel = new Label(" " + itemType.getName() + ", " + itemType.getPrice() + "PLN ");
-            itemLabel.setAlignment(Pos.CENTER_LEFT);
+            itemLabel.setAlignment(Pos.BASELINE_LEFT);
 
             Button button = new Button("Add to Cart");
-            button.setAlignment(Pos.CENTER_RIGHT);
+            button.setAlignment(Pos.BASELINE_RIGHT);
             button.setOnAction(this.setAddToCartPopUp(itemType));
 
             hBox.setStyle("-fx-border-style: solid");
@@ -254,7 +254,6 @@ public class ClientAppRenderer {
     }
 
     public void renderOrders(List<SubmittedOrder> submittedOrders) {
-        // List<SubmittedOrder> clientSubmitted = submittedOrders.stream().filter(submittedOrder -> clientOrderHistoryMap.containsKey(submittedOrder.getId())).toList();
         Platform.runLater(() -> {
             orderNodeMap.forEach((submittedOrderId, node) ->
                     orderBox.getChildren().remove(node));
@@ -300,18 +299,3 @@ public class ClientAppRenderer {
     }
 
 }
-
-//            TextInputDialog dialog = new TextInputDialog();
-//            dialog.setHeaderText("Enter quantity:");
-//            button.setOnAction(event -> {
-//                if (appFlow.getClientId() == -1) {
-//                    return;
-//                }
-//                Optional<String> s = dialog.showAndWait();
-//                s.ifPresent(value -> {
-//                    try {
-//                        appFlow.addToCart(itemType, Integer.parseInt(value));
-//                    } catch (NumberFormatException ignored) {
-//                    }
-//                });
-//            });

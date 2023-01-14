@@ -23,11 +23,9 @@ public class ShopImplementation implements IShop, Serializable {
     private final IClientListenerHolder clientListenerHolder;
     private final ShopAppRenderer shopRenderer;
     private int clientSequence;
-    private int itemSequence;
 
     public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderService orderService, IClientListenerHolder clientListenerHolder, ShopAppRenderer shopRenderer) {
         this.clientSequence = 1;
-        this.itemSequence = 1;
         this.clientRepository = clientRepository;
         this.itemTypeRepository = itemTypeRepository;
         this.orderService = orderService;
@@ -67,8 +65,10 @@ public class ShopImplementation implements IShop, Serializable {
 
     @Override
     public int placeOrder(Order order) throws RemoteException {
+        if (order.getOll().isEmpty()) {
+            return -1;
+        }
         SubmittedOrder submittedOrder = orderService.creteNewSubmittedOrderAndAddToRepo(order);
-
         shopRenderer.renderOrderAdded(submittedOrder.getId());
         return submittedOrder.getId();
     }
@@ -112,14 +112,6 @@ public class ShopImplementation implements IShop, Serializable {
     @Override
     public boolean unsubscribe(int clientId) throws RemoteException {
         return clientListenerHolder.removeByClientId(clientId);
-    }
-
-    // utils
-    public int addItemType(ItemType itemType) throws RemoteException {
-        ItemTypeExtended itemTypeExtended = new ItemTypeExtended(itemSequence, itemType.getName(), itemType.getPrice(), itemType.getCategory());
-        itemTypeRepository.addInstance(itemTypeExtended);
-        itemSequence++;
-        return itemTypeExtended.getId();
     }
 
 }

@@ -20,12 +20,14 @@ public class SellerAppRenderer {
     private final VBox presentOrderBox;
     private final VBox orderHistoryBox;
     private final Map<Integer, Node> presentOrderNodeMap;
+    private final Map<Integer, Node> deliveredOrderNodeMap;
 
     public SellerAppRenderer(AppFlow appFlow, VBox presentOrderBox, VBox orderHistoryBox) {
         this.appFlow = appFlow;
         this.presentOrderBox = presentOrderBox;
         this.orderHistoryBox = orderHistoryBox;
         this.presentOrderNodeMap = new HashMap<>();
+        this.deliveredOrderNodeMap = new HashMap<>();
     }
 
     public void renderOrders(List<SubmittedOrder> submittedOrders) {
@@ -46,7 +48,11 @@ public class SellerAppRenderer {
                 hBox.getChildren().add(orderLabel);
                 hBox.getChildren().add(RenderUtils.renderOrderDetailsButton(RenderUtils.parseOrderDetails(order)));
                 if (order.getStatus() == Status.DELIVERED) {
+
+                    orderHistoryBox.getChildren().remove(deliveredOrderNodeMap.get(order.getId()));
                     orderHistoryBox.getChildren().add(hBox);
+                    deliveredOrderNodeMap.put(order.getId(), hBox);
+
                     presentOrderNodeMap.remove(order.getId());
                 } else {
                     hBox.getChildren().add(RenderUtils.renderSetProcessingButton(order, appFlow));
@@ -54,8 +60,6 @@ public class SellerAppRenderer {
                     presentOrderNodeMap.put(order.getId(), hBox);
                     presentOrderBox.getChildren().add(hBox);
                 }
-//                presentOrderNodeMap.put(order.getId(), hBox);
-//                presentOrderBox.getChildren().add(hBox);
             });
         });
     }

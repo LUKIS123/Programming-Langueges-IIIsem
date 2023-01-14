@@ -17,19 +17,13 @@ import pl.edu.pwr.lgawron.lab07.shop.repositories.ItemTypeRepository;
 import java.util.List;
 
 public class AppFlow {
-    private final ValuesHolder values;
-    private final IRepository<ClientExtended> clientRepository;
-    private final IRepository<ItemTypeExtended> itemTypeRepository;
-    private final IOrderRepository clientOrdersRepository;
-    private final ShopAppRenderer renderer;
     private final ShopController shopController;
 
     public AppFlow(ValuesHolder values, VBox itemBox, VBox clientBox, VBox orderBox, VBox infoBox) {
-        this.values = values;
-        this.clientRepository = new ClientRepository();
-        this.itemTypeRepository = new ItemTypeRepository(this.readItemDataFile());
-        this.clientOrdersRepository = new ClientOrdersRepository();
-        this.renderer = new ShopAppRenderer(clientRepository, itemTypeRepository, clientOrdersRepository, itemBox, clientBox, orderBox, infoBox);
+        IRepository<ClientExtended> clientRepository = new ClientRepository();
+        IRepository<ItemTypeExtended> itemTypeRepository = new ItemTypeRepository(this.readItemDataFile());
+        IOrderRepository clientOrdersRepository = new ClientOrdersRepository();
+        ShopAppRenderer renderer = new ShopAppRenderer(clientRepository, itemTypeRepository, clientOrdersRepository, itemBox, clientBox, orderBox, infoBox);
         this.shopController = new ShopController(values, clientRepository, itemTypeRepository, clientOrdersRepository, renderer);
     }
 

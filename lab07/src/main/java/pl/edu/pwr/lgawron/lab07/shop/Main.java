@@ -25,7 +25,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pl/edu/pwr/lgawron/lab07/shop-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 650, 400);
+        Scene scene = new Scene(fxmlLoader.load(), 650, 450);
         stage.setTitle("Shop-App");
         stage.setScene(scene);
 

@@ -29,7 +29,7 @@ public class RenderUtils {
     }
 
     public static String parseOrderDetails(SubmittedOrder order) {
-        StringBuilder stringBuilder = new StringBuilder("Order ID:" + order.getId() + "\n");
+        StringBuilder stringBuilder = new StringBuilder(" Order ID:" + order.getId() + "\n");
         stringBuilder
                 .append("Client ID: ")
                 .append(order.getOrder().getClientID())
@@ -44,7 +44,7 @@ public class RenderUtils {
             }
             stringBuilder
                     .append(orderLine.getIt().getName())
-                    .append(", quantity: ")
+                    .append(" Quantity: ")
                     .append(orderLine.getQuantity())
                     .append(", advert: ")
                     .append(adv)

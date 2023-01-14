@@ -21,18 +21,13 @@ import java.util.*;
 
 public class AppFlow {
     private final Label notificationLabel;
-    private final Button notificationButton;
     private final Label cartLabel;
-    private final Button cartButton;
-    private final VBox infoBox;
-    private final VBox itemBox;
-    private final VBox orderBox;
     private final ValuesHolder values;
     private IShop shop;
     private final ClientAppRenderer clientAppRenderer;
     private int clientId;
     private List<ItemType> itemList;
-    private Map<Integer, Status> integerStatusMap;
+    private final Map<Integer, Status> integerStatusMap;
     private final List<SubmittedOrder> submittedOrders;
     private final ShoppingCartService shoppingCartService;
     private StatusListenerImplementation statusListenerImplementation;
@@ -41,18 +36,13 @@ public class AppFlow {
     public AppFlow(ValuesHolder values, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
         this.values = values;
         this.notificationLabel = notificationLabel;
-        this.notificationButton = notificationButton;
         this.cartLabel = cartLabel;
-        this.cartButton = cartButton;
-        this.infoBox = infoBox;
-        this.itemBox = itemBox;
-        this.orderBox = orderBox;
 
         this.clientId = -1;
         this.submittedOrders = new ArrayList<>();
         this.integerStatusMap = new HashMap<>();
         this.clientAppRenderer = new ClientAppRenderer(this, notificationLabel, notificationButton, cartLabel, cartButton, infoBox, itemBox, orderBox);
-        this.shoppingCartService = new ShoppingCartService(this, clientAppRenderer);
+        this.shoppingCartService = new ShoppingCartService(clientAppRenderer);
     }
 
     public void initialize() throws RemoteException, NotBoundException {
@@ -87,6 +77,9 @@ public class AppFlow {
     public void submitOrderToShop() throws RemoteException {
         Order order = shoppingCartService.buildOrder();
         int orderId = shop.placeOrder(order);
+        if (orderId == -1) {
+            cartLabel.setText("Something went wrong!");
+        }
         shoppingCartService.putToHistory(orderId, order);
         shoppingCartService.getOrderBuilder().getOrderLineList().clear();
         clientAppRenderer.renderShoppingCartPopUp(shoppingCartService.getOrderBuilder());
@@ -167,6 +160,10 @@ public class AppFlow {
 
     public List<SubmittedOrder> getSubmittedOrders() {
         return submittedOrders;
+    }
+
+    public StatusListenerImplementation getStatusListenerImplementation() {
+        return statusListenerImplementation;
     }
 
     public void unExportListener() throws NoSuchObjectException {
