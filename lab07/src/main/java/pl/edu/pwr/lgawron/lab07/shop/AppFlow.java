@@ -8,7 +8,7 @@ import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 import pl.edu.pwr.lgawron.lab07.common.utils.DataFileUtility;
 import pl.edu.pwr.lgawron.lab07.common.utils.SerializeUtility;
-import pl.edu.pwr.lgawron.lab07.shop.flow.ShopController;
+import pl.edu.pwr.lgawron.lab07.shop.flow.ShopService;
 import pl.edu.pwr.lgawron.lab07.shop.flow.ShopAppRenderer;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientOrdersRepository;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientRepository;
@@ -17,14 +17,14 @@ import pl.edu.pwr.lgawron.lab07.shop.repositories.ItemTypeRepository;
 import java.util.List;
 
 public class AppFlow {
-    private final ShopController shopController;
+    private final ShopService shopService;
 
     public AppFlow(ValuesHolder values, VBox itemBox, VBox clientBox, VBox orderBox, VBox infoBox) {
         IRepository<ClientExtended> clientRepository = new ClientRepository();
         IRepository<ItemTypeExtended> itemTypeRepository = new ItemTypeRepository(this.readItemDataFile());
         IOrderRepository clientOrdersRepository = new ClientOrdersRepository();
         ShopAppRenderer renderer = new ShopAppRenderer(clientRepository, itemTypeRepository, clientOrdersRepository, itemBox, clientBox, orderBox, infoBox);
-        this.shopController = new ShopController(values, clientRepository, itemTypeRepository, clientOrdersRepository, renderer);
+        this.shopService = new ShopService(values, clientRepository, itemTypeRepository, clientOrdersRepository, renderer);
     }
 
     private List<ItemTypeExtended> readItemDataFile() {
@@ -33,11 +33,11 @@ public class AppFlow {
     }
 
     public void initialize() {
-        shopController.createRegistryAndExportIShop();
+        shopService.createRegistryAndExportIShop();
     }
 
     public void killApp() {
-        shopController.removeShopFromRegistry();
+        shopService.removeShopFromRegistry();
         System.exit(0);
     }
 

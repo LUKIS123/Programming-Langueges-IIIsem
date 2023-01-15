@@ -16,13 +16,13 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ShopController {
+public class ShopService {
     private final ValuesHolder valuesHolder;
     private final ShopAppRenderer shopRenderer;
     private final IShop shop;
     private IShop shopRemote;
 
-    public ShopController(ValuesHolder values, IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderRepository clientOrdersRepository, ShopAppRenderer renderer) {
+    public ShopService(ValuesHolder values, IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderRepository clientOrdersRepository, ShopAppRenderer renderer) {
         this.valuesHolder = values;
         IClientListenerHolder clientListenerHolder = new ListenerHolder();
         IOrderService orderService = new OrderService(clientOrdersRepository);

@@ -3,8 +3,8 @@ package pl.edu.pwr.lgawron.lab07.shop.flow;
 import interfaces.IStatusListener;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
 
-import java.rmi.RemoteException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListenerHolder implements IClientListenerHolder {
     private final Map<Integer, IStatusListener> statusListenerMap;
@@ -14,7 +14,7 @@ public class ListenerHolder implements IClientListenerHolder {
     }
 
     @Override
-    public boolean addListener(IStatusListener statusListener, int clientId) throws RemoteException {
+    public boolean addListener(IStatusListener statusListener, int clientId) {
         if (statusListenerMap.containsKey(clientId)) {
             return false;
         }
@@ -23,12 +23,12 @@ public class ListenerHolder implements IClientListenerHolder {
     }
 
     @Override
-    public IStatusListener getListenerByClientId(int clientId) throws RemoteException {
+    public IStatusListener getListenerByClientId(int clientId) {
         return statusListenerMap.get(clientId);
     }
 
     @Override
-    public boolean removeByClientId(int clientId) throws RemoteException {
+    public boolean removeByClientId(int clientId) {
         if (!statusListenerMap.containsKey(clientId)) {
             return false;
         }
@@ -37,7 +37,7 @@ public class ListenerHolder implements IClientListenerHolder {
     }
 
     @Override
-    public Map<Integer, IStatusListener> getStatusListenerMap() throws RemoteException {
+    public Map<Integer, IStatusListener> getStatusListenerMap() {
         return statusListenerMap;
     }
 
