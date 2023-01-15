@@ -115,7 +115,7 @@ public class AppFlow {
                         .filter(submittedOrder -> submittedOrder.getId() == orderId)
                         .findFirst();
                 if (first.isPresent()) {
-                    // for (SubmittedOrder submittedOrder : submittedOrders) {
+
                     ListIterator<SubmittedOrder> listIterator = submittedOrders.listIterator();
                     while (listIterator.hasNext()) {
                         SubmittedOrder next = listIterator.next();
@@ -123,11 +123,7 @@ public class AppFlow {
                             listIterator.set(first.get());
                         }
                     }
-                    // if (submittedOrder.getId() == first.get().getId()) {
-                    // submittedOrders.remove(submittedOrder);
-                    //submittedOrders.add(first.get());
-                    //}
-                    // }
+
                     clientAppRenderer.renderOrders(submittedOrders);
                     integerStatusMap.put(orderId, status);
                     clientAppRenderer.renderAfterNotification();

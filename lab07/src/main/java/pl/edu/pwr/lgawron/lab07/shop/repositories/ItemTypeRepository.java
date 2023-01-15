@@ -2,7 +2,6 @@ package pl.edu.pwr.lgawron.lab07.shop.repositories;
 
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,17 +15,17 @@ public class ItemTypeRepository implements IRepository<ItemTypeExtended> {
     }
 
     @Override
-    public List<ItemTypeExtended> getRepo() throws RemoteException {
+    public List<ItemTypeExtended> getRepo() {
         return itemTypeList;
     }
 
     @Override
-    public void addInstance(ItemTypeExtended itemTypeExtended) throws RemoteException {
+    public void addInstance(ItemTypeExtended itemTypeExtended) {
         itemTypeList.add(itemTypeExtended);
     }
 
     @Override
-    public ItemTypeExtended getById(int id) throws RemoteException {
+    public ItemTypeExtended getById(int id) {
         Optional<ItemTypeExtended> first = itemTypeList
                 .stream()
                 .filter(itemTypeExtended -> itemTypeExtended.getId() == id)

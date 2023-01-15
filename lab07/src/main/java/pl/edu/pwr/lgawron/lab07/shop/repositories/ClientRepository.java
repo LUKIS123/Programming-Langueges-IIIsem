@@ -2,7 +2,6 @@ package pl.edu.pwr.lgawron.lab07.shop.repositories;
 
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,17 +14,17 @@ public class ClientRepository implements IRepository<ClientExtended> {
     }
 
     @Override
-    public List<ClientExtended> getRepo() throws RemoteException {
+    public List<ClientExtended> getRepo() {
         return clientList;
     }
 
     @Override
-    public void addInstance(ClientExtended clientExtended) throws RemoteException {
+    public void addInstance(ClientExtended clientExtended) {
         clientList.add(clientExtended);
     }
 
     @Override
-    public ClientExtended getById(int id) throws RemoteException {
+    public ClientExtended getById(int id) {
         Optional<ClientExtended> first = clientList
                 .stream()
                 .filter(clientExtended -> clientExtended.getId() == id)

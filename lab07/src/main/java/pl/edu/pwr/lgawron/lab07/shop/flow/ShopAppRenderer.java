@@ -10,14 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.SubmittedOrder;
-import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,57 +52,46 @@ public class ShopAppRenderer {
 
     public void renderAllItems() {
         Platform.runLater(() -> {
-            try {
-                for (Map.Entry<Integer, Node> integerNodeEntry : items.entrySet()) {
-                    itemBox.getChildren().remove(integerNodeEntry.getValue());
-                }
-
-                itemTypeRepository.getRepo().forEach(itemTypeExtended -> {
-                    Label itemLabel = new Label(itemTypeExtended.toString());
-                    itemLabel.setMinSize(610, 40);
-                    itemLabel.setAlignment(Pos.BASELINE_LEFT);
-                    itemLabel.setStyle("-fx-border-style: solid");
-                    items.put(itemTypeExtended.getId(), itemLabel);
-                    itemBox.getChildren().add(itemLabel);
-                });
-            } catch (RemoteException ignored) {
+            for (Map.Entry<Integer, Node> integerNodeEntry : items.entrySet()) {
+                itemBox.getChildren().remove(integerNodeEntry.getValue());
             }
+            itemTypeRepository.getRepo().forEach(itemTypeExtended -> {
+                Label itemLabel = new Label(itemTypeExtended.toString());
+                itemLabel.setMinSize(610, 40);
+                itemLabel.setAlignment(Pos.BASELINE_LEFT);
+                itemLabel.setStyle("-fx-border-style: solid");
+                items.put(itemTypeExtended.getId(), itemLabel);
+                itemBox.getChildren().add(itemLabel);
+            });
         });
     }
 
     public void renderClientRegistered(int clientId) {
         Platform.runLater(() -> {
-            try {
-                ClientExtended byId = clientRepository.getById(clientId);
-                Label clientLabel = new Label(byId.toString());
-                clientLabel.setAlignment(Pos.BASELINE_LEFT);
-                clientNodeMap.put(clientId, clientLabel);
-                clientBox.getChildren().add(clientLabel);
-            } catch (RemoteException ignored) {
-            }
+            ClientExtended byId = clientRepository.getById(clientId);
+            Label clientLabel = new Label(byId.toString());
+            clientLabel.setAlignment(Pos.BASELINE_LEFT);
+            clientNodeMap.put(clientId, clientLabel);
+            clientBox.getChildren().add(clientLabel);
         });
     }
 
     public void renderOrderAdded(int orderId) {
         Platform.runLater(() -> {
-            try {
-                SubmittedOrder byId = clientOrdersRepository.getById(orderId);
+            SubmittedOrder byId = clientOrdersRepository.getById(orderId);
 
-                Label orderLabel = new Label("Order" + byId.getId() + " {id=" + byId.getId() + ", clientId=" + byId.getOrder().getClientID() + ", status=" + byId.getStatus().toString() + "}");
-                orderLabel.setAlignment(Pos.BOTTOM_LEFT);
+            Label orderLabel = new Label("Order" + byId.getId() + " {id=" + byId.getId() + ", clientId=" + byId.getOrder().getClientID() + ", status=" + byId.getStatus().toString() + "}");
+            orderLabel.setAlignment(Pos.BOTTOM_LEFT);
 
-                HBox hBox = new HBox();
-                hBox.setStyle("-fx-border-style: solid");
-                hBox.setAlignment(Pos.CENTER);
-                hBox.setSpacing(10);
-                hBox.getChildren().add(orderLabel);
-                hBox.getChildren().add(this.renderOrderDetailsButton(RenderUtils.parseOrderDetails(byId)));
+            HBox hBox = new HBox();
+            hBox.setStyle("-fx-border-style: solid");
+            hBox.setAlignment(Pos.CENTER);
+            hBox.setSpacing(10);
+            hBox.getChildren().add(orderLabel);
+            hBox.getChildren().add(this.renderOrderDetailsButton(RenderUtils.parseOrderDetails(byId)));
 
-                orders.put(orderId, hBox);
-                orderBox.getChildren().add(hBox);
-
-            } catch (RemoteException ignored) {
-            }
+            orders.put(orderId, hBox);
+            orderBox.getChildren().add(hBox);
         });
     }
 
