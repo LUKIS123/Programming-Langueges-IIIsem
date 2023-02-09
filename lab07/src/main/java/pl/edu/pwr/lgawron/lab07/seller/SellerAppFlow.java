@@ -14,13 +14,13 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppFlow {
+public class SellerAppFlow {
     private final ValuesHolder values;
     private IShop shop;
     private final SellerAppRenderer sellerAppRenderer;
     private final List<SubmittedOrder> submittedOrderList;
 
-    public AppFlow(ValuesHolder values, VBox presentOrderBox, VBox orderHistoryBox) {
+    public SellerAppFlow(ValuesHolder values, VBox presentOrderBox, VBox orderHistoryBox) {
         this.values = values;
 
         this.submittedOrderList = new ArrayList<>();

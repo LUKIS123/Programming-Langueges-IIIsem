@@ -20,7 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AppFlow {
+public class ClientAppFlow {
     private final Label notificationLabel;
     private final Label cartLabel;
     private final ValuesHolder values;
@@ -34,7 +34,7 @@ public class AppFlow {
     private StatusListenerImplementation statusListenerImplementation;
     private IStatusListener listenerRemote;
 
-    public AppFlow(ValuesHolder values, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
+    public ClientAppFlow(ValuesHolder values, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
         this.values = values;
         this.notificationLabel = notificationLabel;
         this.cartLabel = cartLabel;

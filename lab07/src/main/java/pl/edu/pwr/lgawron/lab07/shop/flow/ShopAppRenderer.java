@@ -55,7 +55,7 @@ public class ShopAppRenderer {
             for (Map.Entry<Integer, Node> integerNodeEntry : items.entrySet()) {
                 itemBox.getChildren().remove(integerNodeEntry.getValue());
             }
-            itemTypeRepository.getRepo().forEach(itemTypeExtended -> {
+            itemTypeRepository.getRepositoryData().forEach(itemTypeExtended -> {
                 Label itemLabel = new Label(itemTypeExtended.toString());
                 itemLabel.setMinSize(610, 40);
                 itemLabel.setAlignment(Pos.BASELINE_LEFT);

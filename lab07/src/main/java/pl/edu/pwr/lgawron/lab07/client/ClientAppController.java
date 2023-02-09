@@ -44,7 +44,7 @@ public class ClientAppController {
     @FXML
     private VBox orderBox;
     private final ValuesHolder values = new ValuesHolder();
-    private AppFlow appFlow;
+    private ClientAppFlow clientAppFlow;
 
     public ClientAppController() {
     }
@@ -88,8 +88,8 @@ public class ClientAppController {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
                             // initialization & starting server
-                            appFlow = new AppFlow(values, notificationLabel, notificationButton, cartLabel, cartButton, infoBox, itemBox, orderBox);
-                            appFlow.initialize();
+                            clientAppFlow = new ClientAppFlow(values, notificationLabel, notificationButton, cartLabel, cartButton, infoBox, itemBox, orderBox);
+                            clientAppFlow.initialize();
                             //
                             orderInfo.setVisible(false);
                             inputEvent.consume();
@@ -110,21 +110,21 @@ public class ClientAppController {
 
     @FXML
     public void onRefreshOrdersButtonCLick() {
-        if (appFlow == null) {
+        if (clientAppFlow == null) {
             return;
         }
-        if (appFlow.getClientId() == -1) {
+        if (clientAppFlow.getClientId() == -1) {
             orderInfo.setText("Login first");
             orderInfo.setVisible(true);
             return;
         }
-        if (appFlow.getSubmittedOrders().isEmpty()) {
+        if (clientAppFlow.getSubmittedOrders().isEmpty()) {
             orderInfo.setText("There is no orders");
             orderInfo.setVisible(true);
             return;
         }
         try {
-            appFlow.downloadSubmittedOrdersAndRefresh();
+            clientAppFlow.downloadSubmittedOrdersAndRefresh();
             orderInfo.setVisible(false);
         } catch (RemoteException e) {
             orderInfo.setText("ERROR: Could not download OrderList!");
@@ -133,16 +133,16 @@ public class ClientAppController {
     }
 
     public void onSubscribeButtonClick() {
-        if (appFlow == null) {
+        if (clientAppFlow == null) {
             return;
         }
-        if (appFlow.getStatusListenerImplementation() != null) {
+        if (clientAppFlow.getStatusListenerImplementation() != null) {
             orderInfo.setText("Already subscribed!");
             orderInfo.setVisible(true);
             return;
         }
         try {
-            if (!appFlow.subscribe()) {
+            if (!clientAppFlow.subscribe()) {
                 orderInfo.setText("ERROR: Could not subscribe!");
                 orderInfo.setVisible(true);
             } else {
@@ -157,17 +157,17 @@ public class ClientAppController {
     }
 
     public void onExitApplication() {
-        if (appFlow == null) {
+        if (clientAppFlow == null) {
             return;
         }
-        if (!appFlow.unsubscribe()) {
+        if (!clientAppFlow.unsubscribe()) {
             orderInfo.setText("Could not unsubscribe!");
         }
         try {
-            appFlow.unExportListener();
+            clientAppFlow.unExportListener();
         } catch (NoSuchObjectException ignored) {
         }
-        appFlow.killApp();
+        clientAppFlow.killApp();
     }
 
 }

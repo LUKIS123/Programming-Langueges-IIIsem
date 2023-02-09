@@ -35,21 +35,20 @@ public class ShopImplementation implements IShop, Serializable {
 
     @Override
     public int register(Client client) throws RemoteException {
-        Optional<ClientExtended> first = clientRepository.getRepo().stream().filter(clientExtended -> Objects.equals(clientExtended.getName(), client.getName())).findFirst();
+        Optional<ClientExtended> first = clientRepository.getRepositoryData().stream().filter(clientExtended -> Objects.equals(clientExtended.getName(), client.getName())).findFirst();
         if (first.isEmpty()) {
             ClientExtended clientExtended = new ClientExtended(clientSequence, client);
             clientRepository.addInstance(clientExtended);
             clientSequence++;
             shopRenderer.renderClientRegistered(clientExtended.getId());
             return clientExtended.getId();
-        } else {
-            return first.get().getId();
         }
+        return first.get().getId();
     }
 
     @Override
     public List<ItemType> getItemList() throws RemoteException {
-        List<ItemTypeExtended> repo = itemTypeRepository.getRepo();
+        List<ItemTypeExtended> repo = itemTypeRepository.getRepositoryData();
 
         List<ItemType> itemList = new ArrayList<>();
         for (ItemTypeExtended itemTypeExtended : repo) {
@@ -75,7 +74,7 @@ public class ShopImplementation implements IShop, Serializable {
 
     @Override
     public List<SubmittedOrder> getSubmittedOrders() throws RemoteException {
-        return orderService.getOrderRepository().getRepo();
+        return orderService.getOrderRepository().getRepoData();
     }
 
     @Override
@@ -99,9 +98,8 @@ public class ShopImplementation implements IShop, Serializable {
     public Status getStatus(int orderId) throws RemoteException {
         if (orderService.getSubmittedById(orderId) == null) {
             return null;
-        } else {
-            return orderService.getSubmittedById(orderId).getStatus();
         }
+        return orderService.getSubmittedById(orderId).getStatus();
     }
 
     @Override

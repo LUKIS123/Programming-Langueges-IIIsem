@@ -14,7 +14,7 @@ public class ClientRepository implements IRepository<ClientExtended> {
     }
 
     @Override
-    public List<ClientExtended> getRepo() {
+    public List<ClientExtended> getRepositoryData() {
         return clientList;
     }
 

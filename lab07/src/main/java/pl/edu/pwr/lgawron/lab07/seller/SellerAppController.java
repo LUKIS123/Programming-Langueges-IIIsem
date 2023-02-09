@@ -31,7 +31,7 @@ public class SellerAppController {
     @FXML
     private Button startButton;
     private final ValuesHolder values = new ValuesHolder();
-    private AppFlow appFlow;
+    private SellerAppFlow sellerAppFlow;
 
     public SellerAppController() {
     }
@@ -75,8 +75,8 @@ public class SellerAppController {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
                             // initialization & starting server
-                            appFlow = new AppFlow(values, presentOrderBox, orderHistoryBox);
-                            appFlow.initialize();
+                            sellerAppFlow = new SellerAppFlow(values, presentOrderBox, orderHistoryBox);
+                            sellerAppFlow.initialize();
                             //
                             inputEvent.consume();
                         } catch (InvalidInputException | RemoteException | NotBoundException e) {
@@ -97,21 +97,21 @@ public class SellerAppController {
 
     @FXML
     public void onRefreshButtonClick() {
-        if (appFlow == null) {
+        if (sellerAppFlow == null) {
             return;
         }
         try {
-            appFlow.downloadOrdersAndRefresh();
+            sellerAppFlow.downloadOrdersAndRefresh();
         } catch (RemoteException e) {
             infoLabel.setText("ERROR: Could not download OrderList!");
         }
     }
 
     public void onExitApplication() {
-        if (appFlow == null) {
+        if (sellerAppFlow == null) {
             return;
         }
-        appFlow.killApp();
+        sellerAppFlow.killApp();
     }
 
 }

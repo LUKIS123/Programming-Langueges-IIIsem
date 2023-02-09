@@ -26,7 +26,7 @@ public class ShopAppController {
     @FXML
     private Button startButton;
     private final ValuesHolder values = new ValuesHolder();
-    private AppFlow appFlow;
+    private ShopAppFlow shopAppFlow;
 
     public ShopAppController() {
     }
@@ -63,15 +63,15 @@ public class ShopAppController {
                     openPopUpEvent.consume();
 
                     EventHandler<ActionEvent> buttonHandler = inputEvent -> {
-                        if (appFlow != null) {
+                        if (shopAppFlow != null) {
                             // if the app is already working -> return
                             return;
                         }
                         try {
                             values.setApplicationArguments("", port.getText());
                             // initialization & starting server
-                            appFlow = new AppFlow(values, itemBox, clientBox, orderBox, infoBox);
-                            appFlow.initialize();
+                            shopAppFlow = new ShopAppFlow(values, itemBox, clientBox, orderBox, infoBox);
+                            shopAppFlow.initialize();
                             //
                             inputEvent.consume();
                         } catch (InvalidInputException e) {
@@ -90,10 +90,10 @@ public class ShopAppController {
     }
 
     public void onExitApplication() {
-        if (appFlow == null) {
+        if (shopAppFlow == null) {
             return;
         }
-        appFlow.killApp();
+        shopAppFlow.killApp();
     }
 
 }

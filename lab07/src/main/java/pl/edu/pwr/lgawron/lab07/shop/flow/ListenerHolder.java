@@ -36,9 +36,4 @@ public class ListenerHolder implements IClientListenerHolder {
         return true;
     }
 
-    @Override
-    public Map<Integer, IStatusListener> getStatusListenerMap() {
-        return statusListenerMap;
-    }
-
 }

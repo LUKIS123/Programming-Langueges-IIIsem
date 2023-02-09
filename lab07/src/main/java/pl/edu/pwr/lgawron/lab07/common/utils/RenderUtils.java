@@ -12,8 +12,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Status;
 import model.SubmittedOrder;
-import pl.edu.pwr.lgawron.lab07.client.AppFlow;
+import pl.edu.pwr.lgawron.lab07.client.ClientAppFlow;
 import pl.edu.pwr.lgawron.lab07.client.flow.ClientAppRenderer;
+import pl.edu.pwr.lgawron.lab07.seller.SellerAppFlow;
 
 import java.rmi.RemoteException;
 import java.util.Map;
@@ -55,20 +56,20 @@ public class RenderUtils {
         return stringBuilder.toString();
     }
 
-    public static Button renderReceivePackageButton(SubmittedOrder order, pl.edu.pwr.lgawron.lab07.client.AppFlow appFlow) {
+    public static Button renderReceivePackageButton(SubmittedOrder order, ClientAppFlow clientAppFlow) {
         Button button = new Button("Pick Up");
         button.setOnAction(event -> {
             if (order.getStatus() != Status.READY) {
                 return;
             }
             try {
-                boolean b = appFlow.enrollDelivery(order.getId());
+                boolean b = clientAppFlow.enrollDelivery(order.getId());
                 if (!b) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Could not change order status!", ButtonType.OK);
                     alert.setHeaderText("FAILED!");
                     alert.showAndWait();
                 } else {
-                    appFlow.downloadSubmittedOrdersAndRefresh();
+                    clientAppFlow.downloadSubmittedOrdersAndRefresh();
                 }
             } catch (RemoteException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, e.getMessage(), ButtonType.OK);
@@ -79,7 +80,7 @@ public class RenderUtils {
         return button;
     }
 
-    public static Node renderSetProcessingButton(SubmittedOrder order, pl.edu.pwr.lgawron.lab07.seller.AppFlow appFlow) {
+    public static Node renderSetProcessingButton(SubmittedOrder order, SellerAppFlow sellerAppFlow) {
         Button button = new Button("Set Processing");
         button.setOnAction(event -> {
             if (order.getStatus() != Status.NEW) {
@@ -89,13 +90,13 @@ public class RenderUtils {
                 return;
             }
             try {
-                boolean b = appFlow.setOrderProcessing(order.getId());
+                boolean b = sellerAppFlow.setOrderProcessing(order.getId());
                 if (!b) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Could not change order status!", ButtonType.OK);
                     alert.setHeaderText("FAILED!");
                     alert.showAndWait();
                 }
-                appFlow.downloadOrdersAndRefresh();
+                sellerAppFlow.downloadOrdersAndRefresh();
             } catch (RemoteException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, e.getMessage(), ButtonType.OK);
                 alert.setHeaderText("FAILED!");
@@ -105,7 +106,7 @@ public class RenderUtils {
         return button;
     }
 
-    public static Node renderSetReadyButton(SubmittedOrder order, pl.edu.pwr.lgawron.lab07.seller.AppFlow appFlow) {
+    public static Node renderSetReadyButton(SubmittedOrder order, SellerAppFlow sellerAppFlow) {
         Button button = new Button("Set Ready");
         button.setOnAction(event -> {
             if (order.getStatus() == Status.READY || order.getStatus() == Status.DELIVERED) {
@@ -115,13 +116,13 @@ public class RenderUtils {
                 return;
             }
             try {
-                boolean b = appFlow.setOrderReady(order.getId());
+                boolean b = sellerAppFlow.setOrderReady(order.getId());
                 if (!b) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Could not change order status!", ButtonType.OK);
                     alert.setHeaderText("FAILED!");
                     alert.showAndWait();
                 }
-                appFlow.downloadOrdersAndRefresh();
+                sellerAppFlow.downloadOrdersAndRefresh();
             } catch (RemoteException e) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, e.getMessage(), ButtonType.OK);
                 alert.setHeaderText("FAILED!");
@@ -131,8 +132,8 @@ public class RenderUtils {
         return button;
     }
 
-    public static EventHandler<ActionEvent> renderSetNotificationButton(ClientAppRenderer clientAppRenderer, AppFlow appFlow) {
-        Map<Integer, Status> integerStatusMap = appFlow.getIntegerStatusMap();
+    public static EventHandler<ActionEvent> renderSetNotificationButton(ClientAppRenderer clientAppRenderer, ClientAppFlow clientAppFlow) {
+        Map<Integer, Status> integerStatusMap = clientAppFlow.getIntegerStatusMap();
         return event -> {
             if (integerStatusMap.isEmpty()) {
                 return;

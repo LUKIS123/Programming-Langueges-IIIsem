@@ -52,7 +52,6 @@ public class Main extends Application {
             System.setSecurityManager(new RMISecurityManager());
         }
 
-
         launch();
     }
 

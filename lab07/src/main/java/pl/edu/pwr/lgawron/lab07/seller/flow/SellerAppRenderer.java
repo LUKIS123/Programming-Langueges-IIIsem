@@ -9,21 +9,21 @@ import javafx.scene.layout.VBox;
 import model.Status;
 import model.SubmittedOrder;
 import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
-import pl.edu.pwr.lgawron.lab07.seller.AppFlow;
+import pl.edu.pwr.lgawron.lab07.seller.SellerAppFlow;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SellerAppRenderer {
-    private final AppFlow appFlow;
+    private final SellerAppFlow sellerAppFlow;
     private final VBox presentOrderBox;
     private final VBox orderHistoryBox;
     private final Map<Integer, Node> presentOrderNodeMap;
     private final Map<Integer, Node> deliveredOrderNodeMap;
 
-    public SellerAppRenderer(AppFlow appFlow, VBox presentOrderBox, VBox orderHistoryBox) {
-        this.appFlow = appFlow;
+    public SellerAppRenderer(SellerAppFlow sellerAppFlow, VBox presentOrderBox, VBox orderHistoryBox) {
+        this.sellerAppFlow = sellerAppFlow;
         this.presentOrderBox = presentOrderBox;
         this.orderHistoryBox = orderHistoryBox;
         this.presentOrderNodeMap = new HashMap<>();
@@ -55,8 +55,8 @@ public class SellerAppRenderer {
 
                     presentOrderNodeMap.remove(order.getId());
                 } else {
-                    hBox.getChildren().add(RenderUtils.renderSetProcessingButton(order, appFlow));
-                    hBox.getChildren().add(RenderUtils.renderSetReadyButton(order, appFlow));
+                    hBox.getChildren().add(RenderUtils.renderSetProcessingButton(order, sellerAppFlow));
+                    hBox.getChildren().add(RenderUtils.renderSetReadyButton(order, sellerAppFlow));
                     presentOrderNodeMap.put(order.getId(), hBox);
                     presentOrderBox.getChildren().add(hBox);
                 }

@@ -15,7 +15,7 @@ public class ItemTypeRepository implements IRepository<ItemTypeExtended> {
     }
 
     @Override
-    public List<ItemTypeExtended> getRepo() {
+    public List<ItemTypeExtended> getRepositoryData() {
         return itemTypeList;
     }
 

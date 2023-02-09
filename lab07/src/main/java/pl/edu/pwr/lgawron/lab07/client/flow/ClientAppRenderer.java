@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.*;
-import pl.edu.pwr.lgawron.lab07.client.AppFlow;
+import pl.edu.pwr.lgawron.lab07.client.ClientAppFlow;
 import pl.edu.pwr.lgawron.lab07.client.utils.OrderBuilder;
 import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
 
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientAppRenderer {
-    private final AppFlow appFlow;
+    private final ClientAppFlow clientAppFlow;
     private final Label notificationLabel;
     private int notificationCounter;
     private final Button notificationButton;
@@ -42,8 +42,8 @@ public class ClientAppRenderer {
     private final Map<OrderLine, Node> itemBoxCartMap;
     private final Map<Integer, Node> orderNodeMap;
 
-    public ClientAppRenderer(AppFlow appFlow, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
-        this.appFlow = appFlow;
+    public ClientAppRenderer(ClientAppFlow clientAppFlow, Label notificationLabel, Button notificationButton, Label cartLabel, Button cartButton, VBox infoBox, VBox itemBox, VBox orderBox) {
+        this.clientAppFlow = clientAppFlow;
         this.notificationLabel = notificationLabel;
         this.notificationCounter = 0;
         this.notificationButton = notificationButton;
@@ -100,7 +100,7 @@ public class ClientAppRenderer {
 
             EventHandler<ActionEvent> buttonHandler = inputEvent -> {
                 try {
-                    appFlow.register(input.getText());
+                    clientAppFlow.register(input.getText());
                     inputEvent.consume();
                 } catch (RemoteException e) {
                     connectionLabel.setText("ERROR: Registration failed!");
@@ -136,7 +136,7 @@ public class ClientAppRenderer {
 
     private EventHandler<ActionEvent> setAddToCartPopUp(ItemType itemType) {
         return openPopUpEvent -> {
-            if (appFlow.getClientId() == -1) {
+            if (clientAppFlow.getClientId() == -1) {
                 return;
             }
             Node node = (Node) openPopUpEvent.getSource();
@@ -164,7 +164,7 @@ public class ClientAppRenderer {
 
             EventHandler<ActionEvent> buttonHandler = inputEvent -> {
                 try {
-                    appFlow.addToCart(itemType, Integer.parseInt(quantity.getText()), advert.getText());
+                    clientAppFlow.addToCart(itemType, Integer.parseInt(quantity.getText()), advert.getText());
                     inputEvent.consume();
                 } catch (NumberFormatException ignored) {
                 }
@@ -242,7 +242,7 @@ public class ClientAppRenderer {
 
             EventHandler<ActionEvent> buttonHandler = inputEvent -> {
                 try {
-                    appFlow.submitOrderToShop();
+                    clientAppFlow.submitOrderToShop();
                     inputEvent.consume();
                 } catch (RemoteException e) {
                     connectionLabel.setText("Submission failed!");
@@ -269,7 +269,7 @@ public class ClientAppRenderer {
                 hBox.getChildren().add(orderLabel);
                 hBox.getChildren().add(RenderUtils.renderOrderDetailsButton(RenderUtils.parseOrderDetails(order)));
                 if (order.getStatus() == Status.READY) {
-                    hBox.getChildren().add(RenderUtils.renderReceivePackageButton(order, appFlow));
+                    hBox.getChildren().add(RenderUtils.renderReceivePackageButton(order, clientAppFlow));
                 }
 
                 orderNodeMap.put(order.getId(), hBox);
@@ -282,7 +282,7 @@ public class ClientAppRenderer {
         Platform.runLater(() -> {
             notificationCounter++;
             notificationLabel.setText("Notifications:" + notificationCounter);
-            notificationButton.setOnAction(RenderUtils.renderSetNotificationButton(this, appFlow));
+            notificationButton.setOnAction(RenderUtils.renderSetNotificationButton(this, clientAppFlow));
         });
     }
 
