@@ -1,8 +1,8 @@
 package pl.edu.pwr.lgawron.lab07.shop.flow;
 
 import interfaces.IShop;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
+import model.SubmittedOrder;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerRepository;
 import pl.edu.pwr.lgawron.lab07.shop.services.IOrderService;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
@@ -22,9 +22,12 @@ public class ShopRemoteService {
     private final IShop shop;
     private IShop shopRemote;
 
-    public ShopRemoteService(ValuesHolder values, IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderRepository clientOrdersRepository, ShopAppRenderer renderer) {
+    public ShopRemoteService(ValuesHolder values, IRepository<ClientExtended> clientRepository,
+                             IRepository<ItemTypeExtended> itemTypeRepository, IRepository<SubmittedOrder> clientOrdersRepository,
+                             ShopAppRenderer renderer) {
+
         this.valuesHolder = values;
-        IClientListenerHolder clientListenerHolder = new ListenerHolder();
+        IClientListenerRepository clientListenerHolder = new ListenerRepository();
         IOrderService orderService = new OrderService(clientOrdersRepository);
         this.shopRenderer = renderer;
         this.shop = new ShopImplementation(clientRepository, itemTypeRepository, orderService, clientListenerHolder, renderer);

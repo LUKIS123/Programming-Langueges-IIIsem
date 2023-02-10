@@ -35,14 +35,6 @@ public class ShoppingCartService {
         return order;
     }
 
-    public boolean isEmpty() {
-        return isEmpty;
-    }
-
-    public void setEmpty(boolean empty) {
-        isEmpty = empty;
-    }
-
     public OrderBuilder getOrderBuilder() {
         return orderBuilder;
     }

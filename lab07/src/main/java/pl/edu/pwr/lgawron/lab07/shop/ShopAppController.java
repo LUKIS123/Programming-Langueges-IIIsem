@@ -5,14 +5,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pl.edu.pwr.lgawron.lab07.common.input.InvalidInputException;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
 
 public class ShopAppController {
     @FXML
@@ -32,36 +32,17 @@ public class ShopAppController {
     }
 
     @FXML
-    protected void onStartButtonClick(ActionEvent openPopUpEvent) {
-        Node node = (Node) openPopUpEvent.getSource();
-        Stage thisStage = (Stage) node.getScene().getWindow();
+    public void onStartButtonClick(ActionEvent openPopUpEvent) {
+        TextField port = new TextField();
+        port.setPromptText("Port");
+        port.setText("8085");
+        Button button = new Button("Create Registry");
+        button.setAlignment(Pos.BOTTOM_CENTER);
+        Label communicate = new Label();
+        communicate.setVisible(false);
 
         startButton.setOnAction(
                 event -> {
-                    VBox dialogVbox = new VBox(20);
-                    dialogVbox.setAlignment(Pos.CENTER);
-                    dialogVbox.getChildren().add(new Text("Please enter port to start Server on:"));
-
-                    TextField port = new TextField();
-                    port.setPromptText("Port");
-                    port.setText("8085");
-                    Button button = new Button("Create Registry");
-                    button.setAlignment(Pos.BOTTOM_CENTER);
-                    Label communicate = new Label();
-                    communicate.setVisible(false);
-
-                    dialogVbox.getChildren().add(port);
-                    dialogVbox.getChildren().add(button);
-                    dialogVbox.getChildren().add(communicate);
-
-                    Scene dialogScene = new Scene(dialogVbox, 300, 200);
-
-                    Stage dialog = new Stage();
-                    dialog.initModality(Modality.APPLICATION_MODAL);
-                    dialog.initOwner(thisStage);
-                    dialog.setScene(dialogScene);
-                    openPopUpEvent.consume();
-
                     EventHandler<ActionEvent> buttonHandler = inputEvent -> {
                         if (shopAppFlow != null) {
                             // if the app is already working -> return
@@ -79,11 +60,13 @@ public class ShopAppController {
                             communicate.setVisible(true);
                         }
                         if (inputEvent.isConsumed()) {
-                            dialog.close();
+                            Node source = (Node) inputEvent.getSource();
+                            Stage sourceStage = (Stage) source.getScene().getWindow();
+                            sourceStage.close();
                         }
                     };
-                    button.setOnAction(buttonHandler);
-                    dialog.setScene(dialogScene);
+                    Stage dialog = RenderUtils.renderStartingPupUp("Please enter port to start Server on:",
+                            openPopUpEvent, port, null, button, communicate, buttonHandler);
                     dialog.show();
                 }
         );

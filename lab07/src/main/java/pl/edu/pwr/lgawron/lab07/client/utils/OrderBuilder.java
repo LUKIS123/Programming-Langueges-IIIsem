@@ -42,10 +42,6 @@ public class OrderBuilder {
         return order;
     }
 
-    public int getClientId() {
-        return clientId;
-    }
-
     public List<OrderLine> getOrderLineList() {
         return orderLineList;
     }

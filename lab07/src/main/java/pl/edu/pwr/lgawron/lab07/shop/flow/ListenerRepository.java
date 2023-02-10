@@ -1,15 +1,15 @@
 package pl.edu.pwr.lgawron.lab07.shop.flow;
 
 import interfaces.IStatusListener;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ListenerHolder implements IClientListenerHolder {
+public class ListenerRepository implements IClientListenerRepository {
     private final Map<Integer, IStatusListener> statusListenerMap;
 
-    public ListenerHolder() {
+    public ListenerRepository() {
         this.statusListenerMap = new HashMap<>();
     }
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ClientOrdersRepository implements IOrderRepository {
+public class ClientOrdersRepository implements IRepository<SubmittedOrder> {
     private final List<SubmittedOrder> submittedOrderList;
 
     public ClientOrdersRepository() {
@@ -14,7 +14,7 @@ public class ClientOrdersRepository implements IOrderRepository {
     }
 
     @Override
-    public List<SubmittedOrder> getRepoData() {
+    public List<SubmittedOrder> getRepositoryData() {
         return submittedOrderList;
     }
 

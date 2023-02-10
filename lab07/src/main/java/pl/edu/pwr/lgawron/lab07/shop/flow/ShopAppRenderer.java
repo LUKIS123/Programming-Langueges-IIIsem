@@ -14,7 +14,6 @@ import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
 import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ItemTypeExtended;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 
 import java.util.HashMap;
@@ -23,16 +22,18 @@ import java.util.Map;
 public class ShopAppRenderer {
     private final IRepository<ClientExtended> clientRepository;
     private final IRepository<ItemTypeExtended> itemTypeRepository;
-    private final IOrderRepository clientOrdersRepository;
+    private final IRepository<SubmittedOrder> clientOrdersRepository;
     private final VBox itemBox;
     private final Map<Integer, Node> items;
     private final VBox clientBox;
-    private final Map<Integer, Node> clientNodeMap;
     private final VBox orderBox;
     private final Map<Integer, Node> orders;
     private final VBox infoBox;
 
-    public ShopAppRenderer(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderRepository clientOrdersRepository, VBox itemBox, VBox clientBox, VBox orderBox, VBox infoBox) {
+    public ShopAppRenderer(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository,
+                           IRepository<SubmittedOrder> clientOrdersRepository, VBox itemBox,
+                           VBox clientBox, VBox orderBox, VBox infoBox) {
+
         this.clientRepository = clientRepository;
         this.itemTypeRepository = itemTypeRepository;
         this.clientOrdersRepository = clientOrdersRepository;
@@ -41,7 +42,6 @@ public class ShopAppRenderer {
         this.orderBox = orderBox;
         this.infoBox = infoBox;
         this.items = new HashMap<>();
-        this.clientNodeMap = new HashMap<>();
         this.orders = new HashMap<>();
     }
 
@@ -71,7 +71,6 @@ public class ShopAppRenderer {
             ClientExtended byId = clientRepository.getById(clientId);
             Label clientLabel = new Label(byId.toString());
             clientLabel.setAlignment(Pos.BASELINE_LEFT);
-            clientNodeMap.put(clientId, clientLabel);
             clientBox.getChildren().add(clientLabel);
         });
     }

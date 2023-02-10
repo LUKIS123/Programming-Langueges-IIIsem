@@ -5,16 +5,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pl.edu.pwr.lgawron.lab07.common.input.InvalidInputException;
 import pl.edu.pwr.lgawron.lab07.common.input.ValuesHolder;
+import pl.edu.pwr.lgawron.lab07.common.utils.RenderUtils;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
@@ -51,39 +49,19 @@ public class ClientAppController {
 
     @FXML
     public void onStartButtonCLick(ActionEvent openPopUpEvent) {
-        Node node = (Node) openPopUpEvent.getSource();
-        Stage thisStage = (Stage) node.getScene().getWindow();
+        TextField server = new TextField();
+        server.setPromptText("Server");
+        server.setText("localhost");
+        TextField port = new TextField();
+        port.setPromptText("Port");
+        port.setText("8085");
+        Button button = new Button("Connect");
+        button.setAlignment(Pos.BOTTOM_CENTER);
+        Label communicate = new Label();
+        communicate.setVisible(false);
 
         startButton.setOnAction(
                 event -> {
-                    VBox dialogVbox = new VBox(20);
-                    dialogVbox.setAlignment(Pos.CENTER);
-                    dialogVbox.getChildren().add(new Text("Please enter server and port:"));
-
-                    TextField server = new TextField();
-                    server.setPromptText("Server");
-                    server.setText("localhost");
-                    TextField port = new TextField();
-                    port.setPromptText("Port");
-                    port.setText("8085");
-                    Button button = new Button("Connect");
-                    button.setAlignment(Pos.BOTTOM_CENTER);
-                    Label communicate = new Label();
-                    communicate.setVisible(false);
-
-                    dialogVbox.getChildren().add(server);
-                    dialogVbox.getChildren().add(port);
-                    dialogVbox.getChildren().add(button);
-                    dialogVbox.getChildren().add(communicate);
-
-                    Scene dialogScene = new Scene(dialogVbox, 350, 250);
-
-                    Stage dialog = new Stage();
-                    dialog.initModality(Modality.APPLICATION_MODAL);
-                    dialog.initOwner(thisStage);
-                    dialog.setScene(dialogScene);
-                    openPopUpEvent.consume();
-
                     EventHandler<ActionEvent> buttonHandler = inputEvent -> {
                         try {
                             values.setApplicationArguments(server.getText(), port.getText());
@@ -98,11 +76,13 @@ public class ClientAppController {
                             communicate.setVisible(true);
                         }
                         if (inputEvent.isConsumed()) {
-                            dialog.close();
+                            Node source = (Node) inputEvent.getSource();
+                            Stage sourceStage = (Stage) source.getScene().getWindow();
+                            sourceStage.close();
                         }
                     };
-                    button.setOnAction(buttonHandler);
-                    dialog.setScene(dialogScene);
+                    Stage dialog = RenderUtils.renderStartingPupUp("Please enter server and port:",
+                            openPopUpEvent, port, server, button, communicate, buttonHandler);
                     dialog.show();
                 }
         );
@@ -145,10 +125,9 @@ public class ClientAppController {
             if (!clientAppFlow.subscribe()) {
                 orderInfo.setText("ERROR: Could not subscribe!");
                 orderInfo.setVisible(true);
-            } else {
-                orderInfo.setText("SUBSCRIBED!");
-                orderInfo.setVisible(true);
             }
+            orderInfo.setText("SUBSCRIBED!");
+            orderInfo.setVisible(true);
         } catch (RemoteException e) {
             orderInfo.setText("ERROR: Could not subscribe!");
             orderInfo.setVisible(true);

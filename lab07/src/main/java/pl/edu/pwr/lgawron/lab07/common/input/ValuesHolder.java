@@ -11,16 +11,19 @@ public class ValuesHolder {
         if (port.length() > 4) {
             throw new InvalidInputException("Wrong port");
         }
+
         if (server.equals("127.0.0.1")) {
             this.server = "localhost";
         } else {
             this.server = server;
         }
+
         try {
             this.port = Integer.parseInt(port);
         } catch (NumberFormatException e) {
             throw new InvalidInputException("Port is not a String");
         }
+
     }
 
     public String getServer() {

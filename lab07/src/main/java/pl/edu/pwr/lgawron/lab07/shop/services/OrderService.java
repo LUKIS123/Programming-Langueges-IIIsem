@@ -1,13 +1,14 @@
 package pl.edu.pwr.lgawron.lab07.shop.services;
 
-import model.*;
+import model.Order;
+import model.SubmittedOrder;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.ClientOrdersRepository;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IOrderRepository;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 
 public class OrderService implements IOrderService {
-    private final IOrderRepository ordersRepository;
+    private final IRepository<SubmittedOrder> ordersRepository;
 
-    public OrderService(IOrderRepository ordersRepository) {
+    public OrderService(IRepository<SubmittedOrder> ordersRepository) {
         this.ordersRepository = ordersRepository;
     }
 

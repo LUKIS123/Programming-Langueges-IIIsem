@@ -3,7 +3,7 @@ package pl.edu.pwr.lgawron.lab07.shop.flow;
 import interfaces.IShop;
 import interfaces.IStatusListener;
 import model.*;
-import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerHolder;
+import pl.edu.pwr.lgawron.lab07.shop.repositories.IClientListenerRepository;
 import pl.edu.pwr.lgawron.lab07.shop.services.IOrderService;
 import pl.edu.pwr.lgawron.lab07.shop.repositories.IRepository;
 import pl.edu.pwr.lgawron.lab07.shop.modelsextended.ClientExtended;
@@ -20,11 +20,14 @@ public class ShopImplementation implements IShop, Serializable {
     private final IRepository<ClientExtended> clientRepository;
     private final IRepository<ItemTypeExtended> itemTypeRepository;
     private final IOrderService orderService;
-    private final IClientListenerHolder clientListenerHolder;
+    private final IClientListenerRepository clientListenerHolder;
     private final ShopAppRenderer shopRenderer;
     private int clientSequence;
 
-    public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository, IOrderService orderService, IClientListenerHolder clientListenerHolder, ShopAppRenderer shopRenderer) {
+    public ShopImplementation(IRepository<ClientExtended> clientRepository, IRepository<ItemTypeExtended> itemTypeRepository,
+                              IOrderService orderService, IClientListenerRepository clientListenerHolder,
+                              ShopAppRenderer shopRenderer) {
+
         this.clientSequence = 1;
         this.clientRepository = clientRepository;
         this.itemTypeRepository = itemTypeRepository;
@@ -74,7 +77,7 @@ public class ShopImplementation implements IShop, Serializable {
 
     @Override
     public List<SubmittedOrder> getSubmittedOrders() throws RemoteException {
-        return orderService.getOrderRepository().getRepoData();
+        return orderService.getOrderRepository().getRepositoryData();
     }
 
     @Override
