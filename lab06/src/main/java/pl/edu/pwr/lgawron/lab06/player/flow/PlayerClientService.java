@@ -7,7 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import pl.edu.pwr.lgawron.lab06.common.sockets.SenderSocket;
 import pl.edu.pwr.lgawron.lab06.common.input.ValuesHolder;
-import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
+import pl.edu.pwr.lgawron.lab06.player.utils.PlayerEnvironmentData;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerMapRenderer;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
 
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 public class PlayerClientService {
-    private PlayerData playerData;
+    private PlayerEnvironmentData playerEnvironmentData;
     private final VBox controlBox;
     private SenderSocket senderSocket;
     private final ValuesHolder valuesHolder;
@@ -43,25 +43,25 @@ public class PlayerClientService {
         String[] sizes = boardSize.split(",");
         String[] coordinates = positions.split(",");
 
-        playerData = new PlayerData(id, Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
+        playerEnvironmentData = new PlayerEnvironmentData(id, Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]));
         this.displayBasicInfo(receiverPort, playerServerPort, id);
 
         // init grid
         dimensions = appFlow.setDimensionsAndInitGrid(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
-        playerData.fillGrid(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
+        playerEnvironmentData.fillGrid(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]));
 
         // first render
         playerMapRenderer = appFlow.initMapRenderer();
         playerMapRenderer.firstRender();
-        playerMapRenderer.renderPlayerSpawned(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), playerData);
+        playerMapRenderer.renderPlayerSpawned(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), playerEnvironmentData);
 
         // setting starting moving directions
         while (true) {
             int x = random.nextInt(-1, 2);
             int y = random.nextInt(-1, 2);
             if (x != 0 || y != 0) {
-                playerData.setMovingDirectionX(x);
-                playerData.setMovingDirectionY(y);
+                playerEnvironmentData.setMovingDirectionX(x);
+                playerEnvironmentData.setMovingDirectionY(y);
                 break;
             }
         }
@@ -78,15 +78,15 @@ public class PlayerClientService {
         }
 
         // loop for replacement in grid & render
-        int currentX = playerData.getLocation2DPoint().getPositionX();
-        int currentY = playerData.getLocation2DPoint().getPositionY();
+        int currentX = playerEnvironmentData.getLocation2DPoint().getPositionX();
+        int currentY = playerEnvironmentData.getLocation2DPoint().getPositionY();
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 // replacement
                 if (stringGrid.get(1 + i).get(1 + j).equals("-")) {
                     continue;
                 }
-                playerData.replaceGridTile(currentX + j, currentY + i, stringGrid.get(1 + i).get(1 + j));
+                playerEnvironmentData.replaceGridTile(currentX + j, currentY + i, stringGrid.get(1 + i).get(1 + j));
                 // render
                 playerMapRenderer.renderSee(currentX + j, currentY + i, stringGrid.get(1 + i).get(1 + j));
             }
@@ -98,19 +98,19 @@ public class PlayerClientService {
         String[] coordinates = newPosition.split(",");
         int newX = Integer.parseInt(coordinates[0]);
         int newY = Integer.parseInt(coordinates[1]);
-        int oldX = playerData.getLocation2DPoint().getPositionX();
-        int oldY = playerData.getLocation2DPoint().getPositionY();
+        int oldX = playerEnvironmentData.getLocation2DPoint().getPositionX();
+        int oldY = playerEnvironmentData.getLocation2DPoint().getPositionY();
         int treasureWaitingTime = Integer.parseInt(splitData[3]);
 
         if (oldX == newX && oldY == newY) {
             return;
         }
         // render
-        playerMapRenderer.renderMove(oldX, oldY, newX, newY, playerData);
+        playerMapRenderer.renderMove(oldX, oldY, newX, newY, playerEnvironmentData);
         // save data
-        playerData.setNewPosition(newX, newY);
+        playerEnvironmentData.setNewPosition(newX, newY);
         // possible treasure
-        playerData.setPossibleCurrentSpotTreasure(treasureWaitingTime);
+        playerEnvironmentData.setPossibleCurrentSpotTreasure(treasureWaitingTime);
     }
 
     public void handleTakeResponse(String[] split) {
@@ -119,27 +119,27 @@ public class PlayerClientService {
             int waitTime = Integer.parseInt(split[3]);
             int treasures = Integer.parseInt(split[4]);
 
-            playerData.setTreasuresPicked(treasures);
-            playerData.setTreasurePickedWaitTime(waitTime);
-            playerData.replaceGridTile(playerData.getLocation2DPoint().getPositionX(), playerData.getLocation2DPoint().getPositionY(), "*");
+            playerEnvironmentData.setTreasuresPicked(treasures);
+            playerEnvironmentData.setTreasurePickedWaitTime(waitTime);
+            playerEnvironmentData.replaceGridTile(playerEnvironmentData.getLocation2DPoint().getPositionX(), playerEnvironmentData.getLocation2DPoint().getPositionY(), "*");
             this.displayTreasureInfo(treasures);
             // render treasure taken
-            playerMapRenderer.renderAfterTreasurePicked(playerData.getLocation2DPoint().getPositionX(), playerData.getLocation2DPoint().getPositionY());
+            playerMapRenderer.renderAfterTreasurePicked(playerEnvironmentData.getLocation2DPoint().getPositionX(), playerEnvironmentData.getLocation2DPoint().getPositionY());
         }
     }
 
     // getting coordinates of treasure in field of view, if not -> random point
     public int[] getNextPointToMove() {
         for (int i = -1; i < 2; i++) {
-            if (playerData.getLocation2DPoint().getPositionY() + i < 0 || playerData.getLocation2DPoint().getPositionY() + i >= dimensions.getValue()) {
+            if (playerEnvironmentData.getLocation2DPoint().getPositionY() + i < 0 || playerEnvironmentData.getLocation2DPoint().getPositionY() + i >= dimensions.getValue()) {
                 continue;
             }
-            List<String> currentRow = playerData.getPlayerGrid().get(playerData.getLocation2DPoint().getPositionY() + i);
+            List<String> currentRow = playerEnvironmentData.getPlayerGrid().get(playerEnvironmentData.getLocation2DPoint().getPositionY() + i);
             for (int j = -1; j < 2; j++) {
-                if (playerData.getLocation2DPoint().getPositionX() + j < 0 || playerData.getLocation2DPoint().getPositionX() + j >= dimensions.getKey()) {
+                if (playerEnvironmentData.getLocation2DPoint().getPositionX() + j < 0 || playerEnvironmentData.getLocation2DPoint().getPositionX() + j >= dimensions.getKey()) {
                     continue;
                 }
-                if (currentRow.get(playerData.getLocation2DPoint().getPositionX() + j).equals("T")) {
+                if (currentRow.get(playerEnvironmentData.getLocation2DPoint().getPositionX() + j).equals("T")) {
                     return new int[]{j, i};
                 }
             }
@@ -152,16 +152,16 @@ public class PlayerClientService {
         int x;
         int y;
 
-        while (!playerData.checkIfPositionPossibleToMove(playerData.getMovingDirectionX(), playerData.getMovingDirectionY(), dimensions)) {
+        while (!playerEnvironmentData.checkIfPositionPossibleToMove(playerEnvironmentData.getMovingDirectionX(), playerEnvironmentData.getMovingDirectionY(), dimensions)) {
             x = random.nextInt(-1, 2);
             y = random.nextInt(-1, 2);
             if (x != 0 || y != 0) {
-                playerData.setMovingDirectionX(x);
-                playerData.setMovingDirectionY(y);
+                playerEnvironmentData.setMovingDirectionX(x);
+                playerEnvironmentData.setMovingDirectionY(y);
             }
         }
 
-        return new int[]{playerData.getMovingDirectionX(), playerData.getMovingDirectionY()};
+        return new int[]{playerEnvironmentData.getMovingDirectionX(), playerEnvironmentData.getMovingDirectionY()};
     }
 
     public void handleGameOverResponse(String[] split) {
@@ -176,37 +176,40 @@ public class PlayerClientService {
     }
 
     public void sendSeeRequest() {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.seeRequest(playerData.getId()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.seeRequest(playerEnvironmentData.getId()));
     }
 
     public void sendLeaveGameRequest() {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.leaveGameRequest(playerData.getId()));
+        try {
+            senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.leaveGameRequest(playerEnvironmentData.getId()));
+        } catch (NullPointerException ignored) {
+        }
     }
 
     // manual controls
 
     public void sendMoveUpRequest(int direction) {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerData.getId(), direction));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveUpRequest(playerEnvironmentData.getId(), direction));
     }
 
     public void sendMoveLeftRequest() {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveLeftRequest(playerData.getId()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveLeftRequest(playerEnvironmentData.getId()));
     }
 
     public void sendMoveRightRequest() {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveRightRequest(playerData.getId()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveRightRequest(playerEnvironmentData.getId()));
     }
 
     public void sendArtificialMoveRequest(int x, int y) {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerData.getId(), x, y));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.artificialMoveRequest(playerEnvironmentData.getId(), x, y));
     }
 
     public void sendMoveDownRequest(int direction) {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveDownRequest(playerData.getId(), direction));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.moveDownRequest(playerEnvironmentData.getId(), direction));
     }
 
     public void sendTakeRequest() {
-        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.takeTreasureRequest(playerData.getId(), playerData.getLocation2DPoint()));
+        senderSocket.sendMessage(newReceiverPort, valuesHolder.getServer(), PlayerRequestCreator.takeTreasureRequest(playerEnvironmentData.getId(), playerEnvironmentData.getLocation2DPoint()));
     }
     // manual controls
 
@@ -232,7 +235,7 @@ public class PlayerClientService {
     @FXML
     private void displayLostInfo(int treasures) {
         Platform.runLater(() ->
-                gameInfo.setText("YOU LOSE! Most treasures taken by another player=" + treasures + ", your score was=" + playerData.getTreasuresPicked())
+                gameInfo.setText("YOU LOSE! Most treasures taken by another player=" + treasures + ", your score was=" + playerEnvironmentData.getTreasuresPicked())
         );
     }
 
@@ -243,8 +246,8 @@ public class PlayerClientService {
         );
     }
 
-    public PlayerData getPlayerData() {
-        return playerData;
+    public PlayerEnvironmentData getPlayerData() {
+        return playerEnvironmentData;
     }
 
 }

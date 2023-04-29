@@ -40,10 +40,4 @@ public class RequestQueue {
 
     }
 
-    public LinkedList<PlayerRequest> getQueuedRequests() {
-        synchronized (lock) {
-            return queuedRequests;
-        }
-    }
-
 }

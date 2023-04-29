@@ -1,11 +1,13 @@
 package pl.edu.pwr.lgawron.lab06.player.playersocket;
 
 import pl.edu.pwr.lgawron.lab06.common.sockets.SenderSocket;
-import pl.edu.pwr.lgawron.lab06.player.executor.PlayerTasks;
-import pl.edu.pwr.lgawron.lab06.player.flow.PlayerClientService;
+import pl.edu.pwr.lgawron.lab06.player.executor.ServerResponseQueue;
 import pl.edu.pwr.lgawron.lab06.player.utils.PlayerRequestCreator;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -16,16 +18,14 @@ public class PlayerReceiverSocket {
     private final String proxy;
     private ServerSocket serverSocket;
     private final SenderSocket senderSocket;
-    private final PlayerClientService worker;
-    private final PlayerTasks playerTasks;
+    private final ServerResponseQueue serverResponseQueue;
     private boolean exit;
 
-    public PlayerReceiverSocket(int port, String proxy, SenderSocket senderSocket, PlayerClientService worker, PlayerTasks playerTasks) {
+    public PlayerReceiverSocket(int port, String proxy, SenderSocket senderSocket, ServerResponseQueue serverResponseQueue) {
         this.port = port;
         this.proxy = proxy;
         this.senderSocket = senderSocket;
-        this.worker = worker;
-        this.playerTasks = playerTasks;
+        this.serverResponseQueue = serverResponseQueue;
         this.exit = false;
     }
 
@@ -47,8 +47,8 @@ public class PlayerReceiverSocket {
 
                     System.out.println(theLine);
 
-                    String s = newLineSignRemover(theLine);
-                    this.handleResponse(s);
+                    String s = removeNewLineSign(theLine);
+                    serverResponseQueue.addTask(s.split(";"));
 
                     sc.close();
                 }
@@ -61,19 +61,7 @@ public class PlayerReceiverSocket {
         thread.start();
     }
 
-    private void handleResponse(String s) {
-        String[] split = s.split(";");
-        String type = split[1];
-        if (type.equals("register")) {
-            worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], this.getPort());
-        } else if (type.equals("over")) {
-            worker.handleGameOverResponse(split);
-        } else {
-            playerTasks.addTask(split);
-        }
-    }
-
-    private String newLineSignRemover(String str) {
+    private String removeNewLineSign(String str) {
         if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == '\n') {
             str = str.substring(0, str.length() - 1);
         }

@@ -11,68 +11,37 @@ public class PlayerRequest {
     private int treasureY;
 
     public PlayerRequest(String playerId, String type) {
-        this.playerId = this.getIntValue(playerId);
-        this.type = this.checkType(type);
+        this.playerId = Integer.parseInt(playerId);
+        this.type = this.parseType(type);
     }
 
-    private RequestType checkType(String type) {
-        if (type.equals("register")) {
-            return RequestType.REGISTER;
+    public PlayerRequest(PlayerRequestBuilder builder) {
+        this.playerId = builder.getPlayerId();
+        this.type = builder.getType();
+        if (builder.isRegisterRequest()) {
+            proxyAddress = builder.getProxyAddress();
+            clientServerPort = builder.getClientServerPort();
+        } else if (builder.isMoveRequest()) {
+            moveX = builder.getMoveX();
+            moveY = builder.getMoveY();
+        } else if (builder.isTakeRequest()) {
+            treasureX = builder.getTreasureX();
+            treasureY = builder.getTreasureY();
         }
-        if (type.equals("see")) {
-            return RequestType.SEE;
-        }
-        if (type.equals("move")) {
-            return RequestType.MOVE;
-        }
-        if (type.equals("take")) {
-            return RequestType.TAKE;
-        }
-        if (type.equals("logout")) {
-            return RequestType.GAME_OVER;
-        }
-        if (type.equals("exit")) {
-            return RequestType.EXIT;
-        }
-        if (type.equals("finish_registration")) {
-            return RequestType.FINISH_REGISTRATION;
-        }
-        if (type.equals("leave")) {
-            return RequestType.LEAVE;
-        }
-        return RequestType.UNKNOWN;
     }
 
-    private int getIntValue(String s) {
-        return Integer.parseInt(s);
-    }
-
-    public PlayerRequest withPort(String port) {
-        clientServerPort = this.getIntValue(port);
-        return this;
-    }
-
-    public PlayerRequest withProxy(String proxy) {
-        if (proxy.equals("0.0.0.0/0.0.0.0")) {
-            this.setProxyAddress("localhost");
-        } else {
-            this.proxyAddress = proxy;
-        }
-        return this;
-    }
-
-    public PlayerRequest withCoordinates(String coordinates) {
-        String[] split = coordinates.split(",");
-        moveX = Integer.parseInt(split[0]);
-        moveY = Integer.parseInt(split[1]);
-        return this;
-    }
-
-    public PlayerRequest withTreasureLocation(String coordinates) {
-        String[] split = coordinates.split(",");
-        treasureX = Integer.parseInt(split[0]);
-        treasureY = Integer.parseInt(split[1]);
-        return this;
+    private RequestType parseType(String type) {
+        return switch (type) {
+            case "register" -> RequestType.REGISTER;
+            case "see" -> RequestType.SEE;
+            case "move" -> RequestType.MOVE;
+            case "take" -> RequestType.TAKE;
+            case "logout" -> RequestType.GAME_OVER;
+            case "exit" -> RequestType.EXIT;
+            case "finish_registration" -> RequestType.FINISH_REGISTRATION;
+            case "leave" -> RequestType.LEAVE;
+            default -> RequestType.UNKNOWN;
+        };
     }
 
     public int getPlayerId() {
@@ -89,10 +58,6 @@ public class PlayerRequest {
 
     public String getProxyAddress() {
         return proxyAddress;
-    }
-
-    public void setProxyAddress(String proxyAddress) {
-        this.proxyAddress = proxyAddress;
     }
 
     public int getMoveX() {

@@ -97,7 +97,6 @@ public class GameFlow {
     public void killApp() {
         registrationReceiverSocket.setExit(true);
         registrationReceiverSocket.kilThread();
-
         requestQueue.addElement(new PlayerRequest("0", "exit"));
 
         playerService.getPlayerList().forEach(playerInstance -> {

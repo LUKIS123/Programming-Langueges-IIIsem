@@ -2,40 +2,49 @@ package pl.edu.pwr.lgawron.lab06.player.executor;
 
 import pl.edu.pwr.lgawron.lab06.player.flow.PlayerClientService;
 import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerReceiverSocket;
-import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
+import pl.edu.pwr.lgawron.lab06.player.utils.PlayerEnvironmentData;
 
 public class PlayerAIAlgorithm implements Executor {
     private boolean exit;
     private final PlayerClientService worker;
     private final Thread thread;
-    private final PlayerTasks playerTasks;
+    private final ServerResponseQueue serverResponseQueue;
     private final PlayerReceiverSocket receiverSocket;
-    private PlayerData playerData;
+    private PlayerEnvironmentData playerEnvironmentData;
 
-    public PlayerAIAlgorithm(PlayerClientService worker, PlayerTasks playerTasks, PlayerReceiverSocket receiverSocket) {
+    public PlayerAIAlgorithm(PlayerClientService worker, ServerResponseQueue serverResponseQueue, PlayerReceiverSocket receiverSocket) {
         this.worker = worker;
-        this.playerTasks = playerTasks;
+        this.serverResponseQueue = serverResponseQueue;
         this.receiverSocket = receiverSocket;
         this.exit = false;
 
         this.thread = new Thread(() -> {
+
             while (worker.getPlayerData() == null) {
+                if (serverResponseQueue.getTasks().size() != 0) {
+                    // executing registration response
+                    this.makeAction(serverResponseQueue.popTask());
+                }
                 this.tryToSleep(100);
             }
-            playerData = worker.getPlayerData();
+            playerEnvironmentData = worker.getPlayerData();
 
             while (!exit) {
                 this.makeSeeRequest();
-                String[] first = playerTasks.popTask();
+                String[] first = serverResponseQueue.popTask();
                 this.makeAction(first);
 
+                if (exit) {
+                    break;
+                }
+
                 this.makeMoveRequestWithinFiledOfView();
-                String[] second = playerTasks.popTask();
+                String[] second = serverResponseQueue.popTask();
                 this.makeAction(second);
 
-                if (playerData.isPossibleCurrentSpotTreasure()) {
+                if (playerEnvironmentData.isPossibleCurrentSpotTreasure()) {
                     this.makeTakeRequest();
-                    String[] third = playerTasks.popTask();
+                    String[] third = serverResponseQueue.popTask();
                     this.makeAction(third);
                 }
             }
@@ -44,6 +53,10 @@ public class PlayerAIAlgorithm implements Executor {
 
     @Override
     public void start() {
+        if (serverResponseQueue.getTasks().size() != 0) {
+            // executing registration response
+            this.makeAction(serverResponseQueue.popTask());
+        }
         thread.start();
     }
 
@@ -62,12 +75,13 @@ public class PlayerAIAlgorithm implements Executor {
             }
             case "take" -> {
                 worker.handleTakeResponse(split);
-                playerData.setPossibleCurrentSpotTreasure(false);
-                this.tryToSleep(playerData.getTreasurePickedWaitTime());
-                playerData.setTreasurePickedWaitTime(0);
+                playerEnvironmentData.setPossibleCurrentSpotTreasure(false);
+                this.tryToSleep(playerEnvironmentData.getTreasurePickedWaitTime());
+                playerEnvironmentData.setTreasurePickedWaitTime(0);
             }
             case "register" ->
                     worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], receiverSocket.getPort());
+            case "over" -> worker.handleGameOverResponse(split);
             case "exit" -> thread.interrupt();
             default -> {
             }
@@ -99,7 +113,7 @@ public class PlayerAIAlgorithm implements Executor {
     @Override
     public void setExit(boolean exit) {
         this.exit = exit;
-        playerTasks.addTask(new String[]{"0", "exit"});
+        serverResponseQueue.addTask(new String[]{"0", "exit"});
     }
 
 }

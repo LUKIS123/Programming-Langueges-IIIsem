@@ -29,11 +29,13 @@ public class AppController {
     private Label playerInfo;
     @FXML
     private Button hostButton;
-    private final RegisterPopUp registerPopUp = new RegisterPopUp();
-    private final ValuesHolder values = new ValuesHolder();
+    private final RegisterPopUp registerPopUp;
+    private final ValuesHolder values;
     private GameFlow game;
 
     public AppController() {
+        this.registerPopUp = new RegisterPopUp();
+        this.values = new ValuesHolder();
     }
 
     @FXML

@@ -1,6 +1,5 @@
 package pl.edu.pwr.lgawron.lab06.administrator.adminsocket;
 
-import pl.edu.pwr.lgawron.lab06.administrator.models.PlayerRequest;
 import pl.edu.pwr.lgawron.lab06.administrator.parse.ClientCommandParser;
 import pl.edu.pwr.lgawron.lab06.administrator.queue.RequestQueue;
 
@@ -42,8 +41,8 @@ public class AdminReceiverSocket {
                     System.out.println(theLine);
 
                     // command: playerId, type, coordinates itd
-                    String s = newLineSignRemover(theLine);
-                    requestQueue.addElement(this.parseRequest(s));
+                    String s = removeNewLineSign(theLine);
+                    requestQueue.addElement(ClientCommandParser.parseRequest(s));
 
                     // closing the non-server socket
                     pSocket.close();
@@ -59,27 +58,7 @@ public class AdminReceiverSocket {
         thread.start();
     }
 
-    private PlayerRequest parseRequest(String s) {
-        String[] split = s.split(";");
-        if (split[1].equals("register")) {
-            return ClientCommandParser.pareRegisterRequest(split);
-        }
-        if (split[1].equals("see")) {
-            return ClientCommandParser.parseSeeRequest(split);
-        }
-        if (split[1].equals("move")) {
-            return ClientCommandParser.parseMoveRequest(split);
-        }
-        if (split[1].equals("take")) {
-            return ClientCommandParser.parseTakeRequest(split);
-        }
-        if (split[1].equals("leave")) {
-            return ClientCommandParser.parseLeaveRequest(split);
-        }
-        return new PlayerRequest("0", "unknown");
-    }
-
-    private String newLineSignRemover(String str) {
+    private String removeNewLineSign(String str) {
         if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == '\n') {
             str = str.substring(0, str.length() - 1);
         }

@@ -68,11 +68,11 @@ public class PlayerMapRenderer {
         });
     }
 
-    public void renderPlayerSpawned(int x, int y, PlayerData playerData) {
+    public void renderPlayerSpawned(int x, int y, PlayerEnvironmentData playerEnvironmentData) {
         Platform.runLater(() -> {
             playerPane.getChildren().remove(frontTiles[x][y]);
 
-            Label playerLabel = new Label("Player " + playerData.getId());
+            Label playerLabel = new Label("Player " + playerEnvironmentData.getId());
             playerLabel.setAlignment(Pos.CENTER);
             playerLabel.setPrefSize(50, 50);
             playerLabel.setStyle("-fx-background-color: magenta");
@@ -113,7 +113,7 @@ public class PlayerMapRenderer {
         });
     }
 
-    public void renderMove(int x, int y, int newX, int newY, PlayerData playerData) {
+    public void renderMove(int x, int y, int newX, int newY, PlayerEnvironmentData playerEnvironmentData) {
         Platform.runLater(() -> {
             playerPane.getChildren().remove(frontTiles[x][y]);
 
@@ -124,7 +124,7 @@ public class PlayerMapRenderer {
 
             playerPane.getChildren().remove(frontTiles[newX][newY]);
 
-            Label playerLabel = new Label("Player " + playerData.getId());
+            Label playerLabel = new Label("Player " + playerEnvironmentData.getId());
             playerLabel.setAlignment(Pos.CENTER);
             playerLabel.setPrefSize(50, 50);
             playerLabel.setStyle("-fx-background-color: magenta");

@@ -2,29 +2,34 @@ package pl.edu.pwr.lgawron.lab06.player.executor;
 
 import pl.edu.pwr.lgawron.lab06.player.flow.PlayerClientService;
 import pl.edu.pwr.lgawron.lab06.player.playersocket.PlayerReceiverSocket;
-import pl.edu.pwr.lgawron.lab06.player.utils.PlayerData;
+import pl.edu.pwr.lgawron.lab06.player.utils.PlayerEnvironmentData;
 
 public class ManualTaskExecutor implements Executor {
     private boolean exit;
     private final PlayerClientService worker;
     private final Thread thread;
     private final PlayerReceiverSocket receiverSocket;
-    private final PlayerTasks playerTasks;
-    private PlayerData playerData;
+    private final ServerResponseQueue serverResponseQueue;
+    private PlayerEnvironmentData playerEnvironmentData;
 
-    public ManualTaskExecutor(PlayerClientService worker, PlayerReceiverSocket receiverSocket, PlayerTasks playerTasks) {
+    public ManualTaskExecutor(PlayerClientService worker, PlayerReceiverSocket receiverSocket, ServerResponseQueue serverResponseQueue) {
         this.worker = worker;
         this.receiverSocket = receiverSocket;
-        this.playerTasks = playerTasks;
+        this.serverResponseQueue = serverResponseQueue;
 
         this.thread = new Thread(() -> {
+
             while (worker.getPlayerData() == null) {
+                if (serverResponseQueue.getTasks().size() != 0) {
+                    // executing registration response
+                    this.makeAction(serverResponseQueue.popTask());
+                }
                 this.tryToSleep(100);
             }
-            playerData = worker.getPlayerData();
+            playerEnvironmentData = worker.getPlayerData();
 
             while (!exit) {
-                String[] task = playerTasks.popTask();
+                String[] task = serverResponseQueue.popTask();
                 this.makeAction(task);
             }
         });
@@ -32,6 +37,10 @@ public class ManualTaskExecutor implements Executor {
 
     @Override
     public void start() {
+        if (serverResponseQueue.getTasks().size() != 0) {
+            // executing registration response
+            this.makeAction(serverResponseQueue.popTask());
+        }
         thread.start();
     }
 
@@ -44,12 +53,13 @@ public class ManualTaskExecutor implements Executor {
             case "move" -> worker.handleMoveResponse(split);
             case "take" -> {
                 worker.handleTakeResponse(split);
-                playerData.setPossibleCurrentSpotTreasure(false);
-                this.tryToSleep(playerData.getTreasurePickedWaitTime());
-                playerData.setTreasurePickedWaitTime(0);
+                playerEnvironmentData.setPossibleCurrentSpotTreasure(false);
+                this.tryToSleep(playerEnvironmentData.getTreasurePickedWaitTime());
+                playerEnvironmentData.setTreasurePickedWaitTime(0);
             }
             case "register" ->
                     worker.handleRegistrationResponse(Integer.parseInt(split[2]), Integer.parseInt(split[0]), split[3], split[4], receiverSocket.getPort());
+            case "over" -> worker.handleGameOverResponse(split);
             case "exit" -> thread.interrupt();
             default -> {
             }
@@ -68,6 +78,7 @@ public class ManualTaskExecutor implements Executor {
     @Override
     public void setExit(boolean exit) {
         this.exit = exit;
-        playerTasks.addTask(new String[]{"0", "exit"});
+        serverResponseQueue.addTask(new String[]{"0", "exit"});
     }
+
 }

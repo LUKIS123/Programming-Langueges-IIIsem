@@ -32,11 +32,13 @@ public class AppController {
     private Button playManuallyButton;
     @FXML
     private Button registerButton;
-    private final RegisterPopUp registerPopUp = new RegisterPopUp();
-    private final PlayerAppFlow appFlow = new PlayerAppFlow();
+    private final RegisterPopUp registerPopUp;
+    private final PlayerAppFlow appFlow;
     private ValuesHolder values;
 
     public AppController() {
+        this.registerPopUp = new RegisterPopUp();
+        this.appFlow = new PlayerAppFlow();
     }
 
     @FXML
