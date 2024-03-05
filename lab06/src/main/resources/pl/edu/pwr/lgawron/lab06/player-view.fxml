@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="pl.edu.pwr.lgawron.lab06.player.AppController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+    <HBox alignment="TOP_CENTER" spacing="20">
+
+        <VBox fx:id="controlBox" alignment="TOP_CENTER" spacing="5">
+            <HBox spacing="5">
+                <HBox spacing="10">
+                    <Button fx:id="registerButton" text="Join Game" alignment="TOP_CENTER"
+                            onAction="#onRegisterButtonClick"/>
+                    <Button fx:id="startButton" text="Start Algorithm" alignment="TOP_CENTER"
+                            onAction="#onStartButtonClick"/>
+                    <Button fx:id="playManuallyButton" text="Play Manually" alignment="TOP_CENTER"
+                            onAction="#onPlayManuallyButtonCLick"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </HBox>
+
+
+    <Pane fx:id="mainPane">
+        <GridPane fx:id="mapPane" prefWidth="1000" prefHeight="750"/>
+        <GridPane fx:id="playerPane" prefWidth="1000" prefHeight="750" visible="false"/>
+    </Pane>
+
+</VBox>
