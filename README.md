@@ -1,4 +1,4 @@
-# Programming-Langueges-IIIsem
+# Programming-Languages-IIIsem
 Jezyki programowania - laby <br>
 Polecenia: <br>
 
