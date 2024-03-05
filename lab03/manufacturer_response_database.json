@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "productId": 1,
+    "customerId": 1,
+    "status": "PENDING",
+    "description": "test1",
+    "submittedToEmployee": "2022-11-06",
+    "submittedToManufacturer": "2022-11-06"
+  },
+  {
+    "id": 2,
+    "productId": 2,
+    "customerId": 1,
+    "status": "SENT_BACK",
+    "response": "ACCEPTED",
+    "description": "test2",
+    "submittedToEmployee": "2022-11-06",
+    "submittedToManufacturer": "2022-11-06",
+    "manufacturerReply": "2022-11-19"
+  }
+]
