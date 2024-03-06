@@ -1,1 +1,0 @@
-Projekt to prosty system dowozu paczek - CRUD, podzielony na 3 różne aplikacje konsolowe, które komunikują się pomiędzy sobą przy pomocy plików (Client, Manufacturer oraz Employee). Dane zapisywane są do plików .json, działanie aplikacji zakłada istnienie wielu instancji jednocześnie - działających w tym samym czasie.
